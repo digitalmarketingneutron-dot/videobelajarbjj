@@ -8,7 +8,7 @@
         :root {
             --bg-main: #f8fafc;
             --card-bg: #ffffff;
-            --primary: #dc2626; /* Merah Brand */
+            --primary: #dc2626;
             --primary-hover: #b91c1c;
             --text-main: #0f172a;
             --text-muted: #64748b;
@@ -31,7 +31,6 @@
 
         .container { width: 100%; max-width: 950px; }
 
-        /* Card Login */
         .login-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -88,7 +87,7 @@
 
         .error-msg { color: var(--primary); font-size: 0.85rem; text-align: center; margin-top: 14px; font-weight: 500; }
 
-        /* LOADING SPINNER ANIMATION */
+        /* LOADING OVERLAY */
         .loading-overlay {
             display: none;
             position: fixed;
@@ -111,7 +110,7 @@
         .loading-text { font-size: 0.9rem; font-weight: 600; color: var(--text-muted); }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Dashboard Area */
+        /* DASHBOARD */
         .dashboard { display: none; }
         
         .dash-header {
@@ -152,7 +151,7 @@
         .select-box select {
             width: 100%; padding: 12px 16px;
             background: #f8fafc; border: 1px solid var(--border-color);
-            border-radius: 12px; color: var(--text-main); font-size: 0.95netpx; outline: none; cursor: pointer;
+            border-radius: 12px; color: var(--text-main); font-size: 0.95rem; outline: none; cursor: pointer;
         }
 
         .video-wrapper {
@@ -163,7 +162,6 @@
         .video-wrapper iframe { width: 100%; height: 100%; border: none; }
         .block-popup { position: absolute; top: 0; right: 0; width: 80px; height: 60px; z-index: 20; background: transparent; }
 
-        /* Fitur Interaktif Tambahan (Status, Like, Komentar) */
         .video-meta-bar {
             display: flex; justify-content: space-between; align-items: center;
             margin-top: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border-color);
@@ -190,22 +188,20 @@
         .comment-box { display: flex; gap: 8px; }
         .comment-box input {
             flex: 1; padding: 10px 14px; background: #f8fafc;
-            border: 1px solid var(--border-color); border-radius: 10px; font-size: 0.85rem;
+            border: 1px solid var(--border-color); border-radius: 10px; font-size: 0.85rem; outline: none;
         }
+        .comment-box input:focus { border-color: var(--primary); }
         .comment-btn {
-            background: var(--text-main); color: #fff; border: none; padding: 0 16px;
-            border-radius: 10px; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+            background: var(--primary); color: #fff; border: none; padding: 0 18px;
+            border-radius: 10px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: background 0.2s;
         }
-        .comment-list { margin-top: 10px; max-height: 120px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
-        .comment-item { background: #f8fafc; padding: 8px 12px; border-radius: 8px; font-size: 0.8rem; color: var(--text-muted); border: 1px solid var(--border-color); }
-        .comment-item strong { color: var(--text-main); }
-
+        .comment-btn:hover { background: var(--primary-hover); }
+        
         .footer-note { text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 24px; }
     </style>
 </head>
 <body>
 
-    <!-- LOADING SPINNER OVERLAY -->
     <div id="loadingOverlay" class="loading-overlay">
         <div class="spinner"></div>
         <div id="loadingText" class="loading-text">Memuat sistem...</div>
@@ -230,7 +226,7 @@
             <div id="errorMsg" class="error-msg"></div>
         </div>
 
-        <!-- DASHBOARD UTAMA -->
+        <!-- DASHBOARD -->
         <div id="dashboardSection" class="dashboard">
             <div class="dash-header">
                 <div class="user-info">
@@ -251,7 +247,6 @@
                     <iframe id="videoPlayer" src="" allow="autoplay" allowfullscreen></iframe>
                 </div>
 
-                <!-- INFO STATUS, LIKE, & KOMENTAR -->
                 <div class="video-meta-bar">
                     <div id="watchStatusBadge" class="status-badge">⏳ Belum Ditonton</div>
                     <div class="action-buttons">
@@ -260,12 +255,11 @@
                 </div>
 
                 <div class="comment-section">
-                    <h4>Catatan / Tanya Jawab Materi Ini</h4>
+                    <h4>Kirim Catatan / Pertanyaan ke Pengajar</h4>
                     <div class="comment-box">
-                        <input type="text" id="commentInput" placeholder="Tulis catatan atau pertanyaan di sini...">
-                        <button class="comment-btn" onclick="addComment()">Kirim</button>
+                        <input type="text" id="commentInput" placeholder="Tulis pesan atau pertanyaan untuk pengajar...">
+                        <button class="comment-btn" onclick="sendCommentToSheet()">Kirim</button>
                     </div>
-                    <div id="commentList" class="comment-list"></div>
                 </div>
             </div>
         </div>
@@ -276,9 +270,11 @@
     </div>
 
     <script>
+        // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI
+        const SCRIPT_URL = 'URL_WEB_APP_GOOGLE_SCRIPT_ANDA_DISINI';
+
         let cachedVideos = [];
         let currentStudent = null;
-        let globalDatabaseData = null;
 
         function showLoading(text = "Memproses...") {
             document.getElementById('loadingText').innerText = text;
@@ -303,10 +299,8 @@
             showLoading("Menghubungkan ke server database...");
 
             try {
-                // Ganti URL di bawah dengan URL Web App dari Google Apps Script Anda
-                let response = await fetch('https://script.google.com/macros/s/AKfycbwg0JXaoE8aj1LUm-aNReGH83ayPP3uKjAhVXAhI4XY_ZkiX8rkPv-QRNPrxvpA5Gnk/exec');
+                let response = await fetch(SCRIPT_URL);
                 let data = await response.json();
-                globalDatabaseData = data;
 
                 let student = data.siswa.find(s => s.username === user && s.password === pass);
 
@@ -359,20 +353,13 @@
             if(!cachedVideos[index]) return;
             let vid = cachedVideos[index];
 
-            // Set Video URL
             let fileId = extractDriveId(vid.url);
             document.getElementById('videoPlayer').src = "https://drive.google.com/file/d/" + fileId + "/preview";
 
-            // Tandai sudah pernah dilihat (disimpan di localStorage browser siswa)
             let videoKey = "watched_" + currentStudent.username + "_" + fileId;
-            let isWatched = localStorage.getItem(videoKey);
-            
-            // Otomatis ubah status jadi ditonton setelah dibuka
             localStorage.setItem(videoKey, "true");
             updateWatchStatus(true);
-
-            // Muat interaksi Like & Komentar lokal
-            loadInteractions(fileId);
+            loadLocalLikes(fileId);
         }
 
         function updateWatchStatus(watched) {
@@ -386,13 +373,11 @@
             }
         }
 
-        // --- SISTEM LIKE & KOMENTAR LOCAL ---
         function getStorageKey(fileId, type) {
             return "elearn_" + fileId + "_" + type;
         }
 
-        function loadInteractions(fileId) {
-            // Like Data
+        function loadLocalLikes(fileId) {
             let likedKey = getStorageKey(fileId, "liked_" + currentStudent.username);
             let countKey = getStorageKey(fileId, "likecount");
             
@@ -400,17 +385,8 @@
             let count = parseInt(localStorage.getItem(countKey) || "0");
 
             let likeBtn = document.getElementById('likeBtn');
-            if(isLiked) {
-                likeBtn.classList.add('liked');
-            } else {
-                likeBtn.classList.remove('liked');
-            }
+            if(isLiked) { likeBtn.classList.add('liked'); } else { likeBtn.classList.remove('liked'); }
             document.getElementById('likeCount').innerText = count;
-
-            // Comment Data
-            let commentKey = getStorageKey(fileId, "comments");
-            let comments = JSON.parse(localStorage.getItem(commentKey) || "[]");
-            renderComments(comments);
         }
 
         function toggleLike() {
@@ -430,43 +406,44 @@
                 localStorage.setItem(likedKey, "true");
                 localStorage.setItem(countKey, count + 1);
             }
-            loadInteractions(fileId);
+            loadLocalLikes(fileId);
         }
 
-        function addComment() {
+        // MENGIRIM PESAN LANGSUNG KE TAB "Komentar" DI SPREADSHEET
+        async function sendCommentToSheet() {
             let input = document.getElementById('commentInput');
-            let text = input.value.trim();
-            if(!text) return;
-
-            let index = document.getElementById('videoSelect').value;
-            let fileId = extractDriveId(cachedVideos[index].url);
-            let commentKey = getStorageKey(fileId, "comments");
-
-            let comments = JSON.parse(localStorage.getItem(commentKey) || "[]");
-            comments.push({
-                nama: currentStudent.nama,
-                text: text,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            });
-
-            localStorage.setItem(commentKey, JSON.stringify(comments));
-            input.value = "";
-            renderComments(comments);
-        }
-
-        function renderComments(comments) {
-            let list = document.getElementById('commentList');
-            list.innerHTML = "";
-            if(comments.length === 0) {
-                list.innerHTML = "<div class='comment-item'>Belum ada catatan atau pertanyaan.</div>";
+            let pesan = input.value.trim();
+            if(!pesan) {
+                alert("Pesan atau pertanyaan tidak boleh kosong!");
                 return;
             }
-            comments.forEach(c => {
-                let div = document.createElement('div');
-                div.className = "comment-item";
-                div.innerHTML = `<strong>${c.nama}</strong> (${c.time}): ${c.text}`;
-                list.appendChild(div);
-            });
+
+            let index = document.getElementById('videoSelect').value;
+            let currentVideo = cachedVideos[index];
+
+            showLoading("Mengirim pesan ke pengajar...");
+
+            try {
+                let payload = {
+                    nama: currentStudent.nama,
+                    judulVideo: "[" + currentVideo.kelas + "] " + currentVideo.judul,
+                    pesan: pesan
+                };
+
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Diperlukan untuk Apps Script Web App
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                input.value = "";
+                alert("Pesan berhasil terkirim ke pengajar!");
+            } catch (error) {
+                alert("Gagal mengirim pesan. Silakan coba lagi.");
+            } finally {
+                hideLoading();
+            }
         }
 
         function extractDriveId(url) {
@@ -487,7 +464,6 @@
             document.getElementById('videoPlayer').src = '';
         }
 
-        // Pengaman keamanan sistem
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', e => {
             if (e.key === 'F12' || (e.ctrlKey && ['u', 's', 'i', 'j'].includes(e.key.toLowerCase()))) {
