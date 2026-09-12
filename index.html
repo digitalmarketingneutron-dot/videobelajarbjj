@@ -294,6 +294,7 @@
         let cachedVideos = [];
         let currentStudent = null;
         let globalDatabase = null;
+        let heartbeatInterval = null;
 
         function showLoading(text = "Memproses...") {
             document.getElementById('loadingText').innerText = text;
@@ -304,7 +305,21 @@
             document.getElementById('loadingOverlay').style.display = 'none';
         }
 
-        // Cek sesi otomatis saat halaman dibuka / direfresh
+        // Fungsi kirim sinyal aktif (Heartbeat) agar server tahu siswa sedang online
+        function startHeartbeat(username) {
+            if (heartbeatInterval) clearInterval(heartbeatInterval);
+            
+            heartbeatInterval = setInterval(() => {
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: "update_login", username: username, status: "ACTIVE" })
+                }).catch(err => console.log("Heartbeat sync error"));
+            }, 60000); // Setiap 60 detik kirim sinyal aktif
+        }
+
+        // Cek sesi otomatis saat halaman dibuka / direfresh di perangkat yang sama
         window.addEventListener('DOMContentLoaded', async () => {
             let savedUser = localStorage.getItem('elearn_logged_user');
             if (savedUser) {
@@ -317,6 +332,15 @@
                     let student = data.siswa.find(s => s.username === savedUser);
                     if (student) {
                         currentStudent = student;
+                        
+                        // Perbarui status aktif saat halaman direfresh
+                        await fetch(SCRIPT_URL, {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ action: "update_login", username: student.username, status: "ACTIVE" })
+                        });
+
                         document.getElementById('loginSection').style.display = 'none';
                         document.getElementById('dashboardSection').style.display = 'block';
                         document.getElementById('welcomeText').innerText = "Selamat datang, " + student.nama;
@@ -324,6 +348,7 @@
 
                         let allowedVideos = data.video.filter(v => student.kelas.includes(v.kelas));
                         setupVideoSelector(allowedVideos);
+                        startHeartbeat(student.username);
                     } else {
                         localStorage.removeItem('elearn_logged_user');
                     }
@@ -356,10 +381,10 @@
                 let student = data.siswa.find(s => s.username === user && s.password === pass);
 
                 if(student) {
-                    // CEK SINGLE LOGIN: Jika status di spreadsheet sudah ACTIVE
+                    // Validasi Single Login Berdasarkan Waktu Aktif Terakhir (< 2 menit)
                     if (student.statusLogin === "ACTIVE") {
                         hideLoading();
-                        errDiv.innerText = "Akun ini sedang aktif di perangkat lain! Hubungi admin untuk reset akses.";
+                        errDiv.innerText = "Akun ini sedang aktif di perangkat lain! Jika ini adalah perangkat Anda sebelumnya, silakan tunggu 2 menit atau hubungi admin.";
                         return;
                     }
 
@@ -381,6 +406,7 @@
 
                     let allowedVideos = data.video.filter(v => student.kelas.includes(v.kelas));
                     setupVideoSelector(allowedVideos);
+                    startHeartbeat(student.username);
                 } else {
                     errDiv.innerText = "Username atau Password salah!";
                 }
@@ -576,10 +602,12 @@
         }
 
         async function handleLogout() {
+            if (heartbeatInterval) clearInterval(heartbeatInterval);
+
             if (currentStudent) {
                 showLoading("Keluar dari akun...");
                 try {
-                    // Ubah status di spreadsheet menjadi kosong (tidak aktif)
+                    // Kosongkan waktu aktif di spreadsheet agar langsung bisa login kembali
                     await fetch(SCRIPT_URL, {
                         method: 'POST',
                         mode: 'no-cors',
