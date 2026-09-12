@@ -472,41 +472,50 @@
             loadLocalLikes(fileId);
         }
 
-        async function sendCommentToSheet() {
-            let input = document.getElementById('commentInput');
-            let pesan = input.value.trim();
-            if(!pesan) {
-                alert("Pertanyaan tidak boleh kosong!");
-                return;
-            }
+async function sendCommentToSheet() {
+    let input = document.getElementById('commentInput');
+    let pesan = input.value.trim();
+    if(!pesan) {
+        alert("Pertanyaan tidak boleh kosong!");
+        return;
+    }
 
-            let index = document.getElementById('videoSelect').value;
-            let currentVideo = cachedVideos[index];
+    let index = document.getElementById('videoSelect').value;
+    let currentVideo = cachedVideos[index];
 
-            showLoading("Mengirim pertanyaan...");
+    showLoading("Mengirim pertanyaan ke pengajar...");
 
-            try {
-                let payload = {
-                    nama: currentStudent.nama,
-                    judulVideo: "[" + currentVideo.kelas + "] " + currentVideo.judul,
-                    pesan: pesan
-                };
+    try {
+        let payload = {
+            nama: currentStudent.nama,
+            judulVideo: "[" + currentVideo.kelas + "] " + currentVideo.judul,
+            pesan: pesan
+        };
 
-                await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+        // Kirim data ke Spreadsheet via POST
+        await fetch(SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
 
-                input.value = "";
-                alert("Pertanyaan berhasil terkirim! Refresh halaman atau login ulang nanti untuk melihat jawaban dari pengajar.");
-            } catch (error) {
-                alert("Gagal mengirim pertanyaan. Silakan coba lagi.");
-            } finally {
-                hideLoading();
-            }
-        }
+        input.value = "";
+
+        // Jeda 1.5 detik agar Google Spreadsheet sempat mencatat baris baru, lalu tarik data terbaru
+        setTimeout(async () => {
+            let response = await fetch(SCRIPT_URL);
+            globalDatabase = await response.json();
+            renderStudentHistory(currentVideo);
+            hideLoading();
+            alert("Pertanyaan berhasil terkirim!");
+        }, 1500);
+
+    } catch (error) {
+        hideLoading();
+        alert("Gagal mengirim pertanyaan. Silakan coba lagi.");
+    }
+}
 
         function extractDriveId(url) {
             let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
