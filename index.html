@@ -92,7 +92,7 @@
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(4px);
             z-index: 999;
             justify-content: center;
@@ -182,7 +182,6 @@
         }
         .action-btn.liked { background: rgba(220, 38, 38, 0.1); color: var(--primary); border-color: rgba(220, 38, 38, 0.3); }
 
-        /* Komentar & Riwayat Section */
         .comment-section { margin-top: 18px; }
         .comment-section h4 { font-size: 0.9rem; font-weight: 600; color: var(--text-main); margin-bottom: 8px; }
         .comment-box { display: flex; gap: 8px; margin-bottom: 14px; }
@@ -305,6 +304,37 @@
             document.getElementById('loadingOverlay').style.display = 'none';
         }
 
+        // Cek sesi otomatis saat halaman dibuka / direfresh
+        window.addEventListener('DOMContentLoaded', async () => {
+            let savedUser = localStorage.getItem('elearn_logged_user');
+            if (savedUser) {
+                showLoading("Memulihkan sesi belajar...");
+                try {
+                    let response = await fetch(SCRIPT_URL);
+                    let data = await response.json();
+                    globalDatabase = data;
+
+                    let student = data.siswa.find(s => s.username === savedUser);
+                    if (student) {
+                        currentStudent = student;
+                        document.getElementById('loginSection').style.display = 'none';
+                        document.getElementById('dashboardSection').style.display = 'block';
+                        document.getElementById('welcomeText').innerText = "Selamat datang, " + student.nama;
+                        document.getElementById('classText').innerText = "Kelas: " + student.kelas.join(', ');
+
+                        let allowedVideos = data.video.filter(v => student.kelas.includes(v.kelas));
+                        setupVideoSelector(allowedVideos);
+                    } else {
+                        localStorage.removeItem('elearn_logged_user');
+                    }
+                } catch (error) {
+                    console.error("Gagal memulihkan sesi");
+                } finally {
+                    hideLoading();
+                }
+            }
+        });
+
         async function handleLogin() {
             let user = document.getElementById('userInput').value.trim();
             let pass = document.getElementById('passInput').value.trim();
@@ -316,7 +346,7 @@
             }
 
             errDiv.innerText = "";
-            showLoading("Menghubungkan ke server database...");
+            showLoading("Memeriksa kredensial & status perangkat...");
 
             try {
                 let response = await fetch(SCRIPT_URL);
@@ -326,7 +356,24 @@
                 let student = data.siswa.find(s => s.username === user && s.password === pass);
 
                 if(student) {
+                    // CEK SINGLE LOGIN: Jika status di spreadsheet sudah ACTIVE
+                    if (student.statusLogin === "ACTIVE") {
+                        hideLoading();
+                        errDiv.innerText = "Akun ini sedang aktif di perangkat lain! Hubungi admin untuk reset akses.";
+                        return;
+                    }
+
+                    // Set status ACTIVE di spreadsheet
+                    await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: "update_login", username: student.username, status: "ACTIVE" })
+                    });
+
                     currentStudent = student;
+                    localStorage.setItem('elearn_logged_user', student.username);
+
                     document.getElementById('loginSection').style.display = 'none';
                     document.getElementById('dashboardSection').style.display = 'block';
                     document.getElementById('welcomeText').innerText = "Selamat datang, " + student.nama;
@@ -381,8 +428,58 @@
             localStorage.setItem(videoKey, "true");
             updateWatchStatus(true);
             
-            loadLocalLikes(fileId);
+            renderLikeStatus(vid);
             renderStudentHistory(vid);
+        }
+
+        function renderLikeStatus(vid) {
+            let fileId = extractDriveId(vid.url);
+            let likedKey = "liked_" + currentStudent.username + "_" + fileId;
+            let isLiked = localStorage.getItem(likedKey) === "true";
+
+            let likeBtn = document.getElementById('likeBtn');
+            if (isLiked) {
+                likeBtn.classList.add('liked');
+            } else {
+                likeBtn.classList.remove('liked');
+            }
+            document.getElementById('likeCount').innerText = vid.likes;
+        }
+
+        async function toggleLike() {
+            let index = document.getElementById('videoSelect').value;
+            let vid = cachedVideos[index];
+            let fileId = extractDriveId(vid.url);
+            
+            let likedKey = "liked_" + currentStudent.username + "_" + fileId;
+            let isLiked = localStorage.getItem(likedKey) === "true";
+
+            let isAdd = !isLiked;
+            localStorage.setItem(likedKey, isAdd ? "true" : "false");
+
+            if (isAdd) {
+                vid.likes += 1;
+            } else {
+                vid.likes = Math.max(0, vid.likes - 1);
+            }
+            renderLikeStatus(vid);
+
+            try {
+                let payload = {
+                    action: "like",
+                    judulVideo: "[" + vid.kelas + "] " + vid.judul,
+                    isAdd: isAdd
+                };
+
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            } catch (error) {
+                console.error("Gagal memperbarui like.");
+            }
         }
 
         function renderStudentHistory(currentVideo) {
@@ -395,8 +492,6 @@
             }
 
             let targetJudul = "[" + currentVideo.kelas + "] " + currentVideo.judul;
-            
-            // Filter komentar milik siswa yang sedang login dan sesuai judul video yang sedang dibuka
             let myComments = globalDatabase.komentar.filter(k => 
                 k.namaSiswa.toLowerCase() === currentStudent.nama.toLowerCase() && 
                 k.judulVideo === targetJudul
@@ -436,96 +531,66 @@
             }
         }
 
-        function getStorageKey(fileId, type) {
-            return "elearn_" + fileId + "_" + type;
-        }
-
-        function loadLocalLikes(fileId) {
-            let likedKey = getStorageKey(fileId, "liked_" + currentStudent.username);
-            let countKey = getStorageKey(fileId, "likecount");
-            
-            let isLiked = localStorage.getItem(likedKey) === "true";
-            let count = parseInt(localStorage.getItem(countKey) || "0");
-
-            let likeBtn = document.getElementById('likeBtn');
-            if(isLiked) { likeBtn.classList.add('liked'); } else { likeBtn.classList.remove('liked'); }
-            document.getElementById('likeCount').innerText = count;
-        }
-
-        function toggleLike() {
-            let index = document.getElementById('videoSelect').value;
-            let fileId = extractDriveId(cachedVideos[index].url);
-            
-            let likedKey = getStorageKey(fileId, "liked_" + currentStudent.username);
-            let countKey = getStorageKey(fileId, "likecount");
-
-            let isLiked = localStorage.getItem(likedKey) === "true";
-            let count = parseInt(localStorage.getItem(countKey) || "0");
-
-            if(isLiked) {
-                localStorage.setItem(likedKey, "false");
-                localStorage.setItem(countKey, Math.max(0, count - 1));
-            } else {
-                localStorage.setItem(likedKey, "true");
-                localStorage.setItem(countKey, count + 1);
+        async function sendCommentToSheet() {
+            let input = document.getElementById('commentInput');
+            let pesan = input.value.trim();
+            if(!pesan) {
+                alert("Pertanyaan tidak boleh kosong!");
+                return;
             }
-            loadLocalLikes(fileId);
+
+            let index = document.getElementById('videoSelect').value;
+            let currentVideo = cachedVideos[index];
+
+            showLoading("Mengirim pertanyaan...");
+
+            try {
+                let payload = {
+                    action: "comment",
+                    nama: currentStudent.nama,
+                    judulVideo: "[" + currentVideo.kelas + "] " + currentVideo.judul,
+                    pesan: pesan
+                };
+
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                input.value = "";
+
+                setTimeout(async () => {
+                    let response = await fetch(SCRIPT_URL);
+                    globalDatabase = await response.json();
+                    renderStudentHistory(currentVideo);
+                    hideLoading();
+                    alert("Pertanyaan berhasil terkirim!");
+                }, 1500);
+
+            } catch (error) {
+                hideLoading();
+                alert("Gagal mengirim pertanyaan. Silakan coba lagi.");
+            }
         }
 
-async function sendCommentToSheet() {
-    let input = document.getElementById('commentInput');
-    let pesan = input.value.trim();
-    if(!pesan) {
-        alert("Pertanyaan tidak boleh kosong!");
-        return;
-    }
+        async function handleLogout() {
+            if (currentStudent) {
+                showLoading("Keluar dari akun...");
+                try {
+                    // Ubah status di spreadsheet menjadi kosong (tidak aktif)
+                    await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: "update_login", username: currentStudent.username, status: "" })
+                    });
+                } catch(e) {}
+                hideLoading();
+            }
 
-    let index = document.getElementById('videoSelect').value;
-    let currentVideo = cachedVideos[index];
-
-    showLoading("Mengirim pertanyaan ke pengajar...");
-
-    try {
-        let payload = {
-            nama: currentStudent.nama,
-            judulVideo: "[" + currentVideo.kelas + "] " + currentVideo.judul,
-            pesan: pesan
-        };
-
-        // Kirim data ke Spreadsheet via POST
-        await fetch(SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-
-        input.value = "";
-
-        // Jeda 1.5 detik agar Google Spreadsheet sempat mencatat baris baru, lalu tarik data terbaru
-        setTimeout(async () => {
-            let response = await fetch(SCRIPT_URL);
-            globalDatabase = await response.json();
-            renderStudentHistory(currentVideo);
-            hideLoading();
-            alert("Pertanyaan berhasil terkirim!");
-        }, 1500);
-
-    } catch (error) {
-        hideLoading();
-        alert("Gagal mengirim pertanyaan. Silakan coba lagi.");
-    }
-}
-
-        function extractDriveId(url) {
-            let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-            if (match) return match[1];
-            match = url.match(/id=([a-zA-Z0-9_-]+)/);
-            if (match) return match[1];
-            return url;
-        }
-
-        function handleLogout() {
+            localStorage.removeItem('elearn_logged_user');
             currentStudent = null;
             globalDatabase = null;
             document.getElementById('dashboardSection').style.display = 'none';
