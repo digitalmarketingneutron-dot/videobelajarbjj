@@ -59,18 +59,16 @@
             border: none;
         }
 
-        /* Overlay transparan hanya menutupi area atas/bawah tertentu, 
-           atau kita gunakan CSS pointer-events agar tombol play bisa ditekan */
-        .secure-overlay {
+        /* Kotak pelindung khusus untuk menutup ikon pop-out di pojok kanan atas */
+        .block-popup {
             position: absolute;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 10;
+            right: 0;
+            width: 80px;
+            height: 60px;
+            z-index: 20;
             background: transparent;
-            /* Menggunakan CSS pointer-events: none, tapi diblokir via JS untuk klik kanan */
-            pointer-events: none; 
+            cursor: not-allowed;
         }
 
         .info-panel {
@@ -99,7 +97,8 @@
         <h1 class="header-title">Materi Pembelajaran Eksklusif</h1>
         
         <div class="video-wrapper">
-            <div class="secure-overlay" id="secureOverlay"></div>
+            <!-- Pelindung khusus pojok kanan atas agar tombol pop-out tidak bisa diklik -->
+            <div class="block-popup" title="Akses dibatasi"></div>
             
             <iframe 
                 src="https://drive.google.com/file/d/1Wko7TLDM5jjGmWECxmJHYjYesGZbSTuz/preview" 
@@ -110,12 +109,12 @@
 
         <div class="info-panel">
             <span>Status: Terlindungi (Protected Drive Stream)</span>
-            <span class="badge">Secure Player v3.1</span>
+            <span class="badge">Secure Player v3.2</span>
         </div>
     </div>
 
     <script>
-        // Mencegah klik kanan di area video secara keseluruhan
+        // Mencegah klik kanan di seluruh halaman
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
         });
