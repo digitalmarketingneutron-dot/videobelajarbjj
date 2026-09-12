@@ -290,8 +290,7 @@
     <script>
         // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwg0JXaoE8aj1LUm-aNReGH83ayPP3uKjAhVXAhI4XY_ZkiX8rkPv-QRNPrxvpA5Gnk/exec';
-
-        let cachedVideos = [];
+let cachedVideos = [];
         let currentStudent = null;
         let globalDatabase = null;
 
@@ -304,7 +303,7 @@
             document.getElementById('loadingOverlay').style.display = 'none';
         }
 
-        // Cek sesi otomatis saat halaman dibuka / direfresh (tetap login tanpa terlempar)
+        // Cek sesi otomatis saat halaman direfresh
         window.addEventListener('DOMContentLoaded', async () => {
             let savedUser = localStorage.getItem('elearn_logged_user');
             if (savedUser) {
@@ -316,7 +315,6 @@
 
                     let student = data.siswa.find(s => s.username === savedUser);
                     if (student) {
-                        // Pastikan akun tidak sedang dikunci di kolom E spreadsheet
                         if (student.isLocked) {
                             localStorage.removeItem('elearn_logged_user');
                             hideLoading();
@@ -335,7 +333,7 @@
                         localStorage.removeItem('elearn_logged_user');
                     }
                 } catch (error) {
-                    console.error("Gagal memulihkan sesi");
+                    console.error("Gagal memulihkan sesi", error);
                 } finally {
                     hideLoading();
                 }
@@ -363,7 +361,6 @@
                 let student = data.siswa.find(s => s.username === user && s.password === pass);
 
                 if(student) {
-                    // Cek apakah kolom E (isLocked) terisi karakter apapun
                     if (student.isLocked) {
                         hideLoading();
                         errDiv.innerText = "Akun Anda terkunci. Silakan hubungi admin untuk membuka akses.";
@@ -420,6 +417,7 @@
             if(!cachedVideos[index]) return;
             let vid = cachedVideos[index];
 
+            // Ekstraksi ID Google Drive yang lebih tahan banting
             let fileId = extractDriveId(vid.url);
             document.getElementById('videoPlayer').src = "https://drive.google.com/file/d/" + fileId + "/preview";
 
@@ -429,6 +427,15 @@
             
             renderLikeStatus(vid);
             renderStudentHistory(vid);
+        }
+
+        function extractDriveId(url) {
+            if (!url) return "";
+            let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+            if (match && match[1]) {
+                return match[1];
+            }
+            return url.trim();
         }
 
         function renderLikeStatus(vid) {
@@ -442,7 +449,7 @@
             } else {
                 likeBtn.classList.remove('liked');
             }
-            document.getElementById('likeCount').innerText = vid.likes;
+            document.getElementById('likeCount').innerText = vid.likes || 0;
         }
 
         async function toggleLike() {
@@ -457,9 +464,9 @@
             localStorage.setItem(likedKey, isAdd ? "true" : "false");
 
             if (isAdd) {
-                vid.likes += 1;
+                vid.likes = (vid.likes || 0) + 1;
             } else {
-                vid.likes = Math.max(0, vid.likes - 1);
+                vid.likes = Math.max(0, (vid.likes || 0) - 1);
             }
             renderLikeStatus(vid);
 
@@ -491,9 +498,12 @@
             }
 
             let targetJudul = "[" + currentVideo.kelas + "] " + currentVideo.judul;
+            
+            // Pencarian data riwayat yang aman dari perbedaan huruf besar/kecil atau spasi
             let myComments = globalDatabase.komentar.filter(k => 
-                k.namaSiswa.toLowerCase() === currentStudent.nama.toLowerCase() && 
-                k.judulVideo === targetJudul
+                k.namaSiswa && currentStudent.nama &&
+                k.namaSiswa.toLowerCase().trim() === currentStudent.nama.toLowerCase().trim() && 
+                k.judulVideo.trim() === targetJudul.trim()
             );
 
             if (myComments.length === 0) {
@@ -560,6 +570,7 @@
 
                 input.value = "";
 
+                // Ambil ulang data database terbaru agar riwayat langsung muncul
                 setTimeout(async () => {
                     let response = await fetch(SCRIPT_URL);
                     globalDatabase = await response.json();
