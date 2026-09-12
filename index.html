@@ -182,10 +182,10 @@
         }
         .action-btn.liked { background: rgba(220, 38, 38, 0.1); color: var(--primary); border-color: rgba(220, 38, 38, 0.3); }
 
-        /* Komentar Section */
-        .comment-section { margin-top: 16px; }
+        /* Komentar & Riwayat Section */
+        .comment-section { margin-top: 18px; }
         .comment-section h4 { font-size: 0.9rem; font-weight: 600; color: var(--text-main); margin-bottom: 8px; }
-        .comment-box { display: flex; gap: 8px; }
+        .comment-box { display: flex; gap: 8px; margin-bottom: 14px; }
         .comment-box input {
             flex: 1; padding: 10px 14px; background: #f8fafc;
             border: 1px solid var(--border-color); border-radius: 10px; font-size: 0.85rem; outline: none;
@@ -196,7 +196,21 @@
             border-radius: 10px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: background 0.2s;
         }
         .comment-btn:hover { background: var(--primary-hover); }
-        
+
+        .history-list { display: flex; flex-direction: column; gap: 10px; max-height: 250px; overflow-y: auto; }
+        .history-card {
+            background: #f8fafc; border: 1px solid var(--border-color);
+            border-radius: 10px; padding: 12px; font-size: 0.85rem;
+        }
+        .history-card .time { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; }
+        .history-card .question { color: var(--text-main); margin-bottom: 6px; }
+        .history-card .reply {
+            background: rgba(16, 185, 129, 0.08); border-left: 3px solid var(--success-color);
+            padding: 8px 10px; border-radius: 6px; color: #065f46; margin-top: 6px; font-size: 0.8rem;
+        }
+        .history-card .reply strong { display: block; margin-bottom: 2px; color: var(--success-color); }
+        .no-history { text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 12px; background: #f8fafc; border-radius: 10px; border: 1px dashed var(--border-color); }
+
         .footer-note { text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 24px; }
     </style>
 </head>
@@ -255,10 +269,15 @@
                 </div>
 
                 <div class="comment-section">
-                    <h4>Kirim Catatan / Pertanyaan ke Pengajar</h4>
+                    <h4>Diskusi / Tanya Jawab dengan Pengajar</h4>
                     <div class="comment-box">
-                        <input type="text" id="commentInput" placeholder="Tulis pesan atau pertanyaan untuk pengajar...">
+                        <input type="text" id="commentInput" placeholder="Tulis pertanyaan seputar materi ini...">
                         <button class="comment-btn" onclick="sendCommentToSheet()">Kirim</button>
+                    </div>
+
+                    <h4>Riwayat Pertanyaan Anda pada Video Ini</h4>
+                    <div id="historyList" class="history-list">
+                        <div class="no-history">Belum ada riwayat pertanyaan untuk video ini.</div>
                     </div>
                 </div>
             </div>
@@ -275,6 +294,7 @@
 
         let cachedVideos = [];
         let currentStudent = null;
+        let globalDatabase = null;
 
         function showLoading(text = "Memproses...") {
             document.getElementById('loadingText').innerText = text;
@@ -301,6 +321,7 @@
             try {
                 let response = await fetch(SCRIPT_URL);
                 let data = await response.json();
+                globalDatabase = data;
 
                 let student = data.siswa.find(s => s.username === user && s.password === pass);
 
@@ -359,7 +380,49 @@
             let videoKey = "watched_" + currentStudent.username + "_" + fileId;
             localStorage.setItem(videoKey, "true");
             updateWatchStatus(true);
+            
             loadLocalLikes(fileId);
+            renderStudentHistory(vid);
+        }
+
+        function renderStudentHistory(currentVideo) {
+            let historyList = document.getElementById('historyList');
+            historyList.innerHTML = "";
+
+            if (!globalDatabase || !globalDatabase.komentar) {
+                historyList.innerHTML = "<div class='no-history'>Belum ada riwayat pertanyaan.</div>";
+                return;
+            }
+
+            let targetJudul = "[" + currentVideo.kelas + "] " + currentVideo.judul;
+            
+            // Filter komentar milik siswa yang sedang login dan sesuai judul video yang sedang dibuka
+            let myComments = globalDatabase.komentar.filter(k => 
+                k.namaSiswa.toLowerCase() === currentStudent.nama.toLowerCase() && 
+                k.judulVideo === targetJudul
+            );
+
+            if (myComments.length === 0) {
+                historyList.innerHTML = "<div class='no-history'>Belum ada riwayat pertanyaan untuk video ini.</div>";
+                return;
+            }
+
+            myComments.forEach(item => {
+                let card = document.createElement('div');
+                card.className = "history-card";
+                
+                let html = `<div class="time">🕒 ${item.waktu}</div>
+                            <div class="question"><strong>Anda:</strong> ${item.pesan}</div>`;
+                
+                if (item.respon && item.respon.trim() !== "") {
+                    html += `<div class="reply"><strong>Respon Pengajar:</strong> ${item.respon}</div>`;
+                } else {
+                    html += `<div class="reply" style="background:#fef3c7; color:#92400e; border-color:#f59e0b;">⏳ Menunggu respon dari pengajar...</div>`;
+                }
+
+                card.innerHTML = html;
+                historyList.appendChild(card);
+            });
         }
 
         function updateWatchStatus(watched) {
@@ -409,19 +472,18 @@
             loadLocalLikes(fileId);
         }
 
-        // MENGIRIM PESAN LANGSUNG KE TAB "Komentar" DI SPREADSHEET
         async function sendCommentToSheet() {
             let input = document.getElementById('commentInput');
             let pesan = input.value.trim();
             if(!pesan) {
-                alert("Pesan atau pertanyaan tidak boleh kosong!");
+                alert("Pertanyaan tidak boleh kosong!");
                 return;
             }
 
             let index = document.getElementById('videoSelect').value;
             let currentVideo = cachedVideos[index];
 
-            showLoading("Mengirim pesan ke pengajar...");
+            showLoading("Mengirim pertanyaan...");
 
             try {
                 let payload = {
@@ -432,15 +494,15 @@
 
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // Diperlukan untuk Apps Script Web App
+                    mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
 
                 input.value = "";
-                alert("Pesan berhasil terkirim ke pengajar!");
+                alert("Pertanyaan berhasil terkirim! Refresh halaman atau login ulang nanti untuk melihat jawaban dari pengajar.");
             } catch (error) {
-                alert("Gagal mengirim pesan. Silakan coba lagi.");
+                alert("Gagal mengirim pertanyaan. Silakan coba lagi.");
             } finally {
                 hideLoading();
             }
@@ -456,6 +518,7 @@
 
         function handleLogout() {
             currentStudent = null;
+            globalDatabase = null;
             document.getElementById('dashboardSection').style.display = 'none';
             document.getElementById('loginSection').style.display = 'block';
             document.getElementById('userInput').value = '';
