@@ -381,60 +381,8 @@
             localStorage.setItem(videoKey, "true");
             updateWatchStatus(true);
             
-            renderLikeStatus(vid);
+            loadLocalLikes(fileId);
             renderStudentHistory(vid);
-        }
-
-        function renderLikeStatus(vid) {
-            let fileId = extractDriveId(vid.url);
-            let likedKey = "liked_" + currentStudent.username + "_" + fileId;
-            let isLiked = localStorage.getItem(likedKey) === "true";
-
-            let likeBtn = document.getElementById('likeBtn');
-            if (isLiked) {
-                likeBtn.classList.add('liked');
-            } else {
-                likeBtn.classList.remove('liked');
-            }
-            document.getElementById('likeCount').innerText = vid.likes;
-        }
-
-        async function toggleLike() {
-            let index = document.getElementById('videoSelect').value;
-            let vid = cachedVideos[index];
-            let fileId = extractDriveId(vid.url);
-            
-            let likedKey = "liked_" + currentStudent.username + "_" + fileId;
-            let isLiked = localStorage.getItem(likedKey) === "true";
-
-            let isAdd = !isLiked;
-            localStorage.setItem(likedKey, isAdd ? "true" : "false");
-
-            // Update instan di UI lokal
-            if (isAdd) {
-                vid.likes += 1;
-            } else {
-                vid.likes = Math.max(0, vid.likes - 1);
-            }
-            renderLikeStatus(vid);
-
-            // Kirim perubahan like ke Google Spreadsheet di background
-            try {
-                let payload = {
-                    action: "like",
-                    judulVideo: "[" + vid.kelas + "] " + vid.judul,
-                    isAdd: isAdd
-                };
-
-                await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-            } catch (error) {
-                console.error("Gagal memperbarui jumlah like di server.");
-            }
         }
 
         function renderStudentHistory(currentVideo) {
@@ -447,6 +395,8 @@
             }
 
             let targetJudul = "[" + currentVideo.kelas + "] " + currentVideo.judul;
+            
+            // Filter komentar milik siswa yang sedang login dan sesuai judul video yang sedang dibuka
             let myComments = globalDatabase.komentar.filter(k => 
                 k.namaSiswa.toLowerCase() === currentStudent.nama.toLowerCase() && 
                 k.judulVideo === targetJudul
@@ -486,49 +436,86 @@
             }
         }
 
-        async function sendCommentToSheet() {
-            let input = document.getElementById('commentInput');
-            let pesan = input.value.trim();
-            if(!pesan) {
-                alert("Pertanyaan tidak boleh kosong!");
-                return;
-            }
-
-            let index = document.getElementById('videoSelect').value;
-            let currentVideo = cachedVideos[index];
-
-            showLoading("Mengirim pertanyaan...");
-
-            try {
-                let payload = {
-                    action: "comment",
-                    nama: currentStudent.nama,
-                    judulVideo: "[" + currentVideo.kelas + "] " + currentVideo.judul,
-                    pesan: pesan
-                };
-
-                await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                input.value = "";
-
-                setTimeout(async () => {
-                    let response = await fetch(SCRIPT_URL);
-                    globalDatabase = await response.json();
-                    renderStudentHistory(currentVideo);
-                    hideLoading();
-                    alert("Pertanyaan berhasil terkirim!");
-                }, 1500);
-
-            } catch (error) {
-                hideLoading();
-                alert("Gagal mengirim pertanyaan. Silakan coba lagi.");
-            }
+        function getStorageKey(fileId, type) {
+            return "elearn_" + fileId + "_" + type;
         }
+
+        function loadLocalLikes(fileId) {
+            let likedKey = getStorageKey(fileId, "liked_" + currentStudent.username);
+            let countKey = getStorageKey(fileId, "likecount");
+            
+            let isLiked = localStorage.getItem(likedKey) === "true";
+            let count = parseInt(localStorage.getItem(countKey) || "0");
+
+            let likeBtn = document.getElementById('likeBtn');
+            if(isLiked) { likeBtn.classList.add('liked'); } else { likeBtn.classList.remove('liked'); }
+            document.getElementById('likeCount').innerText = count;
+        }
+
+        function toggleLike() {
+            let index = document.getElementById('videoSelect').value;
+            let fileId = extractDriveId(cachedVideos[index].url);
+            
+            let likedKey = getStorageKey(fileId, "liked_" + currentStudent.username);
+            let countKey = getStorageKey(fileId, "likecount");
+
+            let isLiked = localStorage.getItem(likedKey) === "true";
+            let count = parseInt(localStorage.getItem(countKey) || "0");
+
+            if(isLiked) {
+                localStorage.setItem(likedKey, "false");
+                localStorage.setItem(countKey, Math.max(0, count - 1));
+            } else {
+                localStorage.setItem(likedKey, "true");
+                localStorage.setItem(countKey, count + 1);
+            }
+            loadLocalLikes(fileId);
+        }
+
+async function sendCommentToSheet() {
+    let input = document.getElementById('commentInput');
+    let pesan = input.value.trim();
+    if(!pesan) {
+        alert("Pertanyaan tidak boleh kosong!");
+        return;
+    }
+
+    let index = document.getElementById('videoSelect').value;
+    let currentVideo = cachedVideos[index];
+
+    showLoading("Mengirim pertanyaan ke pengajar...");
+
+    try {
+        let payload = {
+            nama: currentStudent.nama,
+            judulVideo: "[" + currentVideo.kelas + "] " + currentVideo.judul,
+            pesan: pesan
+        };
+
+        // Kirim data ke Spreadsheet via POST
+        await fetch(SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        input.value = "";
+
+        // Jeda 1.5 detik agar Google Spreadsheet sempat mencatat baris baru, lalu tarik data terbaru
+        setTimeout(async () => {
+            let response = await fetch(SCRIPT_URL);
+            globalDatabase = await response.json();
+            renderStudentHistory(currentVideo);
+            hideLoading();
+            alert("Pertanyaan berhasil terkirim!");
+        }, 1500);
+
+    } catch (error) {
+        hideLoading();
+        alert("Gagal mengirim pertanyaan. Silakan coba lagi.");
+    }
+}
 
         function extractDriveId(url) {
             let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
@@ -551,7 +538,9 @@
 
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', e => {
-            e.preventDefault();
+            if (e.key === 'F12' || (e.ctrlKey && ['u', 's', 'i', 'j'].includes(e.key.toLowerCase()))) {
+                e.preventDefault();
+            }
         });
     </script>
 </body>
