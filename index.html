@@ -3,44 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Video Viewer - Google Drive</title>
+    <title>Portal Rekaman Kelas - E-Learning</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        :root {
+            --bg-main: #f1f5f9;
+            --card-bg: #ffffff;
+            --primary: #dc2626; /* Merah Brand */
+            --primary-hover: #b91c1c;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
         }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-            color: #f8fafc;
+            background-color: var(--bg-main);
+            color: var(--text-main);
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            padding: 20px;
+            align-items: center;
+            padding: 16px;
         }
 
-        .main-card {
+        .container {
             width: 100%;
-            max-width: 850px;
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 28px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            max-width: 950px;
         }
 
-        .header-title {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 20px;
+        /* Card Login Modern */
+        .login-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 36px 28px;
+            box-shadow: var(--shadow);
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        .login-header {
             text-align: center;
-            color: #38bdf8;
-            letter-spacing: 0.5px;
+            margin-bottom: 28px;
+        }
+
+        .login-header .logo-badge {
+            display: inline-block;
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .login-header h2 {
+            font-size: 1.5rem;
+            color: var(--text-main);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            margin-top: 8px;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .error-msg {
+            color: var(--primary);
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 14px;
+            font-weight: 500;
+        }
+
+        /* Dashboard Area */
+        .dashboard { display: none; }
+        
+        .dash-header {
+            background: var(--card-bg);
+            padding: 20px 24px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .user-info h3 {
+            font-size: 1.15rem;
+            color: var(--text-main);
+        }
+
+        .user-info span {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background: #f1f5f9;
+            padding: 3px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 4px;
+        }
+        
+        .logout-btn {
+            background: #fee2e2;
+            color: var(--primary);
+            border: 1px solid #fecaca;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #fecaca;
+        }
+
+        .video-container-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .select-box {
+            margin-bottom: 18px;
+        }
+
+        .select-box label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .select-box select {
+            width: 100%;
+            padding: 12px 16px;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .select-box select:focus {
+            border-color: var(--primary);
         }
 
         .video-wrapper {
@@ -48,9 +212,9 @@
             width: 100%;
             aspect-ratio: 16/9;
             background: #000;
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
         .video-wrapper iframe {
@@ -59,7 +223,7 @@
             border: none;
         }
 
-        /* Kotak pelindung khusus untuk menutup ikon pop-out di pojok kanan atas */
+        /* Pelindung sudut kanan atas untuk blokir tombol pop-out Google Drive */
         .block-popup {
             position: absolute;
             top: 0;
@@ -68,62 +232,160 @@
             height: 60px;
             z-index: 20;
             background: transparent;
-            cursor: not-allowed;
         }
 
-        .info-panel {
-            margin-top: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.85rem;
-            color: #94a3b8;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            padding-top: 14px;
-        }
-
-        .badge {
-            background: rgba(56, 189, 248, 0.15);
-            color: #38bdf8;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-weight: 500;
+        .footer-note {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
 
-    <div class="main-card">
-        <h1 class="header-title">Materi Pembelajaran Eksklusif</h1>
-        
-        <div class="video-wrapper">
-            <!-- Pelindung khusus pojok kanan atas agar tombol pop-out tidak bisa diklik -->
-            <div class="block-popup" title="Akses dibatasi"></div>
-            
-            <iframe 
-                src="https://drive.google.com/file/d/1Wko7TLDM5jjGmWECxmJHYjYesGZbSTuz/preview" 
-                allow="autoplay" 
-                allowfullscreen>
-            </iframe>
+    <div class="container">
+        <!-- FORM LOGIN -->
+        <div id="loginSection" class="login-card">
+            <div class="login-header">
+                <span class="logo-badge">E-Learning Area</span>
+                <h2>Portal Rekaman Kelas</h2>
+            </div>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="userInput" placeholder="Masukkan username anda">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="passInput" placeholder="Masukkan password anda">
+            </div>
+            <button class="btn" onclick="handleLogin()">Masuk Belajar</button>
+            <div id="errorMsg" class="error-msg"></div>
         </div>
 
-        <div class="info-panel">
-            <span>Status: Terlindungi (Protected Drive Stream)</span>
-            <span class="badge">Secure Player v3.2</span>
+        <!-- DASHBOARD PEMUTAR VIDEO -->
+        <div id="dashboardSection" class="dashboard">
+            <div class="dash-header">
+                <div class="user-info">
+                    <h3 id="welcomeText">Halo, Siswa</h3>
+                    <span id="classText">Kelas Terdaftar: -</span>
+                </div>
+                <button class="logout-btn" onclick="handleLogout()">Keluar Akun</button>
+            </div>
+
+            <div class="video-container-box">
+                <div class="select-box">
+                    <label>Pilih Rekaman Materi Pembelajaran:</label>
+                    <select id="videoSelect" onchange="changeVideo()"></select>
+                </div>
+
+                <div class="video-wrapper">
+                    <!-- Lapisan pengaman agar link Google Drive tidak bisa dibuka di tab baru -->
+                    <div class="block-popup" title="Proteksi Materi"></div>
+                    <iframe id="videoPlayer" src="" allow="autoplay" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-note">
+            &copy; 2026 Sistem Pembelajaran Terpadu. All rights reserved.
         </div>
     </div>
 
     <script>
-        // Mencegah klik kanan di seluruh halaman
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
+        let cachedVideos = [];
 
-        // Mencegah shortcut keyboard untuk inspect element / save
-        document.addEventListener('keydown', function(e) {
+        async function handleLogin() {
+            let user = document.getElementById('userInput').value.trim();
+            let pass = document.getElementById('passInput').value.trim();
+            let errDiv = document.getElementById('errorMsg');
+
+            if(!user || !pass) {
+                errDiv.innerText = "Username dan password wajib diisi!";
+                return;
+            }
+
+            errDiv.innerText = "Memeriksa kredensial...";
+
+            try {
+                // Ganti URL di bawah ini dengan URL Web App dari Google Apps Script Anda
+                let response = await fetch('URL_WEB_APP_GOOGLE_SCRIPT_ANDA_DISINI');
+                let data = await response.json();
+
+                let student = data.siswa.find(s => s.username === user && s.password === pass);
+
+                if(student) {
+                    document.getElementById('loginSection').style.display = 'none';
+                    document.getElementById('dashboardSection').style.display = 'block';
+                    document.getElementById('welcomeText').innerText = "Selamat datang, " + student.nama;
+                    document.getElementById('classText').innerText = "Kelas: " + student.kelas.join(', ');
+
+                    let allowedVideos = data.video.filter(v => student.kelas.includes(v.kelas));
+                    setupVideoSelector(allowedVideos);
+                } else {
+                    errDiv.innerText = "Username atau Password salah!";
+                }
+            } catch (error) {
+                errDiv.innerText = "Gagal terhubung ke database sistem.";
+            }
+        }
+
+        function setupVideoSelector(videos) {
+            cachedVideos = videos;
+            let select = document.getElementById('videoSelect');
+            select.innerHTML = "";
+
+            if(videos.length === 0) {
+                select.innerHTML = "<option>Belum ada rekaman video untuk kelas Anda</option>";
+                document.getElementById('videoPlayer').src = "";
+                return;
+            }
+
+            videos.forEach((vid, index) => {
+                let opt = document.createElement('option');
+                opt.value = index;
+                opt.innerText = "[" + vid.kelas + "] " + vid.judul;
+                select.appendChild(opt);
+            });
+
+            updatePlayerUrl(videos[0].url);
+        }
+
+        function changeVideo() {
+            let index = document.getElementById('videoSelect').value;
+            if(cachedVideos[index]) {
+                updatePlayerUrl(cachedVideos[index].url);
+            }
+        }
+
+        function updatePlayerUrl(rawUrl) {
+            let fileId = extractDriveId(rawUrl);
+            let embedUrl = "https://drive.google.com/file/d/" + fileId + "/preview";
+            document.getElementById('videoPlayer').src = embedUrl;
+        }
+
+        function extractDriveId(url) {
+            let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+            if (match) return match[1];
+            match = url.match(/id=([a-zA-Z0-9_-]+)/);
+            if (match) return match[1];
+            return url;
+        }
+
+        function handleLogout() {
+            document.getElementById('dashboardSection').style.display = 'none';
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('userInput').value = '';
+            document.getElementById('passInput').value = '';
+            document.getElementById('errorMsg').innerText = '';
+            document.getElementById('videoPlayer').src = '';
+        }
+
+        // Pengaman anti klik kanan & shortcut inspect element
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
             if (e.key === 'F12' || (e.ctrlKey && ['u', 's', 'i', 'j'].includes(e.key.toLowerCase()))) {
                 e.preventDefault();
-                alert('Aksi ini dinonaktifkan demi keamanan materi.');
             }
         });
     </script>
