@@ -181,61 +181,21 @@
             position: relative; width: 100%; aspect-ratio: 16/9;
             background: #000; border-radius: 14px; overflow: hidden;
             box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-            transition: all 0.3s ease;
         }
         .video-wrapper iframe { width: 100%; height: 100%; border: none; }
-        .block-popup { position: absolute; top: 0; right: 0; width: 80px; height: 60px; z-index: 20; background: transparent; }
-
-        /* PERBAIKAN: Mengatur agar ukuran iframe pas secara presisi saat mode Fullscreen di Android */
-        .video-wrapper:fullscreen {
-            width: 100vw !important;
-            height: 100vh !important;
-            max-width: none !important;
-            max-height: none !important;
-            aspect-ratio: auto;
-            border-radius: 0;
-            background: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        
+        /* PERBAIKAN TOTAL: Blokir sentuhan & klik tombol pop-out Google Drive di HP dan PC */
+        .block-popup { 
+            position: absolute; 
+            top: 0; 
+            right: 0; 
+            width: 100px; 
+            height: 70px; 
+            z-index: 99999; 
+            background: transparent; 
+            pointer-events: auto;
+            touch-action: none;
         }
-        .video-wrapper:-webkit-full-screen {
-            width: 100vw !important;
-            height: 100vh !important;
-            max-width: none !important;
-            max-height: none !important;
-            aspect-ratio: auto;
-            border-radius: 0;
-            background: #000;
-        }
-        .video-wrapper:fullscreen iframe,
-        .video-wrapper:-webkit-full-screen iframe {
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: contain;
-        }
-
-        .fullscreen-bar {
-            margin-top: 12px;
-            display: flex;
-            justify-content: flex-end;
-        }
-        .fs-btn {
-            background: #0f172a;
-            color: #ffffff;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: background 0.2s;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        }
-        .fs-btn:hover { background: #1e293b; }
 
         .video-meta-bar {
             display: flex; justify-content: space-between; align-items: center;
@@ -342,15 +302,10 @@
                     <select id="videoSelect" onchange="onVideoChanged()"></select>
                 </div>
 
-                <div class="video-wrapper" id="videoBox">
+                <div class="video-wrapper">
+                    <!-- Lapisan proteksi ekstra untuk menolak sentuhan/klik di Android & PC -->
                     <div class="block-popup" title="Proteksi Materi"></div>
                     <iframe id="videoPlayer" src="" allow="autoplay" allowfullscreen></iframe>
-                </div>
-
-                <div class="fullscreen-bar">
-                    <button class="fs-btn" onclick="toggleFullscreen()">
-                        Perbesar Layar (Full Screen / Landscape)
-                    </button>
                 </div>
 
                 <div class="video-meta-bar">
@@ -402,34 +357,6 @@
                 passInput.type = "text";
             } else {
                 passInput.type = "password";
-            }
-        }
-
-        function toggleFullscreen() {
-            let elem = document.getElementById('videoBox');
-            
-            if (!document.fullscreenElement) {
-                if (elem.requestFullscreen) {
-                    elem.requestFullscreen();
-                } else if (elem.webkitRequestFullscreen) {
-                    elem.webkitRequestFullscreen();
-                } else if (elem.msRequestFullscreen) {
-                    elem.msRequestFullscreen();
-                }
-
-                if (screen.orientation && screen.orientation.lock) {
-                    screen.orientation.lock('landscape').catch(function(error) {});
-                }
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                }
-                
-                if (screen.orientation && screen.orientation.unlock) {
-                    screen.orientation.unlock();
-                }
             }
         }
 
