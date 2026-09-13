@@ -19,7 +19,6 @@
             --warning-color: #f59e0b;
         }
 
-        /* PERBAIKAN UTAMA: Menggunakan Arial agar aman dari konflik font simbol */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; }
 
         body {
@@ -72,6 +71,26 @@
             transition: all 0.2s;
         }
         .form-group input:focus { outline: none; border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1); }
+
+        /* Style untuk bungkus input password + tombol mata */
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .password-wrapper input {
+            padding-right: 45px;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            padding: 4px;
+        }
 
         .btn {
             width: 100%;
@@ -288,7 +307,10 @@
             </div>
             <div class="form-group">
                 <label>Password</label>
-                <input type="password" id="passInput" placeholder="Masukkan password anda...">
+                <div class="password-wrapper">
+                    <input type="password" id="passInput" placeholder="Masukkan password anda...">
+                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility()" title="Lihat/Sembunyikan Password">👁️</button>
+                </div>
             </div>
             <button class="btn" onclick="handleLogin()">Masuk Belajar</button>
             <div id="errorMsg" class="error-msg"></div>
@@ -362,6 +384,16 @@
 
         function hideLoading() {
             document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        // FUNGSI UNTUK MELIHAT / MENYEMBUNYIKAN PASSWORD
+        function togglePasswordVisibility() {
+            let passInput = document.getElementById('passInput');
+            if (passInput.type === "password") {
+                passInput.type = "text";
+            } else {
+                passInput.type = "password";
+            }
         }
 
         function toggleFullscreen() {
