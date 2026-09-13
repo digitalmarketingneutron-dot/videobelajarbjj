@@ -229,7 +229,7 @@
         .action-btn.liked { background: rgba(220, 38, 38, 0.08); color: var(--primary); border-color: rgba(220, 38, 38, 0.2); }
 
         .comment-section { margin-top: 20px; }
-        .comment-section h4 { font-size: 0.95rem; font-weight: 800; color: var(--text-main); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+        .comment-section h4 { font-size: 0.95rem; font-weight: 800; color: var(--text-main); margin-bottom: 10px; }
         
         .comment-box { display: flex; gap: 8px; margin-bottom: 20px; }
         .comment-box input {
@@ -316,25 +316,25 @@
 
                 <div class="fullscreen-bar">
                     <button class="fs-btn" onclick="toggleFullscreen()">
-                        ⛶ Perbesar Layar (Full Screen / Landscape)
+                        Perbesar Layar (Full Screen / Landscape)
                     </button>
                 </div>
 
                 <div class="video-meta-bar">
-                    <div id="watchStatusBadge" class="status-badge">⏳ Belum Ditonton</div>
+                    <div id="watchStatusBadge" class="status-badge">Status: Belum Ditonton</div>
                     <div class="action-buttons">
-                        <button id="likeBtn" class="action-btn" onclick="toggleLike()">❤️ <span id="likeCount">0</span> Suka</button>
+                        <button id="likeBtn" class="action-btn" onclick="toggleLike()">Suka (<span id="likeCount">0</span>)</button>
                     </div>
                 </div>
 
                 <div class="comment-section">
-                    <h4>💬 Forum Diskusi & Tanya Jawab</h4>
+                    <h4>Forum Diskusi dan Tanya Jawab</h4>
                     <div class="comment-box">
                         <input type="text" id="commentInput" placeholder="Tulis pertanyaan seputar materi video ini...">
                         <button class="comment-btn" onclick="sendCommentToSheet()">Kirim</button>
                     </div>
 
-                    <h4>📜 Riwayat Pertanyaan Anda</h4>
+                    <h4>Riwayat Pertanyaan Anda</h4>
                     <div id="historyList" class="history-list">
                         <div class="no-history">Belum ada riwayat pertanyaan untuk video ini.</div>
                     </div>
@@ -604,13 +604,13 @@
                 let card = document.createElement('div');
                 card.className = "history-card";
                 
-                let html = `<div class="time">🕒 ${item.waktu}</div>
+                let html = `<div class="time">Waktu: ${item.waktu}</div>
                             <div class="question"><strong>Anda:</strong> ${item.pesan}</div>`;
                 
                 if (item.respon && item.respon.trim() !== "") {
                     html += `<div class="reply"><strong>Respon Pengajar:</strong> ${item.respon}</div>`;
                 } else {
-                    html += `<div class="pending-reply">⏳ Menunggu respon dari pengajar...</div>`;
+                    html += `<div class="pending-reply">Menunggu respon dari pengajar...</div>`;
                 }
 
                 card.innerHTML = html;
@@ -622,10 +622,10 @@
             let badge = document.getElementById('watchStatusBadge');
             if(watched) {
                 badge.className = "status-badge watched";
-                badge.innerHTML = "✅ Selesai Ditonton";
+                badge.innerHTML = "Status: Selesai Ditonton";
             } else {
                 badge.className = "status-badge";
-                badge.innerHTML = "⏳ Belum Ditonton";
+                badge.innerHTML = "Status: Belum Ditonton";
             }
         }
 
