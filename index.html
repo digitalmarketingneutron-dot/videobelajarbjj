@@ -133,7 +133,6 @@
             border-radius: 12px; color: var(--text-main); font-size: 0.95rem; font-weight: bold; cursor: pointer;
         }
 
-        /* Default Style PC */
         .video-wrapper {
             position: relative; width: 100%; aspect-ratio: 16/9;
             background: #000; border-radius: 14px; overflow: hidden;
@@ -141,18 +140,30 @@
         }
         .video-wrapper iframe { width: 100%; height: 100%; border: none; }
         
-        /* Proteksi menolak klik pop-out Google Drive */
+        /* Proteksi dasar menolak klik pop-out Google Drive */
         .block-popup { 
-            position: absolute; top: 0; right: 0; width: 80px; height: 60px; 
-            z-index: 99999; background: transparent; pointer-events: auto; touch-action: none;
+            position: absolute; top: 0; right: 0; width: 90px; height: 70px; 
+            z-index: 2147483647; background: transparent; pointer-events: auto; touch-action: none;
         }
 
+        /* Saat masuk layar penuh (Fullscreen) */
         .video-wrapper:fullscreen, .video-wrapper:-webkit-full-screen {
             width: 100vw !important; height: 100vh !important; max-width: none !important; max-height: none !important;
-            aspect-ratio: auto; border-radius: 0; background: #000; display: flex; align-items: center; justify-content: center;
+            aspect-ratio: auto; border-radius: 0; background: #000; display: block;
         }
         .video-wrapper:fullscreen iframe, .video-wrapper:-webkit-full-screen iframe {
             width: 100% !important; height: 100% !important;
+        }
+
+        /* PERBAIKAN: Segel mati posisi pelindung transparan saat layar penuh landscape */
+        .video-wrapper:fullscreen .block-popup, 
+        .video-wrapper:-webkit-full-screen .block-popup {
+            position: fixed !important; /* Paksa mengunci layar HP di pojok kanan atas */
+            top: 0 !important;
+            right: 0 !important;
+            width: 130px !important; /* Diperlebar agar jari tak sengaja menyentuh pinggiran */
+            height: 90px !important; 
+            z-index: 2147483647 !important; /* Level prioritas tertinggi di seluruh OS/Browser */
         }
 
         .fullscreen-bar { margin-top: 12px; display: flex; justify-content: flex-end; }
@@ -202,9 +213,6 @@
         .no-history { text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 16px; background: #f8fafc; border-radius: 14px; border: 2px dashed var(--border-color); font-weight: bold; }
         .footer-note { text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 24px; font-weight: bold; }
 
-        /* =========================================
-           CSS KHUSUS UNTUK HP ANDROID / MOBILE
-           ========================================= */
         @media (max-width: 768px) {
             body { padding: 6px; }
             .login-card { padding: 30px 20px; }
@@ -212,13 +220,11 @@
             .dash-header { padding: 16px; flex-direction: column; align-items: stretch; text-align: left; }
             .logout-btn { margin-top: 8px; padding: 10px; text-align: center; }
 
-            .video-container-box { 
-                padding: 10px; /* Kurangi jarak tepi agar video maksimal lebarnya */
-            }
+            .video-container-box { padding: 10px; }
 
             .video-wrapper {
-                aspect-ratio: auto; /* Hilangkan batas 16:9 yang membuat video gepeng */
-                height: 270px; /* Beri tinggi ekstra khusus agar frame muat dengan sempurna */
+                aspect-ratio: auto;
+                height: 270px;
                 border-radius: 10px;
             }
 
@@ -282,6 +288,7 @@
                 </div>
 
                 <div class="video-wrapper" id="videoBox">
+                    <!-- Lapisan proteksi pop-out Google Drive -->
                     <div class="block-popup" title="Proteksi Materi"></div>
                     <iframe id="videoPlayer" src="" allow="autoplay" allowfullscreen></iframe>
                 </div>
