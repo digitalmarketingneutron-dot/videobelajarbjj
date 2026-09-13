@@ -6,209 +6,80 @@
     <title>Portal E-Learning - Rekaman Kelas</title>
     <style>
         :root {
-            --bg-main: #f1f5f9;
-            --card-bg: #ffffff;
-            --primary: #dc2626;
-            --primary-hover: #b91c1c;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
+            --bg-main: #f1f5f9; --card-bg: #ffffff;
+            --primary: #dc2626; --primary-hover: #b91c1c;
+            --text-main: #0f172a; --text-muted: #64748b;
             --border-color: #e2e8f0;
-            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
+            --success-color: #10b981; --warning-color: #f59e0b;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; }
-
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
-        }
-
+        body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 16px; }
         .container { width: 100%; max-width: 1000px; }
 
-        .login-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 24px;
-            padding: 40px 28px;
-            box-shadow: var(--shadow-lg);
-            max-width: 440px;
-            margin: 0 auto;
-        }
-
+        .login-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 24px; padding: 40px 28px; box-shadow: var(--shadow-lg); max-width: 440px; margin: 0 auto; }
         .login-header { text-align: center; margin-bottom: 28px; }
-        .logo-badge {
-            display: inline-block;
-            background: rgba(220, 38, 38, 0.1);
-            color: var(--primary);
-            padding: 6px 16px;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 12px;
-        }
-        .login-header h2 { font-size: 1.5rem; color: var(--text-main); font-weight: bold; }
-
+        .logo-badge { display: inline-block; background: rgba(220, 38, 38, 0.1); color: var(--primary); padding: 6px 16px; border-radius: 50px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; }
+        .login-header h2 { font-size: 1.5rem; font-weight: bold; }
         .form-group { margin-bottom: 18px; }
         .form-group label { display: block; font-size: 0.85rem; font-weight: bold; color: var(--text-muted); margin-bottom: 6px; }
-        .form-group input {
-            width: 100%;
-            padding: 12px 16px;
-            background: #f8fafc;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            color: var(--text-main);
-            font-size: 0.95rem;
-            transition: all 0.2s;
-        }
+        .form-group input { width: 100%; padding: 12px 16px; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 12px; color: var(--text-main); font-size: 0.95rem; transition: all 0.2s; }
         .form-group input:focus { outline: none; border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1); }
-
         .password-wrapper { position: relative; display: flex; align-items: center; }
         .password-wrapper input { padding-right: 45px; }
-        .toggle-password {
-            position: absolute; right: 12px; background: none; border: none;
-            cursor: pointer; font-size: 1.1rem; color: var(--text-muted); padding: 4px;
-        }
-
-        .btn {
-            width: 100%; padding: 12px; background: var(--primary); color: #ffffff;
-            border: none; border-radius: 12px; font-weight: bold; font-size: 1rem;
-            cursor: pointer; transition: all 0.2s; margin-top: 8px;
-            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
-        }
+        .toggle-password { position: absolute; right: 12px; background: none; border: none; cursor: pointer; font-size: 1.1rem; color: var(--text-muted); padding: 4px; }
+        .btn { width: 100%; padding: 12px; background: var(--primary); color: #ffffff; border: none; border-radius: 12px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: all 0.2s; margin-top: 8px; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25); }
         .btn:hover { background: var(--primary-hover); }
-
         .error-msg { color: var(--primary); font-size: 0.85rem; text-align: center; margin-top: 14px; font-weight: bold; }
 
-        .loading-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px); z-index: 999;
-            justify-content: center; align-items: center; flex-direction: column; gap: 12px;
-        }
-        .spinner {
-            width: 48px; height: 48px; border: 4px solid rgba(255, 255, 255, 0.2);
-            border-top: 4px solid #ffffff; border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
+        .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px); z-index: 999; justify-content: center; align-items: center; flex-direction: column; gap: 12px; }
+        .spinner { width: 48px; height: 48px; border: 4px solid rgba(255, 255, 255, 0.2); border-top: 4px solid #ffffff; border-radius: 50%; animation: spin 0.8s linear infinite; }
         .loading-text { font-size: 0.9rem; font-weight: bold; color: #ffffff; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         .dashboard { display: none; }
-        
-        .dash-header {
-            background: var(--card-bg); padding: 20px 24px; border-radius: 18px;
-            border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);
-            margin-bottom: 20px; display: flex; justify-content: space-between;
-            align-items: center; flex-wrap: wrap; gap: 12px;
-        }
-        .user-info h3 { font-size: 1.15rem; color: var(--text-main); font-weight: bold; }
-        .user-info span { 
-            font-size: 0.75rem; color: var(--primary); background: rgba(220, 38, 38, 0.08); 
-            padding: 4px 12px; border-radius: 50px; display: inline-block; margin-top: 6px; font-weight: bold; 
-        }
-        
-        .logout-btn {
-            background: #fee2e2; color: var(--primary); border: 1px solid #fecaca;
-            padding: 8px 16px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; font-weight: bold;
-        }
+        .dash-header { background: var(--card-bg); padding: 20px 24px; border-radius: 18px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .user-info h3 { font-size: 1.15rem; font-weight: bold; }
+        .user-info span { font-size: 0.75rem; color: var(--primary); background: rgba(220, 38, 38, 0.08); padding: 4px 12px; border-radius: 50px; display: inline-block; margin-top: 6px; font-weight: bold; }
+        .logout-btn { background: #fee2e2; color: var(--primary); border: 1px solid #fecaca; padding: 8px 16px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; font-weight: bold; }
 
-        .video-container-box {
-            background: var(--card-bg); border: 1px solid var(--border-color);
-            border-radius: 20px; padding: 20px; box-shadow: var(--shadow-lg);
-        }
-
+        .video-container-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 20px; box-shadow: var(--shadow-lg); }
         .select-box { margin-bottom: 16px; }
         .select-box label { display: block; font-size: 0.8rem; font-weight: bold; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; }
-        .select-box select {
-            width: 100%; padding: 12px 16px; background: #f8fafc; border: 1px solid var(--border-color);
-            border-radius: 12px; color: var(--text-main); font-size: 0.95rem; font-weight: bold; cursor: pointer;
-        }
+        .select-box select { width: 100%; padding: 12px 16px; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 12px; color: var(--text-main); font-size: 0.95rem; font-weight: bold; cursor: pointer; }
 
-        .video-wrapper {
-            position: relative; width: 100%; aspect-ratio: 16/9;
-            background: #000; border-radius: 14px; overflow: hidden;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-        }
+        .video-wrapper { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 14px; overflow: hidden; box-shadow: 0 8px 16px rgba(0,0,0,0.15); }
         .video-wrapper iframe { width: 100%; height: 100%; border: none; }
-        
-        /* Proteksi dasar menolak klik pop-out Google Drive */
-        .block-popup { 
-            position: absolute; top: 0; right: 0; width: 90px; height: 70px; 
-            z-index: 2147483647; background: transparent; pointer-events: auto; touch-action: none;
-        }
+        .block-popup { position: absolute; top: 0; right: 0; width: 90px; height: 70px; z-index: 2147483647; background: transparent; pointer-events: auto; touch-action: none; }
 
-        /* Saat masuk layar penuh (Fullscreen) */
-        .video-wrapper:fullscreen, .video-wrapper:-webkit-full-screen {
-            width: 100vw !important; height: 100vh !important; max-width: none !important; max-height: none !important;
-            aspect-ratio: auto; border-radius: 0; background: #000; display: block;
-        }
-        .video-wrapper:fullscreen iframe, .video-wrapper:-webkit-full-screen iframe {
-            width: 100% !important; height: 100% !important;
-        }
-
-        /* PERBAIKAN: Segel mati posisi pelindung transparan saat layar penuh landscape */
-        .video-wrapper:fullscreen .block-popup, 
-        .video-wrapper:-webkit-full-screen .block-popup {
-            position: fixed !important; /* Paksa mengunci layar HP di pojok kanan atas */
-            top: 0 !important;
-            right: 0 !important;
-            width: 130px !important; /* Diperlebar agar jari tak sengaja menyentuh pinggiran */
-            height: 90px !important; 
-            z-index: 2147483647 !important; /* Level prioritas tertinggi di seluruh OS/Browser */
-        }
+        .video-wrapper:fullscreen, .video-wrapper:-webkit-full-screen { width: 100vw !important; height: 100vh !important; max-width: none !important; max-height: none !important; aspect-ratio: auto; border-radius: 0; background: #000; display: block; }
+        .video-wrapper:fullscreen iframe, .video-wrapper:-webkit-full-screen iframe { width: 100% !important; height: 100% !important; }
+        .video-wrapper:fullscreen .block-popup, .video-wrapper:-webkit-full-screen .block-popup { position: fixed !important; top: 0 !important; right: 0 !important; width: 130px !important; height: 90px !important; z-index: 2147483647 !important; }
 
         .fullscreen-bar { margin-top: 12px; display: flex; justify-content: flex-end; }
-        .fs-btn {
-            background: #0f172a; color: #ffffff; border: none; padding: 10px 16px;
-            border-radius: 10px; font-size: 0.85rem; font-weight: bold; cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        }
+        .fs-btn { background: #0f172a; color: #ffffff; border: none; padding: 10px 16px; border-radius: 10px; font-size: 0.85rem; font-weight: bold; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
 
-        .video-meta-bar {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-top: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; gap: 10px;
-        }
-        .status-badge {
-            font-size: 0.8rem; font-weight: bold; padding: 5px 14px; border-radius: 50px;
-            background: #f1f5f9; color: var(--text-muted); display: inline-flex; align-items: center; gap: 6px;
-        }
+        .video-meta-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; gap: 10px; }
+        .status-badge { font-size: 0.8rem; font-weight: bold; padding: 5px 14px; border-radius: 50px; background: #f1f5f9; color: var(--text-muted); display: inline-flex; align-items: center; gap: 6px; }
         .status-badge.watched { background: rgba(16, 185, 129, 0.1); color: var(--success-color); }
 
         .action-buttons { display: flex; gap: 10px; }
-        .action-btn {
-            background: #f8fafc; border: 1px solid var(--border-color); padding: 6px 16px;
-            border-radius: 10px; font-size: 0.85rem; font-weight: bold; color: var(--text-muted); cursor: pointer;
-        }
+        .action-btn { background: #f8fafc; border: 1px solid var(--border-color); padding: 6px 16px; border-radius: 10px; font-size: 0.85rem; font-weight: bold; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s;}
         .action-btn.liked { background: rgba(220, 38, 38, 0.08); color: var(--primary); border-color: rgba(220, 38, 38, 0.2); }
 
         .comment-section { margin-top: 20px; }
-        .comment-section h4 { font-size: 0.95rem; font-weight: bold; color: var(--text-main); margin-bottom: 10px; }
-        
+        .comment-section h4 { font-size: 0.95rem; font-weight: bold; margin-bottom: 10px; }
         .comment-box { display: flex; gap: 8px; margin-bottom: 20px; }
-        .comment-box input {
-            flex: 1; padding: 12px 16px; background: #f8fafc;
-            border: 1px solid var(--border-color); border-radius: 12px; font-size: 0.9rem;
-        }
-        .comment-btn {
-            background: var(--primary); color: #fff; border: none; padding: 0 20px;
-            border-radius: 12px; font-size: 0.9rem; font-weight: bold; cursor: pointer;
-        }
+        .comment-box input { flex: 1; padding: 12px 16px; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 12px; font-size: 0.9rem; }
+        .comment-btn { background: var(--primary); color: #fff; border: none; padding: 0 20px; border-radius: 12px; font-weight: bold; cursor: pointer; }
 
         .history-list { display: flex; flex-direction: column; gap: 12px; max-height: 280px; overflow-y: auto; padding-right: 4px; }
         .history-card { background: #f8fafc; border: 1px solid var(--border-color); border-radius: 14px; padding: 14px 16px; font-size: 0.85rem; }
         .history-card .time { font-size: 0.7rem; font-weight: bold; color: var(--text-muted); margin-bottom: 4px; }
-        .history-card .question { color: var(--text-main); font-weight: bold; margin-bottom: 8px; line-height: 1.4; }
+        .history-card .question { font-weight: bold; margin-bottom: 8px; line-height: 1.4; }
         .history-card .reply { background: rgba(16, 185, 129, 0.08); border-left: 3px solid var(--success-color); padding: 10px 12px; border-radius: 0 10px 10px 0; color: #065f46; font-size: 0.8rem; }
-        .history-card .reply strong { display: block; margin-bottom: 2px; color: var(--success-color); font-weight: bold; }
+        .history-card .reply strong { display: block; font-weight: bold; margin-bottom: 2px; color: var(--success-color); }
         .history-card .pending-reply { background: rgba(245, 158, 11, 0.08); border-left: 3px solid var(--warning-color); padding: 10px 12px; border-radius: 0 10px 10px 0; color: #92400e; font-size: 0.8rem; font-weight: bold; }
         .no-history { text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 16px; background: #f8fafc; border-radius: 14px; border: 2px dashed var(--border-color); font-weight: bold; }
         .footer-note { text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 24px; font-weight: bold; }
@@ -216,26 +87,16 @@
         @media (max-width: 768px) {
             body { padding: 6px; }
             .login-card { padding: 30px 20px; }
-            
             .dash-header { padding: 16px; flex-direction: column; align-items: stretch; text-align: left; }
             .logout-btn { margin-top: 8px; padding: 10px; text-align: center; }
-
             .video-container-box { padding: 10px; }
-
-            .video-wrapper {
-                aspect-ratio: auto;
-                height: 270px;
-                border-radius: 10px;
-            }
-
+            .video-wrapper { aspect-ratio: auto; height: 270px; border-radius: 10px; }
             .fullscreen-bar { margin-top: 14px; }
             .fs-btn { width: 100%; justify-content: center; padding: 14px; font-size: 0.95rem; }
-
             .video-meta-bar { flex-direction: column; align-items: stretch; gap: 10px; }
             .status-badge { justify-content: center; padding: 10px; }
             .action-buttons { width: 100%; }
             .action-btn { flex: 1; justify-content: center; padding: 10px; }
-
             .comment-box { flex-direction: column; }
             .comment-box input { padding: 14px; }
             .comment-btn { padding: 14px; width: 100%; }
@@ -288,15 +149,12 @@
                 </div>
 
                 <div class="video-wrapper" id="videoBox">
-                    <!-- Lapisan proteksi pop-out Google Drive -->
                     <div class="block-popup" title="Proteksi Materi"></div>
                     <iframe id="videoPlayer" src="" allow="autoplay" allowfullscreen></iframe>
                 </div>
 
                 <div class="fullscreen-bar">
-                    <button class="fs-btn" onclick="toggleFullscreen()">
-                        Perbesar Layar (Full Screen / Landscape)
-                    </button>
+                    <button class="fs-btn" onclick="toggleFullscreen()">Perbesar Layar (Full Screen / Landscape)</button>
                 </div>
 
                 <div class="video-meta-bar">
@@ -320,10 +178,7 @@
                 </div>
             </div>
         </div>
-
-        <div class="footer-note">
-            &copy; 2026 Portal Pembelajaran Terpadu. All rights reserved.
-        </div>
+        <div class="footer-note">&copy; 2026 Portal Pembelajaran Terpadu. All rights reserved.</div>
     </div>
 
     <script>
@@ -332,56 +187,73 @@
         let cachedVideos = [];
         let currentStudent = null;
         let globalDatabase = null;
+        let realTimeSync = null; // Interval sinkronisasi
 
         function showLoading(text = "Memproses...") {
             document.getElementById('loadingText').innerText = text;
             document.getElementById('loadingOverlay').style.display = 'flex';
         }
-
-        function hideLoading() {
-            document.getElementById('loadingOverlay').style.display = 'none';
-        }
-
+        function hideLoading() { document.getElementById('loadingOverlay').style.display = 'none'; }
+        
         function togglePasswordVisibility() {
             let passInput = document.getElementById('passInput');
-            if (passInput.type === "password") {
-                passInput.type = "text";
-            } else {
-                passInput.type = "password";
-            }
+            passInput.type = passInput.type === "password" ? "text" : "password";
         }
 
         function toggleFullscreen() {
             let elem = document.getElementById('videoBox');
-            
             if (!document.fullscreenElement) {
-                if (elem.requestFullscreen) {
-                    elem.requestFullscreen();
-                } else if (elem.webkitRequestFullscreen) {
-                    elem.webkitRequestFullscreen();
-                } else if (elem.msRequestFullscreen) {
-                    elem.msRequestFullscreen();
-                }
-
-                if (screen.orientation && screen.orientation.lock) {
-                    screen.orientation.lock('landscape').catch(function(error) {});
-                }
+                if (elem.requestFullscreen) elem.requestFullscreen();
+                else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+                if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(()=>{});
             } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                }
-                
-                if (screen.orientation && screen.orientation.unlock) {
-                    screen.orientation.unlock();
-                }
+                if (document.exitFullscreen) document.exitFullscreen();
+                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
             }
+        }
+
+        // --- SISTEM SINKRONISASI REALTIME (Cek Multi-Login & Likes) ---
+        function startRealTimeSync() {
+            if (realTimeSync) clearInterval(realTimeSync);
+            
+            realTimeSync = setInterval(async () => {
+                if (!currentStudent) return;
+                try {
+                    let response = await fetch(SCRIPT_URL);
+                    let data = await response.json();
+                    globalDatabase = data;
+
+                    // 1. CEK SINGLE LOGIN
+                    let me = data.siswa.find(s => s.username === currentStudent.username);
+                    let myToken = localStorage.getItem('elearn_session_token');
+                    if (me && me.token && me.token !== "" && me.token !== myToken) {
+                        alert("SESI BERAKHIR: Akun Anda terdeteksi login di perangkat lain!");
+                        handleLogout(false); // Logout tanpa menghapus token dari server
+                        return;
+                    }
+
+                    // 2. CEK UPDATE LIKE REAL-TIME
+                    let select = document.getElementById('videoSelect');
+                    if(select && select.value !== "") {
+                        let index = select.value;
+                        let currentVideoTitle = cachedVideos[index].judul;
+                        let updatedVid = data.video.find(v => v.judul === currentVideoTitle);
+                        if (updatedVid) {
+                            cachedVideos[index].likes = updatedVid.likes || 0;
+                            document.getElementById('likeCount').innerText = updatedVid.likes || 0;
+                        }
+                        renderStudentHistory(cachedVideos[index]); // Sinkronisasi komentar
+                    }
+                } catch(e) {} // Abaikan error fetch jika koneksi putus sebentar
+            }, 10000); // Lakukan pengecekan setiap 10 detik
         }
 
         window.addEventListener('DOMContentLoaded', async () => {
             let savedUser = localStorage.getItem('elearn_logged_user');
-            if (savedUser) {
+            let savedToken = localStorage.getItem('elearn_session_token');
+            
+            if (savedUser && savedToken) {
                 showLoading("Memulihkan sesi belajar...");
                 try {
                     let response = await fetch(SCRIPT_URL);
@@ -392,20 +264,19 @@
                     if (student) {
                         if (student.isLocked) {
                             localStorage.removeItem('elearn_logged_user');
-                            hideLoading();
-                            return;
+                            hideLoading(); return;
+                        }
+                        
+                        // CEK APAKAH LOGIN DIAMBIL ALIH PERANGKAT LAIN SAAT OFFLINE
+                        if (student.token && student.token !== "" && student.token !== savedToken) {
+                            alert("Sesi berakhir karena akun ini telah login di perangkat lain.");
+                            handleLogout(false);
+                            hideLoading(); return;
                         }
 
-                        currentStudent = student;
-                        document.getElementById('loginSection').style.display = 'none';
-                        document.getElementById('dashboardSection').style.display = 'block';
-                        document.getElementById('welcomeText').innerText = "Selamat datang, " + student.nama;
-                        document.getElementById('classText').innerText = "Kelas Terdaftar: " + student.kelas.join(', ');
-
-                        let allowedVideos = data.video.filter(v => student.kelas.includes(v.kelas));
-                        setupVideoSelector(allowedVideos);
+                        setupDashboard(student, data);
                     } else {
-                        localStorage.removeItem('elearn_logged_user');
+                        handleLogout(false);
                     }
                 } catch (error) {
                     console.error("Gagal memulihkan sesi", error);
@@ -420,11 +291,7 @@
             let pass = document.getElementById('passInput').value.trim();
             let errDiv = document.getElementById('errorMsg');
 
-            if(!user || !pass) {
-                errDiv.innerText = "Username dan password wajib diisi!";
-                return;
-            }
-
+            if(!user || !pass) { errDiv.innerText = "Username dan password wajib diisi!"; return; }
             errDiv.innerText = "";
             showLoading("Memeriksa kredensial akun...");
 
@@ -437,21 +304,27 @@
 
                 if(student) {
                     if (student.isLocked) {
-                        hideLoading();
-                        errDiv.innerText = "Akun Anda terkunci. Silakan hubungi admin untuk membuka akses.";
-                        return;
+                        hideLoading(); errDiv.innerText = "Akun Anda terkunci."; return;
                     }
 
-                    currentStudent = student;
+                    // BUAT TOKEN SESSION BARU UNTUK PERANGKAT INI
+                    let newSessionToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
                     localStorage.setItem('elearn_logged_user', student.username);
+                    localStorage.setItem('elearn_session_token', newSessionToken);
+                    
+                    // DAFTARKAN TOKEN KE SERVER (Sistem Single Login)
+                    fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: "update_session",
+                            username: student.username,
+                            token: newSessionToken
+                        })
+                    });
 
-                    document.getElementById('loginSection').style.display = 'none';
-                    document.getElementById('dashboardSection').style.display = 'block';
-                    document.getElementById('welcomeText').innerText = "Selamat datang, " + student.nama;
-                    document.getElementById('classText').innerText = "Kelas Terdaftar: " + student.kelas.join(', ');
-
-                    let allowedVideos = data.video.filter(v => student.kelas.includes(v.kelas));
-                    setupVideoSelector(allowedVideos);
+                    setupDashboard(student, data);
                 } else {
                     errDiv.innerText = "Username atau Password salah!";
                 }
@@ -460,6 +333,20 @@
             } finally {
                 hideLoading();
             }
+        }
+
+        function setupDashboard(student, data) {
+            currentStudent = student;
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('dashboardSection').style.display = 'block';
+            document.getElementById('welcomeText').innerText = "Selamat datang, " + student.nama;
+            document.getElementById('classText').innerText = "Kelas Terdaftar: " + student.kelas.join(', ');
+
+            let allowedVideos = data.video.filter(v => student.kelas.includes(v.kelas));
+            setupVideoSelector(allowedVideos);
+            
+            // MULAI PANTAU SINKRONISASI 10 DETIK
+            startRealTimeSync(); 
         }
 
         function setupVideoSelector(videos) {
@@ -494,6 +381,7 @@
 
             let fileId = extractDriveId(vid.url);
             document.getElementById('videoPlayer').src = "https://drive.google.com/file/d/" + fileId + "/preview";
+            document.getElementById('likeCount').innerText = vid.likes || 0;
 
             let videoKey = "watched_" + currentStudent.username + "_" + fileId;
             localStorage.setItem(videoKey, "true");
@@ -506,10 +394,7 @@
         function extractDriveId(url) {
             if (!url) return "";
             let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
-            if (match && match[1]) {
-                return match[1];
-            }
-            return url.trim();
+            return match && match[1] ? match[1] : url.trim();
         }
 
         function renderLikeStatus(vid) {
@@ -518,12 +403,8 @@
             let isLiked = localStorage.getItem(likedKey) === "true";
 
             let likeBtn = document.getElementById('likeBtn');
-            if (isLiked) {
-                likeBtn.classList.add('liked');
-            } else {
-                likeBtn.classList.remove('liked');
-            }
-            document.getElementById('likeCount').innerText = vid.likes || 0;
+            if (isLiked) likeBtn.classList.add('liked');
+            else likeBtn.classList.remove('liked');
         }
 
         async function toggleLike() {
@@ -533,33 +414,30 @@
             
             let likedKey = "liked_" + currentStudent.username + "_" + fileId;
             let isLiked = localStorage.getItem(likedKey) === "true";
-
             let isAdd = !isLiked;
+            
             localStorage.setItem(likedKey, isAdd ? "true" : "false");
-
-            if (isAdd) {
-                vid.likes = (vid.likes || 0) + 1;
-            } else {
-                vid.likes = Math.max(0, (vid.likes || 0) - 1);
-            }
+            
+            // Animasi angka instan sebelum konfirmasi server
+            let currentLikes = parseInt(vid.likes) || 0;
+            vid.likes = isAdd ? currentLikes + 1 : Math.max(0, currentLikes - 1);
+            document.getElementById('likeCount').innerText = vid.likes;
             renderLikeStatus(vid);
 
             try {
                 let payload = {
                     action: "like",
-                    judulVideo: "[" + vid.kelas + "] " + vid.judul,
+                    judul: vid.judul, // Mengirim judul asli untuk direkam ke database
                     isAdd: isAdd
                 };
-
+                // Kirim ke server
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-            } catch (error) {
-                console.error("Gagal memperbarui like.");
-            }
+            } catch (error) { console.error("Gagal memperbarui like."); }
         }
 
         function renderStudentHistory(currentVideo) {
@@ -575,12 +453,8 @@
             
             let myComments = globalDatabase.komentar.filter(k => {
                 if (!k.namaSiswa || !k.judulVideo) return false;
-                let namaSpreadsheet = k.namaSiswa.toLowerCase().trim();
-                let namaLogin = currentStudent.nama.toLowerCase().trim();
-                let judulSpreadsheet = k.judulVideo.trim();
-                let judulTarget = targetJudul.trim();
-
-                return namaSpreadsheet === namaLogin && judulSpreadsheet === judulTarget;
+                return k.namaSiswa.toLowerCase().trim() === currentStudent.nama.toLowerCase().trim() && 
+                       k.judulVideo.trim() === targetJudul.trim();
             });
 
             if (myComments.length === 0) {
@@ -591,16 +465,13 @@
             myComments.forEach(item => {
                 let card = document.createElement('div');
                 card.className = "history-card";
-                
                 let html = `<div class="time">Waktu: ${item.waktu}</div>
                             <div class="question"><strong>Anda:</strong> ${item.pesan}</div>`;
-                
                 if (item.respon && item.respon.trim() !== "") {
                     html += `<div class="reply"><strong>Respon Pengajar:</strong> ${item.respon}</div>`;
                 } else {
                     html += `<div class="pending-reply">Menunggu respon dari pengajar...</div>`;
                 }
-
                 card.innerHTML = html;
                 historyList.appendChild(card);
             });
@@ -608,22 +479,14 @@
 
         function updateWatchStatus(watched) {
             let badge = document.getElementById('watchStatusBadge');
-            if(watched) {
-                badge.className = "status-badge watched";
-                badge.innerHTML = "Status: Selesai Ditonton";
-            } else {
-                badge.className = "status-badge";
-                badge.innerHTML = "Status: Belum Ditonton";
-            }
+            badge.className = watched ? "status-badge watched" : "status-badge";
+            badge.innerHTML = watched ? "Status: Selesai Ditonton" : "Status: Belum Ditonton";
         }
 
         async function sendCommentToSheet() {
             let input = document.getElementById('commentInput');
             let pesan = input.value.trim();
-            if(!pesan) {
-                alert("Pertanyaan tidak boleh kosong!");
-                return;
-            }
+            if(!pesan) { alert("Pertanyaan tidak boleh kosong!"); return; }
 
             let index = document.getElementById('videoSelect').value;
             let currentVideo = cachedVideos[index];
@@ -637,16 +500,13 @@
                     judulVideo: "[" + currentVideo.kelas + "] " + currentVideo.judul,
                     pesan: pesan
                 };
-
                 await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
+                    method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-
                 input.value = "";
-
+                
+                // Meminta update instan dari server
                 setTimeout(async () => {
                     let response = await fetch(SCRIPT_URL);
                     globalDatabase = await response.json();
@@ -656,15 +516,24 @@
                 }, 1500);
 
             } catch (error) {
-                hideLoading();
-                alert("Gagal mengirim pertanyaan. Silakan coba lagi.");
+                hideLoading(); alert("Gagal mengirim pertanyaan. Silakan coba lagi.");
             }
         }
 
-        function handleLogout() {
+        function handleLogout(clearServerToken = true) {
+            if (realTimeSync) clearInterval(realTimeSync);
+
+            // Bersihkan token dari server saat log out manual
+            if (clearServerToken && currentStudent) {
+                fetch(SCRIPT_URL, {
+                    method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: "update_session", username: currentStudent.username, token: "" })
+                });
+            }
+
             localStorage.removeItem('elearn_logged_user');
-            currentStudent = null;
-            globalDatabase = null;
+            localStorage.removeItem('elearn_session_token');
+            currentStudent = null; globalDatabase = null;
             document.getElementById('dashboardSection').style.display = 'none';
             document.getElementById('loginSection').style.display = 'block';
             document.getElementById('userInput').value = '';
@@ -675,9 +544,7 @@
 
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', e => {
-            if (e.key === 'F12' || (e.ctrlKey && ['u', 's', 'i', 'j'].includes(e.key.toLowerCase()))) {
-                e.preventDefault();
-            }
+            if (e.key === 'F12' || (e.ctrlKey && ['u', 's', 'i', 'j'].includes(e.key.toLowerCase()))) e.preventDefault();
         });
     </script>
 </body>
