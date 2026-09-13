@@ -98,9 +98,6 @@
         .mapel-tab.active { background: var(--primary); color: #ffffff; border-color: var(--primary); box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2); }
 
         .video-container-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 22px; padding: 16px; box-shadow: var(--shadow-lg); }
-        .select-box { margin-bottom: 14px; }
-        .select-box label { display: block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; }
-        .select-box select { width: 100%; padding: 12px 14px; background: #f8fafc; border: 1.5px solid var(--border-color); border-radius: 12px; color: var(--text-main); font-size: 0.9rem; font-weight: 700; cursor: pointer; outline: none; }
 
         .video-wrapper { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 14px; overflow: hidden; box-shadow: 0 6px 14px rgba(0,0,0,0.1); }
         .video-wrapper iframe { width: 100%; height: 100%; border: none; }
@@ -112,6 +109,26 @@
 
         .fullscreen-bar { margin-top: 10px; display: flex; justify-content: flex-end; }
         .fs-btn { background: #0f172a; color: #ffffff; border: none; padding: 10px 14px; border-radius: 10px; font-size: 0.8rem; font-weight: 700; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+
+        /* --- PLAYLIST STYLING (ALA YOUTUBE) --- */
+        .playlist-section { margin-top: 16px; }
+        .playlist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .playlist-header label { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .playlist-counter { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); background: #f1f5f9; padding: 2px 8px; border-radius: 6px; }
+        
+        .playlist-container { display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto; padding-right: 4px; }
+        .playlist-item { display: flex; align-items: center; gap: 12px; background: #f8fafc; border: 1.5px solid var(--border-color); border-radius: 14px; padding: 10px 14px; cursor: pointer; transition: all 0.2s; }
+        .playlist-item:hover { background: #f1f5f9; border-color: #cbd5e1; }
+        .playlist-item.active { background: rgba(220, 38, 38, 0.05); border-color: var(--primary); }
+        
+        .playlist-thumb { width: 36px; height: 36px; border-radius: 10px; background: #e2e8f0; display: flex; justify-content: center; align-items: center; font-size: 0.9rem; flex-shrink: 0; color: var(--text-muted); }
+        .playlist-item.active .playlist-thumb { background: var(--primary); color: #ffffff; box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3); }
+
+        .playlist-info { flex: 1; overflow: hidden; }
+        .playlist-title { font-size: 0.85rem; font-weight: 700; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+        .playlist-item.active .playlist-title { color: var(--primary); }
+        .playlist-status { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+        .playlist-status.watched { color: var(--success-color); }
 
         .video-meta-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; gap: 10px; }
         .status-badge { font-size: 0.75rem; font-weight: 700; padding: 5px 12px; border-radius: 50px; background: #f1f5f9; color: var(--text-muted); display: inline-flex; align-items: center; gap: 6px; }
@@ -129,7 +146,6 @@
         .comment-btn-wrapper { display: flex; align-items: center; gap: 8px; }
         .comment-btn { background: var(--primary); color: #fff; border: none; padding: 12px 18px; border-radius: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; }
         
-        /* Indikator Loading khusus di samping tombol kirim */
         .comment-loading { display: none; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); }
         .comment-spinner { width: 16px; height: 16px; border: 2px solid var(--border-color); border-top: 2px solid var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
 
@@ -162,7 +178,7 @@
         <div class="splash-subtitle">Sistem Rekaman Kelas</div>
     </div>
 
-    <!-- LOADING SPINNER UTAMA (Hanya untuk Login/Sesi) -->
+    <!-- LOADING SPINNER UTAMA -->
     <div id="loadingOverlay" class="loading-overlay">
         <div class="spinner"></div>
         <div id="loadingText" class="loading-text">Memproses data...</div>
@@ -209,11 +225,6 @@
                     <div id="mapelTabsContainer" class="mapel-tabs"></div>
                 </div>
 
-                <div class="select-box">
-                    <label>Pilih Materi Video</label>
-                    <select id="videoSelect" onchange="onVideoChanged()"></select>
-                </div>
-
                 <div class="video-wrapper" id="videoBox">
                     <div class="block-popup" title="Proteksi Materi"></div>
                     <iframe id="videoPlayer" src="" allow="autoplay" allowfullscreen></iframe>
@@ -221,6 +232,17 @@
 
                 <div class="fullscreen-bar">
                     <button class="fs-btn" onclick="toggleFullscreen()">Perbesar Layar (Full Screen / Landscape)</button>
+                </div>
+
+                <!-- PLAYLIST MATERI VIDEO ALA YOUTUBE -->
+                <div class="playlist-section">
+                    <div class="playlist-header">
+                        <label>Playlist Materi Pembelajaran</label>
+                        <span id="playlistCounter" class="playlist-counter">0 Video</span>
+                    </div>
+                    <div id="playlistContainer" class="playlist-container">
+                        <!-- Item playlist akan digenerate otomatis di sini -->
+                    </div>
                 </div>
 
                 <div class="video-meta-bar">
@@ -236,7 +258,6 @@
                         <input type="text" id="commentInput" placeholder="Tulis pertanyaan seputar materi video ini...">
                         <div class="comment-btn-wrapper">
                             <button id="commentSubmitBtn" class="comment-btn" onclick="sendCommentToSheet()">Kirim</button>
-                            <!-- Indikator loading khusus di samping tombol kirim -->
                             <div id="commentLoading" class="comment-loading">
                                 <div class="comment-spinner"></div>
                                 <span>Mengirim...</span>
@@ -261,6 +282,7 @@
         let currentStudent = null;
         let globalDatabase = null;
         let activeMapel = "";
+        let currentActiveVideoUrl = "";
         let realTimeSync = null;
 
         function showLoading(text = "Memproses...") {
@@ -346,10 +368,8 @@
                         handleLogout(false); return;
                     }
 
-                    let select = document.getElementById('videoSelect');
-                    if(select && select.value !== "") {
-                        let selectedUrl = select.value;
-                        let updatedVid = data.video.find(v => v.url === selectedUrl);
+                    if (currentActiveVideoUrl !== "") {
+                        let updatedVid = data.video.find(v => v.url === currentActiveVideoUrl);
                         if (updatedVid) {
                             document.getElementById('likeCount').innerText = updatedVid.likes || 0;
                             renderStudentHistory(updatedVid);
@@ -418,7 +438,7 @@
 
             if(mapelSet.length === 0) {
                 tabsContainer.innerHTML = "<span style='font-size:0.8rem; color:var(--text-muted);'>Belum ada materi pelajaran.</span>";
-                document.getElementById('videoSelect').innerHTML = "<option>Tidak ada video tersedia</option>";
+                document.getElementById('playlistContainer').innerHTML = "<div class='no-history'>Tidak ada video tersedia</div>";
                 document.getElementById('videoPlayer').src = "";
                 return;
             }
@@ -433,42 +453,65 @@
                     activeMapel = mapel;
                     document.querySelectorAll('.mapel-tab').forEach(t => t.classList.remove('active'));
                     tab.classList.add('active');
-                    populateVideosForActiveMapel();
+                    renderPlaylistForActiveMapel();
                 };
                 tabsContainer.appendChild(tab);
             });
 
-            populateVideosForActiveMapel();
+            renderPlaylistForActiveMapel();
         }
 
-        function populateVideosForActiveMapel() {
-            let select = document.getElementById('videoSelect');
-            select.innerHTML = "";
+        // RENDER PLAYLIST ALA YOUTUBE BERDASARKAN MAPEL YANG DIPILIH
+        function renderPlaylistForActiveMapel() {
+            let container = document.getElementById('playlistContainer');
+            container.innerHTML = "";
 
             let filteredVideos = studentVideos.filter(v => v.mapel === activeMapel);
+            document.getElementById('playlistCounter').innerText = filteredVideos.length + " Video";
 
             if(filteredVideos.length === 0) {
-                select.innerHTML = "<option>Belum ada video untuk mapel ini</option>";
+                container.innerHTML = "<div class='no-history'>Belum ada video untuk mapel ini.</div>";
                 document.getElementById('videoPlayer').src = "";
+                currentActiveVideoUrl = "";
                 return;
             }
 
-            filteredVideos.forEach(vid => {
-                let opt = document.createElement('option');
-                opt.value = vid.url;
-                opt.innerText = vid.judul;
-                select.appendChild(opt);
+            filteredVideos.forEach((vid, index) => {
+                let fileId = extractDriveId(vid.url);
+                let videoKey = "watched_" + currentStudent.username + "_" + fileId;
+                let isWatched = localStorage.getItem(videoKey) === "true";
+
+                let item = document.createElement('div');
+                item.className = "playlist-item " + (vid.url === currentActiveVideoUrl ? "active" : "");
+                
+                let iconPlayPause = vid.url === currentActiveVideoUrl ? "▶" : (index + 1);
+
+                item.innerHTML = `
+                    <div class="playlist-thumb">${iconPlayPause}</div>
+                    <div class="playlist-info">
+                        <div class="playlist-title">${vid.judul}</div>
+                        <div class="playlist-status ${isWatched ? 'watched' : ''}">
+                            ${isWatched ? '✓ Selesai Ditonton' : 'Belum ditonton'}
+                        </div>
+                    </div>
+                `;
+
+                item.onclick = () => {
+                    loadSelectedVideoData(vid.url);
+                    renderPlaylistForActiveMapel(); // Refresh untuk memperbarui tanda aktif
+                };
+
+                container.appendChild(item);
             });
 
-            loadSelectedVideoData(filteredVideos[0].url);
-        }
-
-        function onVideoChanged() {
-            let selectedUrl = document.getElementById('videoSelect').value;
-            loadSelectedVideoData(selectedUrl);
+            // Putar video pertama secara otomatis jika belum ada yang aktif
+            if (!currentActiveVideoUrl || !filteredVideos.some(v => v.url === currentActiveVideoUrl)) {
+                loadSelectedVideoData(filteredVideos[0].url);
+            }
         }
 
         function loadSelectedVideoData(url) {
+            currentActiveVideoUrl = url;
             let vid = studentVideos.find(v => v.url === url);
             if(!vid) return;
 
@@ -501,8 +544,8 @@
         }
 
         async function toggleLike() {
-            let selectedUrl = document.getElementById('videoSelect').value;
-            let vid = studentVideos.find(v => v.url === selectedUrl);
+            if (!currentActiveVideoUrl) return;
+            let vid = studentVideos.find(v => v.url === currentActiveVideoUrl);
             if(!vid) return;
 
             let fileId = extractDriveId(vid.url);
@@ -572,11 +615,10 @@
             let pesan = input.value.trim();
             if(!pesan) { alert("Pertanyaan tidak boleh kosong!"); return; }
 
-            let selectedUrl = document.getElementById('videoSelect').value;
-            let currentVideo = studentVideos.find(v => v.url === selectedUrl);
+            if (!currentActiveVideoUrl) return;
+            let currentVideo = studentVideos.find(v => v.url === currentActiveVideoUrl);
             if(!currentVideo) return;
 
-            // Aktifkan indikator loading di samping tombol kirim (TIDAK MENGGANGGU VIDEO)
             let submitBtn = document.getElementById('commentSubmitBtn');
             let loadingInd = document.getElementById('commentLoading');
             submitBtn.style.display = 'none';
@@ -601,7 +643,6 @@
                     globalDatabase = await response.json();
                     renderStudentHistory(currentVideo);
                     
-                    // Kembalikan tombol seperti semula
                     submitBtn.style.display = 'block';
                     loadingInd.style.display = 'none';
                     input.disabled = false;
@@ -627,7 +668,7 @@
 
             localStorage.removeItem('elearn_logged_user');
             localStorage.removeItem('elearn_session_token');
-            currentStudent = null; globalDatabase = null;
+            currentStudent = null; globalDatabase = null; currentActiveVideoUrl = "";
             document.getElementById('dashboardSection').style.display = 'none';
             document.getElementById('loginSection').style.display = 'block';
             document.getElementById('userInput').value = '';
