@@ -160,7 +160,7 @@
     <!-- LOADING SPINNER -->
     <div id="loadingOverlay" class="loading-overlay">
         <div class="spinner"></div>
-        <div id="loadingText" class="loading-text">Memproses sistem...</div>
+        <div id="loadingText" class="loading-text">Memproses data...</div>
     </div>
 
     <div class="container">
@@ -199,7 +199,6 @@
             </div>
 
             <div class="video-container-box">
-                <!-- LIBRARY MAPEL TABS -->
                 <div class="mapel-library-section">
                     <label>Pilih Mata Pelajaran (Library)</label>
                     <div id="mapelTabsContainer" class="mapel-tabs"></div>
@@ -246,7 +245,7 @@
     <script>
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwg0JXaoE8aj1LUm-aNReGH83ayPP3uKjAhVXAhI4XY_ZkiX8rkPv-QRNPrxvpA5Gnk/exec';
 
-        let studentVideos = []; // Video yang sesuai kelompok kelas siswa
+        let studentVideos = [];
         let currentStudent = null;
         let globalDatabase = null;
         let activeMapel = "";
@@ -287,7 +286,7 @@
             let savedToken = localStorage.getItem('elearn_session_token');
             
             if (savedUser && savedToken) {
-                showLoading("Memulihkan sesi belajar...");
+                showLoading("Memuat data aplikasi...");
                 try {
                     let response = await fetch(SCRIPT_URL);
                     let data = await response.json();
@@ -335,18 +334,17 @@
                         handleLogout(false); return;
                     }
 
-                    // Sinkronisasi update likes video yang aktif
                     let select = document.getElementById('videoSelect');
                     if(select && select.value !== "") {
-                        let selectedVidUrl = select.value;
-                        let updatedVid = data.video.find(v => v.url === selectedVidUrl);
+                        let selectedUrl = select.value;
+                        let updatedVid = data.video.find(v => v.url === selectedUrl);
                         if (updatedVid) {
                             document.getElementById('likeCount').innerText = updatedVid.likes || 0;
                             renderStudentHistory(updatedVid);
                         }
                     }
                 } catch(e) {}
-            }, 10000);
+            }, 12000);
         }
 
         async function handleLogin() {
@@ -356,7 +354,7 @@
 
             if(!user || !pass) { errDiv.innerText = "Username dan password wajib diisi!"; return; }
             errDiv.innerText = "";
-            showLoading("Memeriksa kredensial akun...");
+            showLoading("Masuk ke sistem...");
 
             try {
                 let response = await fetch(SCRIPT_URL);
@@ -395,19 +393,15 @@
             document.getElementById('classText').innerText = "Kelas: " + (student.kelas || "-");
             document.getElementById('kelompokText').innerText = "Kelompok: " + (student.kelompokKelas.join(', ') || "-");
 
-            // Filter video berdasarkan kelompok kelas bimbingan siswa
             studentVideos = data.video.filter(v => student.kelompokKelas.includes(v.kelompokKelas));
-            
             setupMapelTabs();
             startRealTimeSync(); 
         }
 
-        // MEMBUAT LIBRARY TAB BERDASARKAN MAPEL
         function setupMapelTabs() {
             let tabsContainer = document.getElementById('mapelTabsContainer');
             tabsContainer.innerHTML = "";
 
-            // Ambil daftar mapel unik dari video siswa
             let mapelSet = [...new Set(studentVideos.map(v => v.mapel))];
 
             if(mapelSet.length === 0) {
@@ -417,7 +411,6 @@
                 return;
             }
 
-            // Set default mapel pertama yang aktif
             activeMapel = mapelSet[0];
 
             mapelSet.forEach(mapel => {
@@ -450,7 +443,7 @@
 
             filteredVideos.forEach(vid => {
                 let opt = document.createElement('option');
-                opt.value = vid.url; // Gunakan URL sebagai identifier unik
+                opt.value = vid.url;
                 opt.innerText = vid.judul;
                 select.appendChild(opt);
             });
@@ -571,7 +564,7 @@
             let currentVideo = studentVideos.find(v => v.url === selectedUrl);
             if(!currentVideo) return;
 
-            showLoading("Mengirim pertanyaan ke pengajar...");
+            showLoading("Mengirim pertanyaan...");
 
             try {
                 let payload = {
