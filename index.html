@@ -6,17 +6,13 @@
     <title>Portal E-Learning - Rekaman Kelas</title>
     <style>
         :root {
-            --bg-main: #f8fafc; 
-            --card-bg: #ffffff;
-            --primary: #dc2626; 
-            --primary-hover: #b91c1c;
-            --text-main: #0f172a; 
-            --text-muted: #64748b;
+            --bg-main: #f8fafc; --card-bg: #ffffff;
+            --primary: #dc2626; --primary-hover: #b91c1c;
+            --text-main: #0f172a; --text-muted: #64748b;
             --border-color: #e2e8f0;
             --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
             --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-            --success-color: #10b981; 
-            --warning-color: #f59e0b;
+            --success-color: #10b981; --warning-color: #f59e0b;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -31,86 +27,50 @@
             padding: 12px;
         }
 
-        /* --- SPLASH SCREEN STYLING --- */
+        /* --- SPLASH SCREEN --- */
         #splashScreen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 99999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 99999; transition: opacity 0.5s ease, visibility 0.5s ease;
         }
         .splash-logo-circle {
-            width: 84px; height: 84px;
-            background: rgba(220, 38, 38, 0.15);
-            border: 2px solid var(--primary);
-            border-radius: 28px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2.2rem;
-            color: var(--primary);
-            font-weight: bold;
-            margin-bottom: 20px;
-            box-shadow: 0 0 30px rgba(220, 38, 38, 0.3);
-            animation: pulseLogo 1.5s infinite alternate;
+            width: 84px; height: 84px; background: rgba(220, 38, 38, 0.15);
+            border: 2px solid var(--primary); border-radius: 28px;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 2.2rem; color: var(--primary); font-weight: bold; margin-bottom: 20px;
+            box-shadow: 0 0 30px rgba(220, 38, 38, 0.3); animation: pulseLogo 1.5s infinite alternate;
         }
         @keyframes pulseLogo {
             0% { transform: scale(1); box-shadow: 0 0 20px rgba(220, 38, 38, 0.2); }
             100% { transform: scale(1.05); box-shadow: 0 0 35px rgba(220, 38, 38, 0.4); }
         }
-        .splash-title { color: #ffffff; font-size: 1.25rem; font-weight: bold; letter-spacing: 0.5px; margin-bottom: 6px; }
+        .splash-title { color: #ffffff; font-size: 1.25rem; font-weight: bold; margin-bottom: 6px; }
         .splash-subtitle { color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; }
 
-        .container { 
-            width: 100%; 
-            max-width: 480px; /* Di HP/Mobile tampil compact seperti aplikasi */
-            transition: max-width 0.3s ease;
-        }
+        .container { width: 100%; max-width: 480px; transition: max-width 0.3s ease; }
 
-        /* Adaptif untuk Tablet & PC/Laptop agar tampil lebih luas */
         @media (min-width: 768px) {
             body { padding: 24px; background: #e2e8f0; }
-            .container { max-width: 900px; }
+            .container { max-width: 860px; }
         }
 
-        /* --- KARTU LOGIN & DASHBOARD --- */
-        .login-card { 
-            background: var(--card-bg); 
-            border: 1px solid var(--border-color); 
-            border-radius: 28px; 
-            padding: 36px 24px; 
-            box-shadow: var(--shadow-lg); 
-            width: 100%;
-        }
+        /* --- LOGIN CARD --- */
+        .login-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 28px; padding: 36px 24px; box-shadow: var(--shadow-lg); width: 100%; }
         .login-header { text-align: center; margin-bottom: 28px; }
-        .logo-badge { 
-            display: inline-block; background: rgba(220, 38, 38, 0.08); color: var(--primary); 
-            padding: 6px 16px; border-radius: 50px; font-size: 0.7rem; font-weight: 800; 
-            text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; 
-        }
+        .logo-badge { display: inline-block; background: rgba(220, 38, 38, 0.08); color: var(--primary); padding: 6px 16px; border-radius: 50px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; }
         .login-header h2 { font-size: 1.4rem; font-weight: 800; color: var(--text-main); }
         
         .form-group { margin-bottom: 18px; }
         .form-group label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;}
-        .form-group input { 
-            width: 100%; padding: 14px 16px; background: #f8fafc; border: 1.5px solid var(--border-color); 
-            border-radius: 14px; color: var(--text-main); font-size: 1rem; transition: all 0.2s; 
-        }
+        .form-group input { width: 100%; padding: 14px 16px; background: #f8fafc; border: 1.5px solid var(--border-color); border-radius: 14px; color: var(--text-main); font-size: 1rem; transition: all 0.2s; }
         .form-group input:focus { outline: none; border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.08); }
         
         .password-wrapper { position: relative; display: flex; align-items: center; }
         .password-wrapper input { padding-right: 48px; }
         .toggle-password { position: absolute; right: 12px; background: none; border: none; cursor: pointer; font-size: 1.1rem; color: var(--text-muted); padding: 8px; }
 
-        .btn { 
-            width: 100%; padding: 14px; background: var(--primary); color: #ffffff; border: none; 
-            border-radius: 14px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.2s; 
-            margin-top: 10px; box-shadow: 0 6px 16px rgba(220, 38, 38, 0.25); 
-        }
+        .btn { width: 100%; padding: 14px; background: var(--primary); color: #ffffff; border: none; border-radius: 14px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.2s; margin-top: 10px; box-shadow: 0 6px 16px rgba(220, 38, 38, 0.25); }
         .btn:active { transform: scale(0.98); }
         .btn:hover { background: var(--primary-hover); }
         .error-msg { color: var(--primary); font-size: 0.85rem; text-align: center; margin-top: 14px; font-weight: bold; }
@@ -118,37 +78,32 @@
         /* --- LOADING OVERLAY --- */
         .loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; gap: 14px; }
         .spinner { width: 44px; height: 44px; border: 3.5px solid rgba(255, 255, 255, 0.2); border-top: 3.5px solid #ffffff; border-radius: 50%; animation: spin 0.8s linear infinite; }
-        .loading-text { font-size: 0.9rem; font-weight: 700; color: #ffffff; letter-spacing: 0.3px; }
+        .loading-text { font-size: 0.9rem; font-weight: 700; color: #ffffff; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* --- DASHBOARD LAYOUT --- */
+        /* --- DASHBOARD & LIBRARY MAPEL --- */
         .dashboard { display: none; width: 100%; }
         
-        .dash-header { 
-            background: var(--card-bg); padding: 20px; border-radius: 22px; 
-            border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); 
-            margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; 
-        }
+        .dash-header { background: var(--card-bg); padding: 20px; border-radius: 22px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
         .user-info h3 { font-size: 1.1rem; font-weight: 800; color: var(--text-main); }
         .user-info .badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
         .user-info span { font-size: 0.7rem; color: var(--primary); background: rgba(220, 38, 38, 0.08); padding: 4px 10px; border-radius: 50px; font-weight: 700; }
         .logout-btn { background: #fee2e2; color: var(--primary); border: 1px solid #fecaca; padding: 8px 14px; border-radius: 10px; cursor: pointer; font-size: 0.8rem; font-weight: 700; }
 
-        .video-container-box { 
-            background: var(--card-bg); border: 1px solid var(--border-color); 
-            border-radius: 22px; padding: 16px; box-shadow: var(--shadow-lg); 
-        }
-        .select-box { margin-bottom: 14px; }
-        .select-box label { display: block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .select-box select { 
-            width: 100%; padding: 12px 14px; background: #f8fafc; border: 1.5px solid var(--border-color); 
-            border-radius: 12px; color: var(--text-main); font-size: 0.9rem; font-weight: 700; cursor: pointer; outline: none; 
-        }
+        /* LIBRARY MAPEL TABS */
+        .mapel-library-section { margin-bottom: 16px; }
+        .mapel-library-section label { display: block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .mapel-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+        .mapel-tabs::-webkit-scrollbar { display: none; }
+        .mapel-tab { background: #f1f5f9; border: 1px solid var(--border-color); color: var(--text-muted); padding: 8px 16px; border-radius: 50px; font-size: 0.8rem; font-weight: 700; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+        .mapel-tab.active { background: var(--primary); color: #ffffff; border-color: var(--primary); box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2); }
 
-        .video-wrapper { 
-            position: relative; width: 100%; aspect-ratio: 16/9; 
-            background: #000; border-radius: 14px; overflow: hidden; box-shadow: 0 6px 14px rgba(0,0,0,0.1); 
-        }
+        .video-container-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 22px; padding: 16px; box-shadow: var(--shadow-lg); }
+        .select-box { margin-bottom: 14px; }
+        .select-box label { display: block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; }
+        .select-box select { width: 100%; padding: 12px 14px; background: #f8fafc; border: 1.5px solid var(--border-color); border-radius: 12px; color: var(--text-main); font-size: 0.9rem; font-weight: 700; cursor: pointer; outline: none; }
+
+        .video-wrapper { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 14px; overflow: hidden; box-shadow: 0 6px 14px rgba(0,0,0,0.1); }
         .video-wrapper iframe { width: 100%; height: 100%; border: none; }
         .block-popup { position: absolute; top: 0; right: 0; width: 90px; height: 70px; z-index: 2147483647; background: transparent; pointer-events: auto; touch-action: none; }
 
@@ -184,7 +139,6 @@
         
         .footer-note { text-align: center; font-size: 0.7rem; color: var(--text-muted); margin-top: 20px; font-weight: 700; }
 
-        /* --- RESPONSIVE TABLET & DESKTOP LAYOUT --- */
         @media (min-width: 768px) {
             .container { max-width: 820px; }
             .login-card { padding: 44px 40px; }
@@ -245,8 +199,14 @@
             </div>
 
             <div class="video-container-box">
+                <!-- LIBRARY MAPEL TABS -->
+                <div class="mapel-library-section">
+                    <label>Pilih Mata Pelajaran (Library)</label>
+                    <div id="mapelTabsContainer" class="mapel-tabs"></div>
+                </div>
+
                 <div class="select-box">
-                    <label>Pilih Materi Pembelajaran</label>
+                    <label>Pilih Materi Video</label>
                     <select id="videoSelect" onchange="onVideoChanged()"></select>
                 </div>
 
@@ -286,9 +246,10 @@
     <script>
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwg0JXaoE8aj1LUm-aNReGH83ayPP3uKjAhVXAhI4XY_ZkiX8rkPv-QRNPrxvpA5Gnk/exec';
 
-        let cachedVideos = [];
+        let studentVideos = []; // Video yang sesuai kelompok kelas siswa
         let currentStudent = null;
         let globalDatabase = null;
+        let activeMapel = "";
         let realTimeSync = null;
 
         function showLoading(text = "Memproses...") {
@@ -315,13 +276,12 @@
             }
         }
 
-        // --- SPLASH SCREEN HANDLER ---
         window.addEventListener('DOMContentLoaded', async () => {
             setTimeout(() => {
                 let splash = document.getElementById('splashScreen');
                 splash.style.opacity = '0';
                 splash.style.visibility = 'hidden';
-            }, 1200); // Tampilkan splash screen selama 1.2 detik
+            }, 1200);
 
             let savedUser = localStorage.getItem('elearn_logged_user');
             let savedToken = localStorage.getItem('elearn_session_token');
@@ -337,26 +297,19 @@
                     if (student) {
                         if (student.isLocked) {
                             localStorage.removeItem('elearn_logged_user');
-                            hideLoading();
-                            document.getElementById('loginSection').style.display = 'block';
+                            hideLoading(); document.getElementById('loginSection').style.display = 'block';
                             return;
                         }
-                        
                         if (student.token && student.token !== "" && student.token !== savedToken) {
                             alert("Sesi berakhir karena akun ini telah login di perangkat lain.");
-                            handleLogout(false);
-                            hideLoading();
-                            document.getElementById('loginSection').style.display = 'block';
+                            handleLogout(false); hideLoading(); document.getElementById('loginSection').style.display = 'block';
                             return;
                         }
-
                         setupDashboard(student, data);
                     } else {
-                        handleLogout(false);
-                        document.getElementById('loginSection').style.display = 'block';
+                        handleLogout(false); document.getElementById('loginSection').style.display = 'block';
                     }
                 } catch (error) {
-                    console.error("Gagal memulihkan sesi", error);
                     document.getElementById('loginSection').style.display = 'block';
                 } finally {
                     hideLoading();
@@ -368,7 +321,6 @@
 
         function startRealTimeSync() {
             if (realTimeSync) clearInterval(realTimeSync);
-            
             realTimeSync = setInterval(async () => {
                 if (!currentStudent) return;
                 try {
@@ -380,20 +332,18 @@
                     let myToken = localStorage.getItem('elearn_session_token');
                     if (me && me.token && me.token !== "" && me.token !== myToken) {
                         alert("SESI BERAKHIR: Akun Anda terdeteksi login di perangkat lain!");
-                        handleLogout(false);
-                        return;
+                        handleLogout(false); return;
                     }
 
+                    // Sinkronisasi update likes video yang aktif
                     let select = document.getElementById('videoSelect');
                     if(select && select.value !== "") {
-                        let index = select.value;
-                        let currentVideoTitle = cachedVideos[index].judul;
-                        let updatedVid = data.video.find(v => v.judul === currentVideoTitle);
+                        let selectedVidUrl = select.value;
+                        let updatedVid = data.video.find(v => v.url === selectedVidUrl);
                         if (updatedVid) {
-                            cachedVideos[index].likes = updatedVid.likes || 0;
                             document.getElementById('likeCount').innerText = updatedVid.likes || 0;
+                            renderStudentHistory(updatedVid);
                         }
-                        renderStudentHistory(cachedVideos[index]);
                     }
                 } catch(e) {}
             }, 10000);
@@ -414,11 +364,8 @@
                 globalDatabase = data;
 
                 let student = data.siswa.find(s => s.username === user && s.password === pass);
-
                 if(student) {
-                    if (student.isLocked) {
-                        hideLoading(); errDiv.innerText = "Akun Anda terkunci."; return;
-                    }
+                    if (student.isLocked) { hideLoading(); errDiv.innerText = "Akun Anda terkunci."; return; }
 
                     let newSessionToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
                     localStorage.setItem('elearn_logged_user', student.username);
@@ -434,7 +381,7 @@
                     errDiv.innerText = "Username atau Password salah!";
                 }
             } catch (error) {
-                errDiv.innerText = "Gagal terhubung ke server sistem.";
+                errDiv.innerText = "Gagal terhubung ke server.";
             } finally {
                 hideLoading();
             }
@@ -448,41 +395,77 @@
             document.getElementById('classText').innerText = "Kelas: " + (student.kelas || "-");
             document.getElementById('kelompokText').innerText = "Kelompok: " + (student.kelompokKelas.join(', ') || "-");
 
-            let allowedVideos = data.video.filter(v => student.kelompokKelas.includes(v.kelompokKelas));
-            setupVideoSelector(allowedVideos);
+            // Filter video berdasarkan kelompok kelas bimbingan siswa
+            studentVideos = data.video.filter(v => student.kelompokKelas.includes(v.kelompokKelas));
             
+            setupMapelTabs();
             startRealTimeSync(); 
         }
 
-        function setupVideoSelector(videos) {
-            cachedVideos = videos;
-            let select = document.getElementById('videoSelect');
-            select.innerHTML = "";
+        // MEMBUAT LIBRARY TAB BERDASARKAN MAPEL
+        function setupMapelTabs() {
+            let tabsContainer = document.getElementById('mapelTabsContainer');
+            tabsContainer.innerHTML = "";
 
-            if(videos.length === 0) {
-                select.innerHTML = "<option>Belum ada rekaman video untuk kelompok kelas Anda</option>";
+            // Ambil daftar mapel unik dari video siswa
+            let mapelSet = [...new Set(studentVideos.map(v => v.mapel))];
+
+            if(mapelSet.length === 0) {
+                tabsContainer.innerHTML = "<span style='font-size:0.8rem; color:var(--text-muted);'>Belum ada materi pelajaran.</span>";
+                document.getElementById('videoSelect').innerHTML = "<option>Tidak ada video tersedia</option>";
                 document.getElementById('videoPlayer').src = "";
                 return;
             }
 
-            videos.forEach((vid, index) => {
+            // Set default mapel pertama yang aktif
+            activeMapel = mapelSet[0];
+
+            mapelSet.forEach(mapel => {
+                let tab = document.createElement('button');
+                tab.className = "mapel-tab " + (mapel === activeMapel ? "active" : "");
+                tab.innerText = mapel;
+                tab.onclick = () => {
+                    activeMapel = mapel;
+                    document.querySelectorAll('.mapel-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    populateVideosForActiveMapel();
+                };
+                tabsContainer.appendChild(tab);
+            });
+
+            populateVideosForActiveMapel();
+        }
+
+        function populateVideosForActiveMapel() {
+            let select = document.getElementById('videoSelect');
+            select.innerHTML = "";
+
+            let filteredVideos = studentVideos.filter(v => v.mapel === activeMapel);
+
+            if(filteredVideos.length === 0) {
+                select.innerHTML = "<option>Belum ada video untuk mapel ini</option>";
+                document.getElementById('videoPlayer').src = "";
+                return;
+            }
+
+            filteredVideos.forEach(vid => {
                 let opt = document.createElement('option');
-                opt.value = index;
-                opt.innerText = "[" + vid.kelompokKelas + "] " + vid.judul;
+                opt.value = vid.url; // Gunakan URL sebagai identifier unik
+                opt.innerText = vid.judul;
                 select.appendChild(opt);
             });
 
-            loadSelectedVideoData(0);
+            loadSelectedVideoData(filteredVideos[0].url);
         }
 
         function onVideoChanged() {
-            let index = document.getElementById('videoSelect').value;
-            loadSelectedVideoData(index);
+            let selectedUrl = document.getElementById('videoSelect').value;
+            loadSelectedVideoData(selectedUrl);
         }
 
-        function loadSelectedVideoData(index) {
-            if(!cachedVideos[index]) return;
-            let vid = cachedVideos[index];
+        function loadSelectedVideoData(url) {
+            let vid = studentVideos.find(v => v.url === url);
+            if(!vid) return;
 
             let fileId = extractDriveId(vid.url);
             document.getElementById('videoPlayer').src = "https://drive.google.com/file/d/" + fileId + "/preview";
@@ -513,10 +496,11 @@
         }
 
         async function toggleLike() {
-            let index = document.getElementById('videoSelect').value;
-            let vid = cachedVideos[index];
+            let selectedUrl = document.getElementById('videoSelect').value;
+            let vid = studentVideos.find(v => v.url === selectedUrl);
+            if(!vid) return;
+
             let fileId = extractDriveId(vid.url);
-            
             let likedKey = "liked_" + currentStudent.username + "_" + fileId;
             let isLiked = localStorage.getItem(likedKey) === "true";
             let isAdd = !isLiked;
@@ -546,12 +530,10 @@
                 return;
             }
 
-            let targetJudul = "[" + currentVideo.kelompokKelas + "] " + currentVideo.judul;
-            
             let myComments = globalDatabase.komentar.filter(k => {
                 if (!k.namaSiswa || !k.judulVideo) return false;
                 return k.namaSiswa.toLowerCase().trim() === currentStudent.nama.toLowerCase().trim() && 
-                       k.judulVideo.trim() === targetJudul.trim();
+                       k.judulVideo.trim() === currentVideo.judul.trim();
             });
 
             if (myComments.length === 0) {
@@ -585,8 +567,9 @@
             let pesan = input.value.trim();
             if(!pesan) { alert("Pertanyaan tidak boleh kosong!"); return; }
 
-            let index = document.getElementById('videoSelect').value;
-            let currentVideo = cachedVideos[index];
+            let selectedUrl = document.getElementById('videoSelect').value;
+            let currentVideo = studentVideos.find(v => v.url === selectedUrl);
+            if(!currentVideo) return;
 
             showLoading("Mengirim pertanyaan ke pengajar...");
 
@@ -594,7 +577,7 @@
                 let payload = {
                     action: "comment",
                     nama: currentStudent.nama,
-                    judulVideo: "[" + currentVideo.kelompokKelas + "] " + currentVideo.judul,
+                    judulVideo: currentVideo.judul,
                     pesan: pesan
                 };
                 await fetch(SCRIPT_URL, {
