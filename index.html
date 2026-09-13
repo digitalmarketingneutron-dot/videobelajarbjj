@@ -90,7 +90,6 @@
         .user-info span { font-size: 0.7rem; color: var(--primary); background: rgba(220, 38, 38, 0.08); padding: 4px 10px; border-radius: 50px; font-weight: 700; }
         .logout-btn { background: #fee2e2; color: var(--primary); border: 1px solid #fecaca; padding: 8px 14px; border-radius: 10px; cursor: pointer; font-size: 0.8rem; font-weight: 700; }
 
-        /* LIBRARY MAPEL TABS */
         .mapel-library-section { margin-bottom: 16px; }
         .mapel-library-section label { display: block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
         .mapel-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
@@ -124,9 +123,15 @@
 
         .comment-section { margin-top: 16px; }
         .comment-section h4 { font-size: 0.9rem; font-weight: 800; margin-bottom: 8px; color: var(--text-main); }
-        .comment-box { display: flex; gap: 8px; margin-bottom: 16px; }
+        
+        .comment-box { display: flex; gap: 8px; margin-bottom: 16px; align-items: center; }
         .comment-box input { flex: 1; padding: 12px 14px; background: #f8fafc; border: 1.5px solid var(--border-color); border-radius: 12px; font-size: 0.85rem; }
-        .comment-btn { background: var(--primary); color: #fff; border: none; padding: 0 18px; border-radius: 12px; font-weight: 700; cursor: pointer; }
+        .comment-btn-wrapper { display: flex; align-items: center; gap: 8px; }
+        .comment-btn { background: var(--primary); color: #fff; border: none; padding: 12px 18px; border-radius: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+        
+        /* Indikator Loading khusus di samping tombol kirim */
+        .comment-loading { display: none; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); }
+        .comment-spinner { width: 16px; height: 16px; border: 2px solid var(--border-color); border-top: 2px solid var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
 
         .history-list { display: flex; flex-direction: column; gap: 10px; max-height: 240px; overflow-y: auto; padding-right: 2px; }
         .history-card { background: #f8fafc; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; font-size: 0.8rem; }
@@ -157,7 +162,7 @@
         <div class="splash-subtitle">Sistem Rekaman Kelas</div>
     </div>
 
-    <!-- LOADING SPINNER -->
+    <!-- LOADING SPINNER UTAMA (Hanya untuk Login/Sesi) -->
     <div id="loadingOverlay" class="loading-overlay">
         <div class="spinner"></div>
         <div id="loadingText" class="loading-text">Memproses data...</div>
@@ -229,7 +234,14 @@
                     <h4>Forum Diskusi dan Tanya Jawab</h4>
                     <div class="comment-box">
                         <input type="text" id="commentInput" placeholder="Tulis pertanyaan seputar materi video ini...">
-                        <button class="comment-btn" onclick="sendCommentToSheet()">Kirim</button>
+                        <div class="comment-btn-wrapper">
+                            <button id="commentSubmitBtn" class="comment-btn" onclick="sendCommentToSheet()">Kirim</button>
+                            <!-- Indikator loading khusus di samping tombol kirim -->
+                            <div id="commentLoading" class="comment-loading">
+                                <div class="comment-spinner"></div>
+                                <span>Mengirim...</span>
+                            </div>
+                        </div>
                     </div>
 
                     <h4>Riwayat Pertanyaan Anda</h4>
@@ -564,7 +576,12 @@
             let currentVideo = studentVideos.find(v => v.url === selectedUrl);
             if(!currentVideo) return;
 
-            showLoading("Mengirim pertanyaan...");
+            // Aktifkan indikator loading di samping tombol kirim (TIDAK MENGGANGGU VIDEO)
+            let submitBtn = document.getElementById('commentSubmitBtn');
+            let loadingInd = document.getElementById('commentLoading');
+            submitBtn.style.display = 'none';
+            loadingInd.style.display = 'flex';
+            input.disabled = true;
 
             try {
                 let payload = {
@@ -583,12 +600,18 @@
                     let response = await fetch(SCRIPT_URL);
                     globalDatabase = await response.json();
                     renderStudentHistory(currentVideo);
-                    hideLoading();
-                    alert("Pertanyaan berhasil terkirim!");
+                    
+                    // Kembalikan tombol seperti semula
+                    submitBtn.style.display = 'block';
+                    loadingInd.style.display = 'none';
+                    input.disabled = false;
                 }, 1500);
 
             } catch (error) {
-                hideLoading(); alert("Gagal mengirim pertanyaan. Silakan coba lagi.");
+                alert("Gagal mengirim pertanyaan. Silakan coba lagi.");
+                submitBtn.style.display = 'block';
+                loadingInd.style.display = 'none';
+                input.disabled = false;
             }
         }
 
