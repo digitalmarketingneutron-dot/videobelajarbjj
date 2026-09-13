@@ -19,7 +19,8 @@
             --warning-color: #f59e0b;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        /* PERBAIKAN UTAMA: Menggunakan Arial agar aman dari konflik font simbol */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; }
 
         body {
             background-color: var(--bg-main);
@@ -51,15 +52,15 @@
             padding: 6px 16px;
             border-radius: 50px;
             font-size: 0.75rem;
-            font-weight: 700;
+            font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             margin-bottom: 12px;
         }
-        .login-header h2 { font-size: 1.5rem; color: var(--text-main); font-weight: 800; }
+        .login-header h2 { font-size: 1.5rem; color: var(--text-main); font-weight: bold; }
 
         .form-group { margin-bottom: 18px; }
-        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: bold; color: var(--text-muted); margin-bottom: 6px; }
         .form-group input {
             width: 100%;
             padding: 12px 16px;
@@ -79,7 +80,7 @@
             color: #ffffff;
             border: none;
             border-radius: 12px;
-            font-weight: 600;
+            font-weight: bold;
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.2s;
@@ -88,7 +89,7 @@
         }
         .btn:hover { background: var(--primary-hover); }
 
-        .error-msg { color: var(--primary); font-size: 0.85rem; text-align: center; margin-top: 14px; font-weight: 600; }
+        .error-msg { color: var(--primary); font-size: 0.85rem; text-align: center; margin-top: 14px; font-weight: bold; }
 
         .loading-overlay {
             display: none;
@@ -109,7 +110,7 @@
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
-        .loading-text { font-size: 0.9rem; font-weight: 600; color: #ffffff; }
+        .loading-text { font-size: 0.9rem; font-weight: bold; color: #ffffff; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         .dashboard { display: none; }
@@ -127,17 +128,17 @@
             flex-wrap: wrap;
             gap: 12px;
         }
-        .user-info h3 { font-size: 1.15rem; color: var(--text-main); font-weight: 800; }
+        .user-info h3 { font-size: 1.15rem; color: var(--text-main); font-weight: bold; }
         .user-info span { 
             font-size: 0.75rem; color: var(--primary); background: rgba(220, 38, 38, 0.08); 
-            padding: 4px 12px; border-radius: 50px; display: inline-block; margin-top: 6px; font-weight: 700; 
+            padding: 4px 12px; border-radius: 50px; display: inline-block; margin-top: 6px; font-weight: bold; 
         }
         
         .logout-btn {
             background: #fee2e2; color: var(--primary);
             border: 1px solid #fecaca;
             padding: 8px 16px; border-radius: 10px;
-            cursor: pointer; font-size: 0.85rem; font-weight: 700;
+            cursor: pointer; font-size: 0.85rem; font-weight: bold;
             transition: all 0.2s;
         }
         .logout-btn:hover { background: #fecaca; }
@@ -151,11 +152,11 @@
         }
 
         .select-box { margin-bottom: 16px; }
-        .select-box label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .select-box label { display: block; font-size: 0.8rem; font-weight: bold; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
         .select-box select {
             width: 100%; padding: 12px 16px;
             background: #f8fafc; border: 1px solid var(--border-color);
-            border-radius: 12px; color: var(--text-main); font-size: 0.95rem; font-weight: 600; outline: none; cursor: pointer;
+            border-radius: 12px; color: var(--text-main); font-size: 0.95rem; font-weight: bold; outline: none; cursor: pointer;
         }
 
         .video-wrapper {
@@ -197,7 +198,7 @@
             padding: 10px 16px;
             border-radius: 10px;
             font-size: 0.85rem;
-            font-weight: 700;
+            font-weight: bold;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
@@ -213,7 +214,7 @@
             flex-wrap: wrap; gap: 10px;
         }
         .status-badge {
-            font-size: 0.8rem; font-weight: 700; padding: 5px 14px; border-radius: 50px;
+            font-size: 0.8rem; font-weight: bold; padding: 5px 14px; border-radius: 50px;
             background: #f1f5f9; color: var(--text-muted); display: inline-flex; align-items: center; gap: 6px;
         }
         .status-badge.watched { background: rgba(16, 185, 129, 0.1); color: var(--success-color); }
@@ -221,7 +222,7 @@
         .action-buttons { display: flex; gap: 10px; }
         .action-btn {
             background: #f8fafc; border: 1px solid var(--border-color);
-            padding: 6px 16px; border-radius: 10px; font-size: 0.85rem; font-weight: 700;
+            padding: 6px 16px; border-radius: 10px; font-size: 0.85rem; font-weight: bold;
             color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 6px;
             transition: all 0.2s;
         }
@@ -229,7 +230,7 @@
         .action-btn.liked { background: rgba(220, 38, 38, 0.08); color: var(--primary); border-color: rgba(220, 38, 38, 0.2); }
 
         .comment-section { margin-top: 20px; }
-        .comment-section h4 { font-size: 0.95rem; font-weight: 800; color: var(--text-main); margin-bottom: 10px; }
+        .comment-section h4 { font-size: 0.95rem; font-weight: bold; color: var(--text-main); margin-bottom: 10px; }
         
         .comment-box { display: flex; gap: 8px; margin-bottom: 20px; }
         .comment-box input {
@@ -240,7 +241,7 @@
         .comment-box input:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.08); }
         .comment-btn {
             background: var(--primary); color: #fff; border: none; padding: 0 20px;
-            border-radius: 12px; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+            border-radius: 12px; font-size: 0.9rem; font-weight: bold; cursor: pointer; transition: all 0.2s;
             box-shadow: 0 4px 10px rgba(220, 38, 38, 0.25);
         }
         .comment-btn:hover { background: var(--primary-hover); }
@@ -251,20 +252,20 @@
             border-radius: 14px; padding: 14px 16px; font-size: 0.85rem;
             box-shadow: var(--shadow-sm);
         }
-        .history-card .time { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; }
-        .history-card .question { color: var(--text-main); font-weight: 600; margin-bottom: 8px; line-height: 1.4; }
+        .history-card .time { font-size: 0.7rem; font-weight: bold; color: var(--text-muted); margin-bottom: 4px; }
+        .history-card .question { color: var(--text-main); font-weight: bold; margin-bottom: 8px; line-height: 1.4; }
         .history-card .reply {
             background: rgba(16, 185, 129, 0.08); border-left: 3px solid var(--success-color);
             padding: 10px 12px; border-radius: 0 10px 10px 0; color: #065f46; font-size: 0.8rem; line-height: 1.4;
         }
-        .history-card .reply strong { display: block; margin-bottom: 2px; color: var(--success-color); font-weight: 700; }
+        .history-card .reply strong { display: block; margin-bottom: 2px; color: var(--success-color); font-weight: bold; }
         .history-card .pending-reply {
             background: rgba(245, 158, 11, 0.08); border-left: 3px solid var(--warning-color);
-            padding: 10px 12px; border-radius: 0 10px 10px 0; color: #92400e; font-size: 0.8rem; font-weight: 600;
+            padding: 10px 12px; border-radius: 0 10px 10px 0; color: #92400e; font-size: 0.8rem; font-weight: bold;
         }
-        .no-history { text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 16px; background: #f8fafc; border-radius: 14px; border: 2px dashed var(--border-color); font-weight: 500; }
+        .no-history { text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 16px; background: #f8fafc; border-radius: 14px; border: 2px dashed var(--border-color); font-weight: bold; }
 
-        .footer-note { text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 24px; font-weight: 500; }
+        .footer-note { text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 24px; font-weight: bold; }
     </style>
 </head>
 <body>
