@@ -32,7 +32,7 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 99999; transition: opacity 0.5s ease, visibility 0.5s ease;
+            z-index: 99999; transition: opacity 0.4s ease, visibility 0.4s ease;
         }
         .splash-logo-circle {
             width: 84px; height: 84px; background: rgba(220, 38, 38, 0.15);
@@ -240,9 +240,7 @@
                         <label>Playlist Materi Pembelajaran</label>
                         <span id="playlistCounter" class="playlist-counter">0 Video</span>
                     </div>
-                    <div id="playlistContainer" class="playlist-container">
-                        <!-- Item playlist akan digenerate otomatis di sini -->
-                    </div>
+                    <div id="playlistContainer" class="playlist-container"></div>
                 </div>
 
                 <div class="video-meta-bar">
@@ -309,18 +307,21 @@
             }
         }
 
+        // OPTIMASI: Pengecekan awal dibuat lebih instan tanpa blocking total jika belum login
         window.addEventListener('DOMContentLoaded', async () => {
+            let splash = document.getElementById('splashScreen');
+            
+            // Sembunyikan splash screen lebih cepat (800ms) agar terasa ringan
             setTimeout(() => {
-                let splash = document.getElementById('splashScreen');
                 splash.style.opacity = '0';
                 splash.style.visibility = 'hidden';
-            }, 1200);
+            }, 800);
 
             let savedUser = localStorage.getItem('elearn_logged_user');
             let savedToken = localStorage.getItem('elearn_session_token');
             
             if (savedUser && savedToken) {
-                showLoading("Memuat data aplikasi...");
+                showLoading("Memuat sesi akun...");
                 try {
                     let response = await fetch(SCRIPT_URL);
                     let data = await response.json();
@@ -348,6 +349,7 @@
                     hideLoading();
                 }
             } else {
+                // Jika tidak ada data login lokal, langsung tampilkan form login tanpa fetch server
                 document.getElementById('loginSection').style.display = 'block';
             }
         });
@@ -386,7 +388,7 @@
 
             if(!user || !pass) { errDiv.innerText = "Username dan password wajib diisi!"; return; }
             errDiv.innerText = "";
-            showLoading("Masuk ke sistem...");
+            showLoading("Memverifikasi akun...");
 
             try {
                 let response = await fetch(SCRIPT_URL);
@@ -461,7 +463,6 @@
             renderPlaylistForActiveMapel();
         }
 
-        // RENDER PLAYLIST ALA YOUTUBE BERDASARKAN MAPEL YANG DIPILIH
         function renderPlaylistForActiveMapel() {
             let container = document.getElementById('playlistContainer');
             container.innerHTML = "";
@@ -498,13 +499,12 @@
 
                 item.onclick = () => {
                     loadSelectedVideoData(vid.url);
-                    renderPlaylistForActiveMapel(); // Refresh untuk memperbarui tanda aktif
+                    renderPlaylistForActiveMapel();
                 };
 
                 container.appendChild(item);
             });
 
-            // Putar video pertama secara otomatis jika belum ada yang aktif
             if (!currentActiveVideoUrl || !filteredVideos.some(v => v.url === currentActiveVideoUrl)) {
                 loadSelectedVideoData(filteredVideos[0].url);
             }
