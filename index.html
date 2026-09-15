@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal E-Learning - Rekaman Kelas</title>
+    <title>Portal E-Learning - Rekaman Kelas & Materi</title>
     <style>
         :root {
             --bg-main: #f8fafc; --card-bg: #ffffff;
@@ -99,18 +99,22 @@
 
         .video-container-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 22px; padding: 16px; box-shadow: var(--shadow-lg); }
 
-        .video-wrapper { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 14px; overflow: hidden; box-shadow: 0 6px 14px rgba(0,0,0,0.1); }
-        .video-wrapper iframe { width: 100%; height: 100%; border: none; }
+        /* --- MEDIA VIEWER TABS (VIDEO VS PDF) --- */
+        .media-mode-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+        .mode-tab { flex: 1; background: #f8fafc; border: 1.5px solid var(--border-color); padding: 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); cursor: pointer; text-align: center; transition: all 0.2s; }
+        .mode-tab.active { background: #0f172a; color: #ffffff; border-color: #0f172a; }
+
+        .media-wrapper { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 14px; overflow: hidden; box-shadow: 0 6px 14px rgba(0,0,0,0.1); }
+        .media-wrapper iframe { width: 100%; height: 100%; border: none; }
         .block-popup { position: absolute; top: 0; right: 0; width: 90px; height: 70px; z-index: 2147483647; background: transparent; pointer-events: auto; touch-action: none; }
 
-        .video-wrapper:fullscreen, .video-wrapper:-webkit-full-screen { width: 100vw !important; height: 100vh !important; max-width: none !important; max-height: none !important; aspect-ratio: auto; border-radius: 0; background: #000; display: block; }
-        .video-wrapper:fullscreen iframe, .video-wrapper:-webkit-full-screen iframe { width: 100% !important; height: 100% !important; }
-        .video-wrapper:fullscreen .block-popup, .video-wrapper:-webkit-full-screen .block-popup { position: fixed !important; top: 0 !important; right: 0 !important; width: 130px !important; height: 90px !important; z-index: 2147483647 !important; }
+        .media-wrapper:fullscreen, .media-wrapper:-webkit-full-screen { width: 100vw !important; height: 100vh !important; max-width: none !important; max-height: none !important; aspect-ratio: auto; border-radius: 0; background: #000; display: block; }
+        .media-wrapper:fullscreen iframe, .media-wrapper:-webkit-full-screen iframe { width: 100% !important; height: 100% !important; }
 
         .fullscreen-bar { margin-top: 10px; display: flex; justify-content: flex-end; }
         .fs-btn { background: #0f172a; color: #ffffff; border: none; padding: 10px 14px; border-radius: 10px; font-size: 0.8rem; font-weight: 700; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
 
-        /* --- PLAYLIST STYLING (ALA YOUTUBE) --- */
+        /* --- PLAYLIST STYLING --- */
         .playlist-section { margin-top: 16px; }
         .playlist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .playlist-header label { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
@@ -163,7 +167,7 @@
         @media (min-width: 768px) {
             .container { max-width: 820px; }
             .login-card { padding: 44px 40px; }
-            .video-wrapper { height: 420px; aspect-ratio: 16/9; }
+            .media-wrapper { height: 420px; aspect-ratio: 16/9; }
             .dash-header { padding: 24px; }
             .video-container-box { padding: 24px; }
         }
@@ -225,20 +229,26 @@
                     <div id="mapelTabsContainer" class="mapel-tabs"></div>
                 </div>
 
-                <div class="video-wrapper" id="videoBox">
+                <!-- TOMBOL PILIH TAMPILAN: VIDEO ATAU PDF MATERI -->
+                <div class="media-mode-tabs">
+                    <button id="btnModeVideo" class="mode-tab active" onclick="switchMediaMode('video')">▶ Rekaman Video Kelas</button>
+                    <button id="btnModePdf" class="mode-tab" onclick="switchMediaMode('pdf')">📄 Dokumen Materi (PDF)</button>
+                </div>
+
+                <div class="media-wrapper" id="mediaBox">
                     <div class="block-popup" title="Proteksi Materi"></div>
-                    <iframe id="videoPlayer" src="" allow="autoplay" allowfullscreen></iframe>
+                    <iframe id="mediaPlayer" src="" allow="autoplay" allowfullscreen></iframe>
                 </div>
 
-                <div class="fullscreen-bar">
-                    <button class="fs-btn" onclick="toggleFullscreen()">Perbesar Layar (Full Screen / Landscape)</button>
+                <div class="fullscreen-bar" id="fsBarContainer">
+                    <button class="fs-btn" onclick="toggleFullscreen()">Perbesar Layar (Full Screen)</button>
                 </div>
 
-                <!-- PLAYLIST MATERI VIDEO ALA YOUTUBE -->
+                <!-- PLAYLIST MATERI VIDEO & PDF -->
                 <div class="playlist-section">
                     <div class="playlist-header">
-                        <label>Playlist Materi Pembelajaran</label>
-                        <span id="playlistCounter" class="playlist-counter">0 Video</span>
+                        <label id="playlistLabel">Playlist Materi Pembelajaran</label>
+                        <span id="playlistCounter" class="playlist-counter">0 Item</span>
                     </div>
                     <div id="playlistContainer" class="playlist-container"></div>
                 </div>
@@ -253,7 +263,7 @@
                 <div class="comment-section">
                     <h4>Forum Diskusi dan Tanya Jawab</h4>
                     <div class="comment-box">
-                        <input type="text" id="commentInput" placeholder="Tulis pertanyaan seputar materi video ini...">
+                        <input type="text" id="commentInput" placeholder="Tulis pertanyaan seputar materi ini...">
                         <div class="comment-btn-wrapper">
                             <button id="commentSubmitBtn" class="comment-btn" onclick="sendCommentToSheet()">Kirim</button>
                             <div id="commentLoading" class="comment-loading">
@@ -265,7 +275,7 @@
 
                     <h4>Riwayat Pertanyaan Anda</h4>
                     <div id="historyList" class="history-list">
-                        <div class="no-history">Belum ada riwayat pertanyaan untuk video ini.</div>
+                        <div class="no-history">Belum ada riwayat pertanyaan untuk materi ini.</div>
                     </div>
                 </div>
             </div>
@@ -280,7 +290,8 @@
         let currentStudent = null;
         let globalDatabase = null;
         let activeMapel = "";
-        let currentActiveVideoUrl = "";
+        let currentActiveItemUrl = "";
+        let currentMediaMode = "video"; // "video" atau "pdf"
         let realTimeSync = null;
 
         function showLoading(text = "Memproses...") {
@@ -295,7 +306,7 @@
         }
 
         function toggleFullscreen() {
-            let elem = document.getElementById('videoBox');
+            let elem = document.getElementById('mediaBox');
             if (!document.fullscreenElement) {
                 if (elem.requestFullscreen) elem.requestFullscreen();
                 else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
@@ -307,11 +318,8 @@
             }
         }
 
-        // OPTIMASI: Pengecekan awal dibuat lebih instan tanpa blocking total jika belum login
         window.addEventListener('DOMContentLoaded', async () => {
             let splash = document.getElementById('splashScreen');
-            
-            // Sembunyikan splash screen lebih cepat (800ms) agar terasa ringan
             setTimeout(() => {
                 splash.style.opacity = '0';
                 splash.style.visibility = 'hidden';
@@ -349,7 +357,6 @@
                     hideLoading();
                 }
             } else {
-                // Jika tidak ada data login lokal, langsung tampilkan form login tanpa fetch server
                 document.getElementById('loginSection').style.display = 'block';
             }
         });
@@ -370,8 +377,8 @@
                         handleLogout(false); return;
                     }
 
-                    if (currentActiveVideoUrl !== "") {
-                        let updatedVid = data.video.find(v => v.url === currentActiveVideoUrl);
+                    if (currentActiveItemUrl !== "") {
+                        let updatedVid = data.video.find(v => v.url === currentActiveItemUrl || v.pdfUrl === currentActiveItemUrl);
                         if (updatedVid) {
                             document.getElementById('likeCount').innerText = updatedVid.likes || 0;
                             renderStudentHistory(updatedVid);
@@ -381,73 +388,69 @@
             }, 12000);
         }
 
-async function handleLogin() {
-    let user = document.getElementById('userInput').value.trim();
-    let pass = document.getElementById('passInput').value.trim();
-    let errDiv = document.getElementById('errorMsg');
+        async function handleLogin() {
+            let user = document.getElementById('userInput').value.trim();
+            let pass = document.getElementById('passInput').value.trim();
+            let errDiv = document.getElementById('errorMsg');
 
-    if(!user || !pass) { errDiv.innerText = "Username dan password wajib diisi!"; return; }
-    errDiv.innerText = "";
-    showLoading("Menghubungkan ke server...");
+            if(!user || !pass) { errDiv.innerText = "Username dan password wajib diisi!"; return; }
+            errDiv.innerText = "";
+            showLoading("Menghubungkan ke server...");
 
-    let maxRetries = 3; // Mencoba hingga 3 kali otomatis jika gagal/timeout
-    let attempt = 0;
-    let success = false;
-    let data = null;
+            let maxRetries = 3;
+            let attempt = 0;
+            let success = false;
+            let data = null;
 
-    while (attempt < maxRetries && !success) {
-        try {
-            attempt++;
-            if (attempt > 1) {
-                showLoading(`Mencoba ulang koneksi (${attempt}/${maxRetries})...`);
+            while (attempt < maxRetries && !success) {
+                try {
+                    attempt++;
+                    if (attempt > 1) {
+                        showLoading(`Mencoba ulang koneksi (${attempt}/${maxRetries})...`);
+                    }
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+                    let response = await fetch(SCRIPT_URL, { signal: controller.signal });
+                    clearTimeout(timeoutId);
+
+                    data = await response.json();
+                    globalDatabase = data;
+                    success = true;
+                } catch (error) {
+                    if (attempt >= maxRetries) {
+                        hideLoading();
+                        errDiv.innerText = "Gagal terhubung ke server. Silakan Coba lagi.";
+                        return;
+                    }
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                }
             }
 
-            // Tambahkan timeout controller (10 detik) agar tidak stuck selamanya
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000);
+            try {
+                let student = data.siswa.find(s => s.username === user && s.password === pass);
+                if(student) {
+                    if (student.isLocked) { hideLoading(); errDiv.innerText = "Akun Anda terkunci."; return; }
 
-            let response = await fetch(SCRIPT_URL, { signal: controller.signal });
-            clearTimeout(timeoutId);
+                    let newSessionToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
+                    localStorage.setItem('elearn_logged_user', student.username);
+                    localStorage.setItem('elearn_session_token', newSessionToken);
+                    
+                    fetch(SCRIPT_URL, {
+                        method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: "update_session", username: student.username, token: newSessionToken })
+                    });
 
-            data = await response.json();
-            globalDatabase = data;
-            success = true; // Berhasil mengambil data
-        } catch (error) {
-            if (attempt >= maxRetries) {
+                    setupDashboard(student, data);
+                } else {
+                    errDiv.innerText = "Username atau Password salah!";
+                }
+            } catch (e) {
+                errDiv.innerText = "Terjadi kesalahan sistem saat memproses data.";
+            } finally {
                 hideLoading();
-                errDiv.innerText = "Gagal terhubung ke server. Silakan Coba lagi.";
-                return;
             }
-            // Tunggu 1.5 detik sebelum mencoba ulang
-            await new Promise(resolve => setTimeout(resolve, 1500));
         }
-    }
-
-    // Proses pencarian data siswa setelah koneksi berhasil
-    try {
-        let student = data.siswa.find(s => s.username === user && s.password === pass);
-        if(student) {
-            if (student.isLocked) { hideLoading(); errDiv.innerText = "Akun Anda terkunci."; return; }
-
-            let newSessionToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
-            localStorage.setItem('elearn_logged_user', student.username);
-            localStorage.setItem('elearn_session_token', newSessionToken);
-            
-            fetch(SCRIPT_URL, {
-                method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: "update_session", username: student.username, token: newSessionToken })
-            });
-
-            setupDashboard(student, data);
-        } else {
-            errDiv.innerText = "Username atau Password salah!";
-        }
-    } catch (e) {
-        errDiv.innerText = "Terjadi kesalahan sistem saat memproses data.";
-    } finally {
-        hideLoading();
-    }
-}
 
         function setupDashboard(student, data) {
             currentStudent = student;
@@ -470,8 +473,8 @@ async function handleLogin() {
 
             if(mapelSet.length === 0) {
                 tabsContainer.innerHTML = "<span style='font-size:0.8rem; color:var(--text-muted);'>Belum ada materi pelajaran.</span>";
-                document.getElementById('playlistContainer').innerHTML = "<div class='no-history'>Tidak ada video tersedia</div>";
-                document.getElementById('videoPlayer').src = "";
+                document.getElementById('playlistContainer').innerHTML = "<div class='no-history'>Tidak ada materi tersedia</div>";
+                document.getElementById('mediaPlayer').src = "";
                 return;
             }
 
@@ -493,65 +496,99 @@ async function handleLogin() {
             renderPlaylistForActiveMapel();
         }
 
+        function switchMediaMode(mode) {
+            currentMediaMode = mode;
+            document.getElementById('btnModeVideo').className = "mode-tab " + (mode === 'video' ? "active" : "");
+            document.getElementById('btnModePdf').className = "mode-tab " + (mode === 'pdf' ? "active" : "");
+            
+            let fsBar = document.getElementById('fsBarContainer');
+            if (mode === 'pdf') {
+                fsBar.style.display = 'none';
+            } else {
+                fsBar.style.display = 'flex';
+            }
+
+            renderPlaylistForActiveMapel();
+        }
+
         function renderPlaylistForActiveMapel() {
             let container = document.getElementById('playlistContainer');
             container.innerHTML = "";
 
             let filteredVideos = studentVideos.filter(v => v.mapel === activeMapel);
-            document.getElementById('playlistCounter').innerText = filteredVideos.length + " Video";
+            
+            // Jika mode PDF, filter hanya yang memiliki materi PDF
+            let itemsToDisplay = filteredVideos;
+            if (currentMediaMode === 'pdf') {
+                itemsToDisplay = filteredVideos.filter(v => v.pdfUrl && v.pdfUrl.trim() !== "");
+                document.getElementById('playlistCounter').innerText = itemsToDisplay.length + " Dokumen PDF";
+            } else {
+                document.getElementById('playlistCounter').innerText = itemsToDisplay.length + " Video";
+            }
 
-            if(filteredVideos.length === 0) {
-                container.innerHTML = "<div class='no-history'>Belum ada video untuk mapel ini.</div>";
-                document.getElementById('videoPlayer').src = "";
-                currentActiveVideoUrl = "";
+            if(itemsToDisplay.length === 0) {
+                container.innerHTML = `<div class='no-history'>Belum ada ${currentMediaMode === 'pdf' ? 'dokumen PDF' : 'video'} untuk mapel ini.</div>`;
+                document.getElementById('mediaPlayer').src = "";
+                currentActiveItemUrl = "";
                 return;
             }
 
-            filteredVideos.forEach((vid, index) => {
-                let fileId = extractDriveId(vid.url);
-                let videoKey = "watched_" + currentStudent.username + "_" + fileId;
-                let isWatched = localStorage.getItem(videoKey) === "true";
+            itemsToDisplay.forEach((vid, index) => {
+                let targetUrl = currentMediaMode === 'pdf' ? vid.pdfUrl : vid.url;
+                let fileId = extractDriveId(targetUrl);
+                let itemKey = "viewed_" + currentStudent.username + "_" + fileId;
+                let isViewed = localStorage.getItem(itemKey) === "true";
 
                 let item = document.createElement('div');
-                item.className = "playlist-item " + (vid.url === currentActiveVideoUrl ? "active" : "");
+                item.className = "playlist-item " + (targetUrl === currentActiveItemUrl ? "active" : "");
                 
-                let iconPlayPause = vid.url === currentActiveVideoUrl ? "▶" : (index + 1);
+                let iconSymbol = currentMediaMode === 'pdf' ? "📄" : (targetUrl === currentActiveItemUrl ? "▶" : (index + 1));
 
                 item.innerHTML = `
-                    <div class="playlist-thumb">${iconPlayPause}</div>
+                    <div class="playlist-thumb">${iconSymbol}</div>
                     <div class="playlist-info">
                         <div class="playlist-title">${vid.judul}</div>
-                        <div class="playlist-status ${isWatched ? 'watched' : ''}">
-                            ${isWatched ? '✓ Selesai Ditonton' : 'Belum ditonton'}
+                        <div class="playlist-status ${isViewed ? 'watched' : ''}">
+                            ${isViewed ? (currentMediaMode === 'pdf' ? '✓ Dibaca' : '✓ Selesai Ditonton') : 'Belum dibuka'}
                         </div>
                     </div>
                 `;
 
                 item.onclick = () => {
-                    loadSelectedVideoData(vid.url);
+                    loadSelectedMediaData(targetUrl);
                     renderPlaylistForActiveMapel();
                 };
 
                 container.appendChild(item);
             });
 
-            if (!currentActiveVideoUrl || !filteredVideos.some(v => v.url === currentActiveVideoUrl)) {
-                loadSelectedVideoData(filteredVideos[0].url);
+            if (!currentActiveItemUrl || !itemsToDisplay.some(v => (currentMediaMode === 'pdf' ? v.pdfUrl : v.url) === currentActiveItemUrl)) {
+                let firstTarget = currentMediaMode === 'pdf' ? itemsToDisplay[0].pdfUrl : itemsToDisplay[0].url;
+                loadSelectedMediaData(firstTarget);
             }
         }
 
-        function loadSelectedVideoData(url) {
-            currentActiveVideoUrl = url;
-            let vid = studentVideos.find(v => v.url === url);
+        function loadSelectedMediaData(url) {
+            currentActiveItemUrl = url;
+            let vid = studentVideos.find(v => v.url === url || v.pdfUrl === url);
             if(!vid) return;
 
-            let fileId = extractDriveId(vid.url);
-            document.getElementById('videoPlayer').src = "https://drive.google.com/file/d/" + fileId + "/preview";
+            let fileId = extractDriveId(url);
+            let embedUrl = "";
+
+            if (currentMediaMode === 'pdf') {
+                // Format aman embed PDF Google Drive tanpa tombol download utama
+                embedUrl = "https://drive.google.com/file/d/" + fileId + "/preview?usp=drivesdk";
+            } else {
+                embedUrl = "https://drive.google.com/file/d/" + fileId + "/preview";
+            }
+
+            document.getElementById('mediaPlayer').src = embedUrl;
             document.getElementById('likeCount').innerText = vid.likes || 0;
 
-            let videoKey = "watched_" + currentStudent.username + "_" + fileId;
-            localStorage.setItem(videoKey, "true");
-            updateWatchStatus(true);
+            let itemKey = "viewed_" + currentStudent.username + "_" + fileId;
+            localStorage.setItem(itemKey, "true");
+            updateWatchStatus(true, currentMediaMode === 'pdf');
             
             renderLikeStatus(vid);
             renderStudentHistory(vid);
@@ -564,7 +601,8 @@ async function handleLogin() {
         }
 
         function renderLikeStatus(vid) {
-            let fileId = extractDriveId(vid.url);
+            let targetUrl = currentMediaMode === 'pdf' ? vid.pdfUrl : vid.url;
+            let fileId = extractDriveId(targetUrl);
             let likedKey = "liked_" + currentStudent.username + "_" + fileId;
             let isLiked = localStorage.getItem(likedKey) === "true";
 
@@ -574,11 +612,12 @@ async function handleLogin() {
         }
 
         async function toggleLike() {
-            if (!currentActiveVideoUrl) return;
-            let vid = studentVideos.find(v => v.url === currentActiveVideoUrl);
+            if (!currentActiveItemUrl) return;
+            let vid = studentVideos.find(v => v.url === currentActiveItemUrl || v.pdfUrl === currentActiveItemUrl);
             if(!vid) return;
 
-            let fileId = extractDriveId(vid.url);
+            let targetUrl = currentMediaMode === 'pdf' ? vid.pdfUrl : vid.url;
+            let fileId = extractDriveId(targetUrl);
             let likedKey = "liked_" + currentStudent.username + "_" + fileId;
             let isLiked = localStorage.getItem(likedKey) === "true";
             let isAdd = !isLiked;
@@ -615,7 +654,7 @@ async function handleLogin() {
             });
 
             if (myComments.length === 0) {
-                historyList.innerHTML = "<div class='no-history'>Belum ada riwayat pertanyaan untuk video ini.</div>";
+                historyList.innerHTML = "<div class='no-history'>Belum ada riwayat pertanyaan untuk materi ini.</div>";
                 return;
             }
 
@@ -634,10 +673,12 @@ async function handleLogin() {
             });
         }
 
-        function updateWatchStatus(watched) {
+        function updateWatchStatus(watched, isPdf = false) {
             let badge = document.getElementById('watchStatusBadge');
             badge.className = watched ? "status-badge watched" : "status-badge";
-            badge.innerHTML = watched ? "Status: Selesai Ditonton" : "Status: Belum Ditonton";
+            let labelType = isPdf ? "Dibaca" : "Selesai Ditonton";
+            let labelUnread = isPdf ? "Belum Dibaca" : "Belum Ditonton";
+            badge.innerHTML = watched ? `Status: ${labelType}` : `Status: ${labelUnread}`;
         }
 
         async function sendCommentToSheet() {
@@ -645,8 +686,8 @@ async function handleLogin() {
             let pesan = input.value.trim();
             if(!pesan) { alert("Pertanyaan tidak boleh kosong!"); return; }
 
-            if (!currentActiveVideoUrl) return;
-            let currentVideo = studentVideos.find(v => v.url === currentActiveVideoUrl);
+            if (!currentActiveItemUrl) return;
+            let currentVideo = studentVideos.find(v => v.url === currentActiveItemUrl || v.pdfUrl === currentActiveItemUrl);
             if(!currentVideo) return;
 
             let submitBtn = document.getElementById('commentSubmitBtn');
@@ -698,13 +739,13 @@ async function handleLogin() {
 
             localStorage.removeItem('elearn_logged_user');
             localStorage.removeItem('elearn_session_token');
-            currentStudent = null; globalDatabase = null; currentActiveVideoUrl = "";
+            currentStudent = null; globalDatabase = null; currentActiveItemUrl = "";
             document.getElementById('dashboardSection').style.display = 'none';
             document.getElementById('loginSection').style.display = 'block';
             document.getElementById('userInput').value = '';
             document.getElementById('passInput').value = '';
             document.getElementById('errorMsg').innerText = '';
-            document.getElementById('videoPlayer').src = '';
+            document.getElementById('mediaPlayer').src = '';
         }
 
         document.addEventListener('contextmenu', e => e.preventDefault());
