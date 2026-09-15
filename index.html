@@ -129,16 +129,16 @@
 
         .section-title-small { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
 
-        /* VIDEO & PDF BERSEBELAHAN DI PC/TAB, MENUMPUK DI HP */
+  /* VIDEO & PDF BERSEBELAHAN SECARA DEFAULT DI PC / TABLET */
         .media-pdf-flex-container {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: 1fr; /* Default untuk HP */
             gap: 16px;
         }
 
-        @media (min-width: 992px) {
+        @media (min-width: 768px) {
+            /* Mulai dari ukuran Tablet/PC kecil (768px ke atas), langsung berdampingan */
             .media-pdf-flex-container {
-                display: grid;
                 grid-template-columns: 1fr 1fr;
                 align-items: start;
                 gap: 20px;
