@@ -381,43 +381,73 @@
             }, 12000);
         }
 
-        async function handleLogin() {
-            let user = document.getElementById('userInput').value.trim();
-            let pass = document.getElementById('passInput').value.trim();
-            let errDiv = document.getElementById('errorMsg');
+async function handleLogin() {
+    let user = document.getElementById('userInput').value.trim();
+    let pass = document.getElementById('passInput').value.trim();
+    let errDiv = document.getElementById('errorMsg');
 
-            if(!user || !pass) { errDiv.innerText = "Username dan password wajib diisi!"; return; }
-            errDiv.innerText = "";
-            showLoading("Memverifikasi akun...");
+    if(!user || !pass) { errDiv.innerText = "Username dan password wajib diisi!"; return; }
+    errDiv.innerText = "";
+    showLoading("Menghubungkan ke server...");
 
-            try {
-                let response = await fetch(SCRIPT_URL);
-                let data = await response.json();
-                globalDatabase = data;
+    let maxRetries = 3; // Mencoba hingga 3 kali otomatis jika gagal/timeout
+    let attempt = 0;
+    let success = false;
+    let data = null;
 
-                let student = data.siswa.find(s => s.username === user && s.password === pass);
-                if(student) {
-                    if (student.isLocked) { hideLoading(); errDiv.innerText = "Akun Anda terkunci."; return; }
-
-                    let newSessionToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
-                    localStorage.setItem('elearn_logged_user', student.username);
-                    localStorage.setItem('elearn_session_token', newSessionToken);
-                    
-                    fetch(SCRIPT_URL, {
-                        method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ action: "update_session", username: student.username, token: newSessionToken })
-                    });
-
-                    setupDashboard(student, data);
-                } else {
-                    errDiv.innerText = "Username atau Password salah!";
-                }
-            } catch (error) {
-                errDiv.innerText = "Gagal terhubung ke server.";
-            } finally {
-                hideLoading();
+    while (attempt < maxRetries && !success) {
+        try {
+            attempt++;
+            if (attempt > 1) {
+                showLoading(`Mencoba ulang koneksi (${attempt}/${maxRetries})...`);
             }
+
+            // Tambahkan timeout controller (10 detik) agar tidak stuck selamanya
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+            let response = await fetch(SCRIPT_URL, { signal: controller.signal });
+            clearTimeout(timeoutId);
+
+            data = await response.json();
+            globalDatabase = data;
+            success = true; // Berhasil mengambil data
+        } catch (error) {
+            if (attempt >= maxRetries) {
+                hideLoading();
+                errDiv.innerText = "Gagal terhubung ke server. Silakan Coba lagi.";
+                return;
+            }
+            // Tunggu 1.5 detik sebelum mencoba ulang
+            await new Promise(resolve => setTimeout(resolve, 1500));
         }
+    }
+
+    // Proses pencarian data siswa setelah koneksi berhasil
+    try {
+        let student = data.siswa.find(s => s.username === user && s.password === pass);
+        if(student) {
+            if (student.isLocked) { hideLoading(); errDiv.innerText = "Akun Anda terkunci."; return; }
+
+            let newSessionToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
+            localStorage.setItem('elearn_logged_user', student.username);
+            localStorage.setItem('elearn_session_token', newSessionToken);
+            
+            fetch(SCRIPT_URL, {
+                method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: "update_session", username: student.username, token: newSessionToken })
+            });
+
+            setupDashboard(student, data);
+        } else {
+            errDiv.innerText = "Username atau Password salah!";
+        }
+    } catch (e) {
+        errDiv.innerText = "Terjadi kesalahan sistem saat memproses data.";
+    } finally {
+        hideLoading();
+    }
+}
 
         function setupDashboard(student, data) {
             currentStudent = student;
