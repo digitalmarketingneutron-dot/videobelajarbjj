@@ -52,11 +52,11 @@
 
         @media (min-width: 768px) {
             body { padding: 24px; background: #e2e8f0; }
-            .container { max-width: 860px; }
+            .container { max-width: 1080px; }
         }
 
         /* --- LOGIN CARD --- */
-        .login-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 28px; padding: 36px 24px; box-shadow: var(--shadow-lg); width: 100%; }
+        .login-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 28px; padding: 36px 24px; box-shadow: var(--shadow-lg); width: 100%; max-width: 480px; margin: 0 auto; }
         .login-header { text-align: center; margin-bottom: 28px; }
         .logo-badge { display: inline-block; background: rgba(220, 38, 38, 0.08); color: var(--primary); padding: 6px 16px; border-radius: 50px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; }
         .login-header h2 { font-size: 1.4rem; font-weight: 800; color: var(--text-main); }
@@ -81,7 +81,7 @@
         .loading-text { font-size: 0.9rem; font-weight: 700; color: #ffffff; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* --- DASHBOARD & LIBRARY MAPEL --- */
+        /* --- DASHBOARD & LAYOUT UTAMA --- */
         .dashboard { display: none; width: 100%; }
         
         .dash-header { background: var(--card-bg); padding: 20px; border-radius: 22px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
@@ -90,20 +90,46 @@
         .user-info span { font-size: 0.7rem; color: var(--primary); background: rgba(220, 38, 38, 0.08); padding: 4px 10px; border-radius: 50px; font-weight: 700; }
         .logout-btn { background: #fee2e2; color: var(--primary); border: 1px solid #fecaca; padding: 8px 14px; border-radius: 10px; cursor: pointer; font-size: 0.8rem; font-weight: 700; }
 
-        .mapel-library-section { margin-bottom: 16px; }
+        .mapel-library-section { margin-bottom: 16px; background: var(--card-bg); padding: 16px; border-radius: 22px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); }
         .mapel-library-section label { display: block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
         .mapel-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
         .mapel-tabs::-webkit-scrollbar { display: none; }
         .mapel-tab { background: #f1f5f9; border: 1px solid var(--border-color); color: var(--text-muted); padding: 8px 16px; border-radius: 50px; font-size: 0.8rem; font-weight: 700; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
         .mapel-tab.active { background: var(--primary); color: #ffffff; border-color: var(--primary); box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2); }
 
-        .video-container-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 22px; padding: 16px; box-shadow: var(--shadow-lg); }
+        /* --- MAIN GRID LAYOUT (Playlist di Kiri, Konten di Kanan) --- */
+        .main-content-grid { display: flex; flex-direction: column; gap: 16px; }
+        @media (min-width: 900px) {
+            .main-content-grid { display: grid; grid-template-columns: 320px 1fr; align-items: start; }
+        }
 
-        /* --- MEDIA VIEWER TABS (VIDEO VS PDF) --- */
-        .media-mode-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
-        .mode-tab { flex: 1; background: #f8fafc; border: 1.5px solid var(--border-color); padding: 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); cursor: pointer; text-align: center; transition: all 0.2s; }
-        .mode-tab.active { background: #0f172a; color: #ffffff; border-color: #0f172a; }
+        /* --- PLAYLIST DI SEBELAH KIRI --- */
+        .playlist-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 22px; padding: 18px; box-shadow: var(--shadow-sm); }
+        .playlist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .playlist-header label { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .playlist-counter { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); background: #f1f5f9; padding: 2px 8px; border-radius: 6px; }
+        
+        .playlist-container { display: flex; flex-direction: column; gap: 8px; max-height: 520px; overflow-y: auto; padding-right: 4px; }
+        .playlist-item { display: flex; align-items: center; gap: 12px; background: #f8fafc; border: 1.5px solid var(--border-color); border-radius: 14px; padding: 10px 12px; cursor: pointer; transition: all 0.2s; }
+        .playlist-item:hover { background: #f1f5f9; border-color: #cbd5e1; }
+        .playlist-item.active { background: rgba(220, 38, 38, 0.05); border-color: var(--primary); }
+        
+        .playlist-thumb { width: 34px; height: 34px; border-radius: 10px; background: #e2e8f0; display: flex; justify-content: center; align-items: center; font-size: 0.85rem; flex-shrink: 0; color: var(--text-muted); }
+        .playlist-item.active .playlist-thumb { background: var(--primary); color: #ffffff; box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3); }
 
+        .playlist-info { flex: 1; overflow: hidden; }
+        .playlist-title { font-size: 0.82rem; font-weight: 700; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+        .playlist-item.active .playlist-title { color: var(--primary); }
+        .playlist-status { font-size: 0.68rem; font-weight: 600; color: var(--text-muted); }
+        .playlist-status.watched { color: var(--success-color); }
+
+        /* --- KANAN: VIDEO & PDF & DISKUSI --- */
+        .right-content-area { display: flex; flex-direction: column; gap: 16px; }
+        .video-container-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 22px; padding: 20px; box-shadow: var(--shadow-lg); }
+
+        .section-title-small { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+
+        /* Video Wrapper */
         .media-wrapper { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 14px; overflow: hidden; box-shadow: 0 6px 14px rgba(0,0,0,0.1); }
         .media-wrapper iframe { width: 100%; height: 100%; border: none; }
         .block-popup { position: absolute; top: 0; right: 0; width: 90px; height: 70px; z-index: 2147483647; background: transparent; pointer-events: auto; touch-action: none; }
@@ -112,29 +138,15 @@
         .media-wrapper:fullscreen iframe, .media-wrapper:-webkit-full-screen iframe { width: 100% !important; height: 100% !important; }
 
         .fullscreen-bar { margin-top: 10px; display: flex; justify-content: flex-end; }
-        .fs-btn { background: #0f172a; color: #ffffff; border: none; padding: 10px 14px; border-radius: 10px; font-size: 0.8rem; font-weight: 700; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+        .fs-btn { background: #0f172a; color: #ffffff; border: none; padding: 8px 14px; border-radius: 10px; font-size: 0.78rem; font-weight: 700; cursor: pointer; }
 
-        /* --- PLAYLIST STYLING --- */
-        .playlist-section { margin-top: 16px; }
-        .playlist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .playlist-header label { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-        .playlist-counter { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); background: #f1f5f9; padding: 2px 8px; border-radius: 6px; }
-        
-        .playlist-container { display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto; padding-right: 4px; }
-        .playlist-item { display: flex; align-items: center; gap: 12px; background: #f8fafc; border: 1.5px solid var(--border-color); border-radius: 14px; padding: 10px 14px; cursor: pointer; transition: all 0.2s; }
-        .playlist-item:hover { background: #f1f5f9; border-color: #cbd5e1; }
-        .playlist-item.active { background: rgba(220, 38, 38, 0.05); border-color: var(--primary); }
-        
-        .playlist-thumb { width: 36px; height: 36px; border-radius: 10px; background: #e2e8f0; display: flex; justify-content: center; align-items: center; font-size: 0.9rem; flex-shrink: 0; color: var(--text-muted); }
-        .playlist-item.active .playlist-thumb { background: var(--primary); color: #ffffff; box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3); }
+        /* PDF Viewer Container (Di bawah Video) */
+        .pdf-section-wrapper { margin-top: 18px; display: none; border-top: 1px solid var(--border-color); padding-top: 16px; }
+        .pdf-wrapper { position: relative; width: 100%; height: 450px; background: #f1f5f9; border-radius: 14px; overflow: hidden; border: 1.5px solid var(--border-color); }
+        .pdf-wrapper iframe { width: 100%; height: 100%; border: none; }
+        .pdf-empty-notice { text-align: center; color: var(--text-muted); font-size: 0.82rem; padding: 20px; background: #f8fafc; border-radius: 12px; border: 2px dashed var(--border-color); font-weight: 700; margin-top: 8px; }
 
-        .playlist-info { flex: 1; overflow: hidden; }
-        .playlist-title { font-size: 0.85rem; font-weight: 700; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
-        .playlist-item.active .playlist-title { color: var(--primary); }
-        .playlist-status { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
-        .playlist-status.watched { color: var(--success-color); }
-
-        .video-meta-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; gap: 10px; }
+        .video-meta-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; gap: 10px; }
         .status-badge { font-size: 0.75rem; font-weight: 700; padding: 5px 12px; border-radius: 50px; background: #f1f5f9; color: var(--text-muted); display: inline-flex; align-items: center; gap: 6px; }
         .status-badge.watched { background: rgba(16, 185, 129, 0.1); color: var(--success-color); }
 
@@ -142,7 +154,7 @@
         .action-btn { background: #f8fafc; border: 1px solid var(--border-color); padding: 6px 14px; border-radius: 10px; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
         .action-btn.liked { background: rgba(220, 38, 38, 0.08); color: var(--primary); border-color: rgba(220, 38, 38, 0.2); }
 
-        .comment-section { margin-top: 16px; }
+        .comment-section { margin-top: 18px; }
         .comment-section h4 { font-size: 0.9rem; font-weight: 800; margin-bottom: 8px; color: var(--text-main); }
         
         .comment-box { display: flex; gap: 8px; margin-bottom: 16px; align-items: center; }
@@ -163,14 +175,6 @@
         .no-history { text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 14px; background: #f8fafc; border-radius: 12px; border: 2px dashed var(--border-color); font-weight: 700; }
         
         .footer-note { text-align: center; font-size: 0.7rem; color: var(--text-muted); margin-top: 20px; font-weight: 700; }
-
-        @media (min-width: 768px) {
-            .container { max-width: 820px; }
-            .login-card { padding: 44px 40px; }
-            .media-wrapper { height: 420px; aspect-ratio: 16/9; }
-            .dash-header { padding: 24px; }
-            .video-container-box { padding: 24px; }
-        }
     </style>
 </head>
 <body>
@@ -223,61 +227,79 @@
                 <button class="logout-btn" onclick="handleLogout()">Keluar Akun</button>
             </div>
 
-            <div class="video-container-box">
-                <div class="mapel-library-section">
-                    <label>Pilih Mata Pelajaran (Library)</label>
-                    <div id="mapelTabsContainer" class="mapel-tabs"></div>
-                </div>
+            <div class="mapel-library-section">
+                <label>Pilih Mata Pelajaran (Library)</label>
+                <div id="mapelTabsContainer" class="mapel-tabs"></div>
+            </div>
 
-                <!-- TOMBOL PILIH TAMPILAN: VIDEO ATAU PDF MATERI -->
-                <div class="media-mode-tabs">
-                    <button id="btnModeVideo" class="mode-tab active" onclick="switchMediaMode('video')">▶ Rekaman Video Kelas</button>
-                    <button id="btnModePdf" class="mode-tab" onclick="switchMediaMode('pdf')">📄 Dokumen Materi (PDF)</button>
-                </div>
-
-                <div class="media-wrapper" id="mediaBox">
-                    <div class="block-popup" title="Proteksi Materi"></div>
-                    <iframe id="mediaPlayer" src="" allow="autoplay" allowfullscreen></iframe>
-                </div>
-
-                <div class="fullscreen-bar" id="fsBarContainer">
-                    <button class="fs-btn" onclick="toggleFullscreen()">Perbesar Layar (Full Screen)</button>
-                </div>
-
-                <!-- PLAYLIST MATERI VIDEO & PDF -->
-                <div class="playlist-section">
+            <!-- GRID UTAMA: PLAYLIST DI KIRI, KONTEN DI KANAN -->
+            <div class="main-content-grid">
+                
+                <!-- PLAYLIST DI KIRI -->
+                <div class="playlist-card">
                     <div class="playlist-header">
-                        <label id="playlistLabel">Playlist Materi Pembelajaran</label>
+                        <label>Daftar Materi</label>
                         <span id="playlistCounter" class="playlist-counter">0 Item</span>
                     </div>
                     <div id="playlistContainer" class="playlist-container"></div>
                 </div>
 
-                <div class="video-meta-bar">
-                    <div id="watchStatusBadge" class="status-badge">Status: Belum Ditonton</div>
-                    <div class="action-buttons">
-                        <button id="likeBtn" class="action-btn" onclick="toggleLike()">Suka (<span id="likeCount">0</span>)</button>
-                    </div>
-                </div>
+                <!-- KONTEN UTAMA DI KANAN (VIDEO & PDF) -->
+                <div class="right-content-area">
+                    <div class="video-container-box">
+                        
+                        <!-- Pemutar Video -->
+                        <div class="section-title-small">▶ Rekaman Video Pembelajaran</div>
+                        <div class="media-wrapper" id="mediaBox">
+                            <div class="block-popup" title="Proteksi Video"></div>
+                            <iframe id="mediaPlayer" src="" allow="autoplay" allowfullscreen></iframe>
+                        </div>
 
-                <div class="comment-section">
-                    <h4>Forum Diskusi dan Tanya Jawab</h4>
-                    <div class="comment-box">
-                        <input type="text" id="commentInput" placeholder="Tulis pertanyaan seputar materi ini...">
-                        <div class="comment-btn-wrapper">
-                            <button id="commentSubmitBtn" class="comment-btn" onclick="sendCommentToSheet()">Kirim</button>
-                            <div id="commentLoading" class="comment-loading">
-                                <div class="comment-spinner"></div>
-                                <span>Mengirim...</span>
+                        <div class="fullscreen-bar">
+                            <button class="fs-btn" onclick="toggleFullscreen()">Perbesar Layar (Full Screen)</button>
+                        </div>
+
+                        <!-- Dokumen Materi PDF di Bawah Video (Otomatis Muncul jika ada link) -->
+                        <div id="pdfContainerSection" class="pdf-section-wrapper">
+                            <div class="section-title-small">📄 Dokumen Materi Pembelajaran (PDF)</div>
+                            <div class="pdf-wrapper" id="pdfBox">
+                                <div class="block-popup" title="Proteksi Dokumen"></div>
+                                <iframe id="pdfPlayer" src=""></iframe>
                             </div>
                         </div>
-                    </div>
+                        <div id="pdfEmptyNotice" class="pdf-empty-notice" style="display: none;">Tidak ada dokumen PDF untuk materi ini.</div>
 
-                    <h4>Riwayat Pertanyaan Anda</h4>
-                    <div id="historyList" class="history-list">
-                        <div class="no-history">Belum ada riwayat pertanyaan untuk materi ini.</div>
+                        <!-- Status & Tombol Suka -->
+                        <div class="video-meta-bar">
+                            <div id="watchStatusBadge" class="status-badge">Status: Belum Ditonton</div>
+                            <div class="action-buttons">
+                                <button id="likeBtn" class="action-btn" onclick="toggleLike()">Suka (<span id="likeCount">0</span>)</button>
+                            </div>
+                        </div>
+
+                        <!-- Forum Diskusi & Tanya Jawab -->
+                        <div class="comment-section">
+                            <h4>Forum Diskusi dan Tanya Jawab</h4>
+                            <div class="comment-box">
+                                <input type="text" id="commentInput" placeholder="Tulis pertanyaan seputar materi ini...">
+                                <div class="comment-btn-wrapper">
+                                    <button id="commentSubmitBtn" class="comment-btn" onclick="sendCommentToSheet()">Kirim</button>
+                                    <div id="commentLoading" class="comment-loading">
+                                        <div class="comment-spinner"></div>
+                                        <span>Mengirim...</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h4>Riwayat Pertanyaan Anda</h4>
+                            <div id="historyList" class="history-list">
+                                <div class="no-history">Belum ada riwayat pertanyaan untuk materi ini.</div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
+
             </div>
         </div>
         <div class="footer-note">&copy; 2026 Portal Pembelajaran Terpadu. All rights reserved.</div>
@@ -291,7 +313,6 @@
         let globalDatabase = null;
         let activeMapel = "";
         let currentActiveItemUrl = "";
-        let currentMediaMode = "video"; // "video" atau "pdf"
         let realTimeSync = null;
 
         function showLoading(text = "Memproses...") {
@@ -378,7 +399,7 @@
                     }
 
                     if (currentActiveItemUrl !== "") {
-                        let updatedVid = data.video.find(v => v.url === currentActiveItemUrl || v.pdfUrl === currentActiveItemUrl);
+                        let updatedVid = data.video.find(v => v.url === currentActiveItemUrl);
                         if (updatedVid) {
                             document.getElementById('likeCount').innerText = updatedVid.likes || 0;
                             renderStudentHistory(updatedVid);
@@ -475,6 +496,7 @@
                 tabsContainer.innerHTML = "<span style='font-size:0.8rem; color:var(--text-muted);'>Belum ada materi pelajaran.</span>";
                 document.getElementById('playlistContainer').innerHTML = "<div class='no-history'>Tidak ada materi tersedia</div>";
                 document.getElementById('mediaPlayer').src = "";
+                document.getElementById('pdfPlayer').src = "";
                 return;
             }
 
@@ -496,99 +518,87 @@
             renderPlaylistForActiveMapel();
         }
 
-        function switchMediaMode(mode) {
-            currentMediaMode = mode;
-            document.getElementById('btnModeVideo').className = "mode-tab " + (mode === 'video' ? "active" : "");
-            document.getElementById('btnModePdf').className = "mode-tab " + (mode === 'pdf' ? "active" : "");
-            
-            let fsBar = document.getElementById('fsBarContainer');
-            if (mode === 'pdf') {
-                fsBar.style.display = 'none';
-            } else {
-                fsBar.style.display = 'flex';
-            }
-
-            renderPlaylistForActiveMapel();
-        }
-
         function renderPlaylistForActiveMapel() {
             let container = document.getElementById('playlistContainer');
             container.innerHTML = "";
 
             let filteredVideos = studentVideos.filter(v => v.mapel === activeMapel);
-            
-            // Jika mode PDF, filter hanya yang memiliki materi PDF
-            let itemsToDisplay = filteredVideos;
-            if (currentMediaMode === 'pdf') {
-                itemsToDisplay = filteredVideos.filter(v => v.pdfUrl && v.pdfUrl.trim() !== "");
-                document.getElementById('playlistCounter').innerText = itemsToDisplay.length + " Dokumen PDF";
-            } else {
-                document.getElementById('playlistCounter').innerText = itemsToDisplay.length + " Video";
-            }
+            document.getElementById('playlistCounter').innerText = filteredVideos.length + " Materi";
 
-            if(itemsToDisplay.length === 0) {
-                container.innerHTML = `<div class='no-history'>Belum ada ${currentMediaMode === 'pdf' ? 'dokumen PDF' : 'video'} untuk mapel ini.</div>`;
+            if(filteredVideos.length === 0) {
+                container.innerHTML = `<div class='no-history'>Belum ada materi untuk mapel ini.</div>`;
                 document.getElementById('mediaPlayer').src = "";
+                document.getElementById('pdfPlayer').src = "";
+                document.getElementById('pdfContainerSection').style.display = 'none';
+                document.getElementById('pdfEmptyNotice').style.display = 'block';
                 currentActiveItemUrl = "";
                 return;
             }
 
-            itemsToDisplay.forEach((vid, index) => {
-                let targetUrl = currentMediaMode === 'pdf' ? vid.pdfUrl : vid.url;
-                let fileId = extractDriveId(targetUrl);
+            filteredVideos.forEach((vid, index) => {
+                let fileId = extractDriveId(vid.url);
                 let itemKey = "viewed_" + currentStudent.username + "_" + fileId;
                 let isViewed = localStorage.getItem(itemKey) === "true";
 
                 let item = document.createElement('div');
-                item.className = "playlist-item " + (targetUrl === currentActiveItemUrl ? "active" : "");
+                item.className = "playlist-item " + (vid.url === currentActiveItemUrl ? "active" : "");
                 
-                let iconSymbol = currentMediaMode === 'pdf' ? "📄" : (targetUrl === currentActiveItemUrl ? "▶" : (index + 1));
+                let iconSymbol = vid.url === currentActiveItemUrl ? "▶" : (index + 1);
 
                 item.innerHTML = `
                     <div class="playlist-thumb">${iconSymbol}</div>
                     <div class="playlist-info">
                         <div class="playlist-title">${vid.judul}</div>
                         <div class="playlist-status ${isViewed ? 'watched' : ''}">
-                            ${isViewed ? (currentMediaMode === 'pdf' ? '✓ Dibaca' : '✓ Selesai Ditonton') : 'Belum dibuka'}
+                            ${isViewed ? '✓ Selesai' : 'Belum dibuka'}
                         </div>
                     </div>
                 `;
 
                 item.onclick = () => {
-                    loadSelectedMediaData(targetUrl);
+                    loadSelectedMediaData(vid.url);
                     renderPlaylistForActiveMapel();
                 };
 
                 container.appendChild(item);
             });
 
-            if (!currentActiveItemUrl || !itemsToDisplay.some(v => (currentMediaMode === 'pdf' ? v.pdfUrl : v.url) === currentActiveItemUrl)) {
-                let firstTarget = currentMediaMode === 'pdf' ? itemsToDisplay[0].pdfUrl : itemsToDisplay[0].url;
-                loadSelectedMediaData(firstTarget);
+            if (!currentActiveItemUrl || !filteredVideos.some(v => v.url === currentActiveItemUrl)) {
+                loadSelectedMediaData(filteredVideos[0].url);
             }
         }
 
         function loadSelectedMediaData(url) {
             currentActiveItemUrl = url;
-            let vid = studentVideos.find(v => v.url === url || v.pdfUrl === url);
+            let vid = studentVideos.find(v => v.url === url);
             if(!vid) return;
 
-            let fileId = extractDriveId(url);
-            let embedUrl = "";
-
-            if (currentMediaMode === 'pdf') {
-                // Format aman embed PDF Google Drive tanpa tombol download utama
-                embedUrl = "https://drive.google.com/file/d/" + fileId + "/preview?usp=drivesdk";
-            } else {
-                embedUrl = "https://drive.google.com/file/d/" + fileId + "/preview";
-            }
-
-            document.getElementById('mediaPlayer').src = embedUrl;
+            // Load Video
+            let videoFileId = extractDriveId(vid.url);
+            let embedVideoUrl = "https://drive.google.com/file/d/" + videoFileId + "/preview";
+            document.getElementById('mediaPlayer').src = embedVideoUrl;
             document.getElementById('likeCount').innerText = vid.likes || 0;
 
-            let itemKey = "viewed_" + currentStudent.username + "_" + fileId;
+            // Load PDF Otomatis di bawah video (jika ada)
+            let pdfSec = document.getElementById('pdfContainerSection');
+            let pdfNotice = document.getElementById('pdfEmptyNotice');
+            let pdfPlayer = document.getElementById('pdfPlayer');
+
+            if (vid.pdfUrl && vid.pdfUrl.trim() !== "") {
+                let pdfFileId = extractDriveId(vid.pdfUrl);
+                let embedPdfUrl = "https://drive.google.com/file/d/" + pdfFileId + "/preview?usp=drivesdk";
+                pdfPlayer.src = embedPdfUrl;
+                pdfSec.style.display = 'block';
+                pdfNotice.style.display = 'none';
+            } else {
+                pdfPlayer.src = "";
+                pdfSec.style.display = 'none';
+                pdfNotice.style.display = 'block';
+            }
+
+            let itemKey = "viewed_" + currentStudent.username + "_" + videoFileId;
             localStorage.setItem(itemKey, "true");
-            updateWatchStatus(true, currentMediaMode === 'pdf');
+            updateWatchStatus(true);
             
             renderLikeStatus(vid);
             renderStudentHistory(vid);
@@ -601,8 +611,7 @@
         }
 
         function renderLikeStatus(vid) {
-            let targetUrl = currentMediaMode === 'pdf' ? vid.pdfUrl : vid.url;
-            let fileId = extractDriveId(targetUrl);
+            let fileId = extractDriveId(vid.url);
             let likedKey = "liked_" + currentStudent.username + "_" + fileId;
             let isLiked = localStorage.getItem(likedKey) === "true";
 
@@ -613,11 +622,10 @@
 
         async function toggleLike() {
             if (!currentActiveItemUrl) return;
-            let vid = studentVideos.find(v => v.url === currentActiveItemUrl || v.pdfUrl === currentActiveItemUrl);
+            let vid = studentVideos.find(v => v.url === currentActiveItemUrl);
             if(!vid) return;
 
-            let targetUrl = currentMediaMode === 'pdf' ? vid.pdfUrl : vid.url;
-            let fileId = extractDriveId(targetUrl);
+            let fileId = extractDriveId(vid.url);
             let likedKey = "liked_" + currentStudent.username + "_" + fileId;
             let isLiked = localStorage.getItem(likedKey) === "true";
             let isAdd = !isLiked;
@@ -673,12 +681,10 @@
             });
         }
 
-        function updateWatchStatus(watched, isPdf = false) {
+        function updateWatchStatus(watched) {
             let badge = document.getElementById('watchStatusBadge');
             badge.className = watched ? "status-badge watched" : "status-badge";
-            let labelType = isPdf ? "Dibaca" : "Selesai Ditonton";
-            let labelUnread = isPdf ? "Belum Dibaca" : "Belum Ditonton";
-            badge.innerHTML = watched ? `Status: ${labelType}` : `Status: ${labelUnread}`;
+            badge.innerHTML = watched ? `Status: Selesai Ditonton` : `Status: Belum Ditonton`;
         }
 
         async function sendCommentToSheet() {
@@ -687,7 +693,7 @@
             if(!pesan) { alert("Pertanyaan tidak boleh kosong!"); return; }
 
             if (!currentActiveItemUrl) return;
-            let currentVideo = studentVideos.find(v => v.url === currentActiveItemUrl || v.pdfUrl === currentActiveItemUrl);
+            let currentVideo = studentVideos.find(v => v.url === currentActiveItemUrl);
             if(!currentVideo) return;
 
             let submitBtn = document.getElementById('commentSubmitBtn');
@@ -746,6 +752,7 @@
             document.getElementById('passInput').value = '';
             document.getElementById('errorMsg').innerText = '';
             document.getElementById('mediaPlayer').src = '';
+            document.getElementById('pdfPlayer').src = '';
         }
 
         document.addEventListener('contextmenu', e => e.preventDefault());
