@@ -104,87 +104,21 @@
         .loading-text { font-size: 0.9rem; font-weight: 700; color: #ffffff; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* --- DASHBOARD HEADER --- */
-        .dashboard { display: none; width: 100%; }
-        .dash-header { 
-            background: var(--card-bg); padding: 20px 24px; border-radius: 22px; 
-            border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); 
-            margin-bottom: 16px; display: flex; justify-content: space-between; 
-            align-items: center; flex-wrap: wrap; gap: 12px; position: relative;
-        }
-        .user-info h3 { font-size: 1.15rem; font-weight: 800; color: var(--text-main); }
-        .user-info .badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
-        .user-info span { 
-            font-size: 0.72rem; color: #fda4af; background: rgba(225, 29, 72, 0.15); 
-            padding: 4px 12px; border-radius: 50px; font-weight: 700; border: 1px solid rgba(225, 29, 72, 0.2); 
-        }
-        .header-actions { display: flex; align-items: center; gap: 12px; }
-        
-        /* NOTIFICATIONS */
-        .notif-wrapper { position: relative; }
-        .notif-btn { 
-            background: var(--input-bg); border: 1px solid var(--border-color); padding: 8px; 
-            border-radius: 12px; cursor: pointer; color: var(--text-main); position: relative; 
-            display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
-        }
-        .notif-btn:hover { background: var(--card-hover); }
-        .notif-badge { 
-            position: absolute; top: -4px; right: -4px; background: var(--primary); 
-            color: #fff; font-size: 0.6rem; font-weight: 800; padding: 2px 6px; 
-            border-radius: 50px; border: 2px solid var(--card-bg); display: none;
-        }
-        .notif-dropdown {
-            position: absolute; top: calc(100% + 10px); right: 0; width: 300px; 
-            background: var(--card-bg); border: 1px solid var(--border-color); 
-            border-radius: 16px; box-shadow: var(--shadow-lg); z-index: 100; 
-            display: none; flex-direction: column; overflow: hidden;
-        }
-        .notif-dropdown.show { display: flex; }
-        .notif-header { padding: 12px 16px; border-bottom: 1px solid var(--border-color); font-weight: 800; font-size: 0.9rem; }
-        .notif-list { max-height: 250px; overflow-y: auto; }
-        .notif-item { padding: 12px 16px; border-bottom: 1px solid var(--border-color); transition: 0.2s; cursor: pointer; }
-        .notif-item:hover { background: rgba(255,255,255,0.03); }
-        .notif-item.unread { background: rgba(225, 29, 72, 0.05); border-left: 3px solid var(--primary); }
-        .notif-time { font-size: 0.65rem; color: var(--text-muted); font-weight: 700; margin-bottom: 4px; }
-        .notif-text { font-size: 0.8rem; color: var(--text-main); line-height: 1.4; }
-        .notif-empty { padding: 20px; text-align: center; color: var(--text-muted); font-size: 0.8rem; font-weight: 700; }
-
-        .logout-btn { 
-            background: rgba(225, 29, 72, 0.1); color: #fda4af; border: 1px solid rgba(225, 29, 72, 0.3); 
-            padding: 8px 16px; border-radius: 12px; cursor: pointer; font-size: 0.8rem; font-weight: 700; transition: all 0.2s; 
-        }
-        .logout-btn:hover { background: var(--primary); color: #ffffff; }
-
-        /* --- TAB NAVIGATION --- */
-        .dash-nav {
-            display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px;
-        }
-        .dash-nav::-webkit-scrollbar { height: 4px; }
-        .dash-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
-        .tab-btn {
-            background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-muted);
-            padding: 12px 24px; border-radius: 16px; font-weight: 700; font-size: 0.85rem; cursor: pointer;
-            transition: all 0.3s; white-space: nowrap; box-shadow: var(--shadow-sm);
-        }
-        .tab-btn:hover { background: var(--card-hover); color: var(--text-main); }
-        .tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4); }
-
         /* --- TAB CONTENT SECTIONS --- */
-        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; margin-top: 20px; padding: 0 15px; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- TAB 1: RUANG BELAJAR (Kiri-Kanan) --- */
+        /* --- TAB 1: RUANG BELAJAR --- */
         .main-content-grid { display: flex; flex-direction: column; gap: 16px; }
         @media (min-width: 900px) { .main-content-grid { display: grid; grid-template-columns: 340px 1fr; align-items: start; } }
 
-        /* Playlist & Folder Styles (Tetap sama) */
         .playlist-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 22px; padding: 20px; box-shadow: var(--shadow-sm); }
         .playlist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
         .playlist-header label { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
         .playlist-counter { font-size: 0.72rem; font-weight: 700; color: var(--text-muted); background: var(--input-bg); padding: 3px 10px; border-radius: 6px; border: 1px solid var(--border-color); }
         .playlist-container { display: flex; flex-direction: column; gap: 10px; max-height: 600px; overflow-y: auto; padding-right: 4px; }
-        .folder-root { border: 1px solid var(--border-color); border-radius: 14px; overflow: hidden; background: var(--input-bg); }
+        .folder-root { border: 1px solid var(--border-color); border-radius: 14px; overflow: hidden; background: var(--input-bg); margin-bottom: 8px; }
         .folder-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; cursor: pointer; background: rgba(255, 255, 255, 0.03); transition: background 0.2s; user-select: none; }
         .folder-header:hover { background: var(--card-hover); }
         .folder-title { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 0.85rem; color: var(--text-main); }
@@ -203,14 +137,11 @@
         .playlist-status { font-size: 0.65rem; font-weight: 600; color: var(--text-muted); }
         .playlist-status.watched { color: var(--success-color); }
 
-        /* Video Area Styles (Tetap sama) */
         .right-content-area { display: flex; flex-direction: column; gap: 16px; }
         .video-container-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 22px; padding: 20px; box-shadow: var(--shadow-lg); }
         .section-title-small { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
         .media-wrapper { position: relative; width: 100%; aspect-ratio: 16/9; background: #000000; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border: 1px solid var(--border-color); }
         .media-wrapper iframe { width: 100%; height: 100%; border: none; }
-        .block-popup { position: absolute; top: 0; right: 0; width: 90px; height: 70px; z-index: 2147483647; background: transparent; pointer-events: auto; touch-action: none; }
-        .media-wrapper:fullscreen, .media-wrapper:-webkit-full-screen { width: 100vw !important; height: 100vh !important; aspect-ratio: auto; border-radius: 0; }
         .fullscreen-bar { margin-top: 12px; display: flex; justify-content: flex-end; }
         .fs-btn { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 10px; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
         .fs-btn:hover { background: var(--card-hover); border-color: rgba(255,255,255,0.2); }
@@ -236,7 +167,6 @@
         .comment-btn { background: var(--primary); color: #fff; border: none; padding: 12px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: 0.2s; }
         .comment-btn:hover { background: var(--primary-hover); }
         .comment-loading { display: none; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); }
-        .comment-spinner { width: 16px; height: 16px; border: 2px solid var(--border-color); border-top: 2px solid var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
         .history-list { display: flex; flex-direction: column; gap: 10px; max-height: 260px; overflow-y: auto; padding-right: 2px; }
         .history-card { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 14px; padding: 14px; font-size: 0.8rem; }
         .history-card .time { font-size: 0.65rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; }
@@ -246,12 +176,11 @@
         .history-card .pending-reply { background: rgba(245, 158, 11, 0.1); border-left: 3px solid var(--warning-color); padding: 10px 12px; border-radius: 0 10px 10px 0; color: #fde68a; font-size: 0.78rem; font-weight: 700; }
         .no-history { text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 16px; background: rgba(255, 255, 255, 0.02); border-radius: 14px; border: 2px dashed var(--border-color); font-weight: 700; }
 
-        /* --- TAB 2: AKADEMIK (NILAI & ABSENSI) --- */
+        /* --- TAB 2 & 3: AKADEMIK & INFORMASI --- */
         .akademik-grid { display: flex; flex-direction: column; gap: 20px; }
         .akademik-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 22px; padding: 24px; box-shadow: var(--shadow-sm); }
         .akademik-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 16px; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
         
-        /* Stat Cards for Absensi */
         .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 20px; }
         .stat-card { background: var(--input-bg); border: 1px solid var(--border-color); padding: 16px; border-radius: 16px; text-align: center; }
         .stat-val { font-size: 1.8rem; font-weight: 800; margin-bottom: 4px; }
@@ -261,7 +190,6 @@
         .val-sakit { color: var(--warning-color); }
         .val-alpa { color: var(--danger-color); }
 
-        /* Grades Table */
         .table-responsive { overflow-x: auto; }
         .grades-table { width: 100%; border-collapse: collapse; min-width: 500px; }
         .grades-table th, .grades-table td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; }
@@ -274,45 +202,43 @@
         .grade-c { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
         .grade-d { background: rgba(239, 68, 68, 0.15); color: #f87171; }
 
-        /* --- TAB 3: INFORMASI --- */
         .info-grid { display: flex; flex-direction: column; gap: 16px; }
-        .info-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 18px; padding: 20px; transition: transform 0.2s; position: relative; overflow: hidden; }
-        .info-card:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.15); }
+        .info-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 18px; padding: 20px; position: relative; overflow: hidden; }
         .info-card::before { content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%; background: var(--primary); }
         .info-card.urgent::before { background: var(--warning-color); }
         .info-header { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center; }
         .info-date { font-size: 0.7rem; font-weight: 800; color: var(--primary); background: rgba(225, 29, 72, 0.1); padding: 4px 10px; border-radius: 50px; }
-        .info-card.urgent .info-date { color: var(--warning-color); background: rgba(245, 158, 11, 0.1); }
         .info-title { font-size: 1rem; font-weight: 800; color: var(--text-main); margin-bottom: 8px; line-height: 1.4; }
         .info-body { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
 
         .footer-note { text-align: center; font-size: 0.72rem; color: var(--text-muted); margin-top: 30px; font-weight: 700; padding-bottom: 20px;}
+
         /* --- TAMPILAN DASHBOARD MOBILE --- */
-#dashboardSection { background: #ffffff; padding: 0; min-height: 100vh; position: relative; padding-bottom: 80px; }
-.mobile-header { background: #2E75B6; padding: 40px 20px 30px; border-radius: 0 0 50px 50px; text-align: center; color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-.mobile-header h2 { font-size: 1.1rem; font-weight: 500; margin-bottom: 15px; }
-.profile-img { width: 90px; height: 90px; border-radius: 50%; border: 4px solid #fff; margin-bottom: 10px; background: #eee; }
-.mobile-header h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 5px; }
-.mobile-header p { font-size: 0.8rem; text-transform: uppercase; color: rgba(255,255,255,0.8); letter-spacing: 1px; }
+        #dashboardSection { background: #ffffff; padding: 0; min-height: 100vh; position: relative; padding-bottom: 80px; }
+        .mobile-header { background: #2E75B6; padding: 40px 20px 30px; border-radius: 0 0 50px 50px; text-align: center; color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .mobile-header h2 { font-size: 1.1rem; font-weight: 500; margin-bottom: 15px; }
+        .profile-img { width: 90px; height: 90px; border-radius: 50%; border: 4px solid #fff; margin-bottom: 10px; background: #eee; }
+        .mobile-header h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 5px; }
+        .mobile-header p { font-size: 0.8rem; text-transform: uppercase; color: rgba(255,255,255,0.8); letter-spacing: 1px; }
 
-.time-section { text-align: center; margin: 25px 0 15px; }
-.time-section h4 { font-size: 1.1rem; color: #333; margin-bottom: 5px; font-weight: 600; }
-.time-section p { font-size: 0.9rem; color: #888; }
+        .time-section { text-align: center; margin: 25px 0 15px; }
+        .time-section h4 { font-size: 1.1rem; color: #333; margin-bottom: 5px; font-weight: 600; }
+        .time-section p { font-size: 0.9rem; color: #888; }
 
-.rekap-absen { display: flex; justify-content: space-between; padding: 15px 40px; border-top: 1px solid #eee; border-bottom: 1px solid #eee; margin-bottom: 25px; }
-.rekap-item { display: flex; flex-direction: column; align-items: center; }
-.rekap-item span { font-size: 0.7rem; color: #888; font-weight: 700; letter-spacing: 1px; margin-bottom: 5px; }
-.rekap-item strong { font-size: 1.1rem; color: #333; font-weight: 800; }
+        .rekap-absen { display: flex; justify-content: space-between; padding: 15px 40px; border-top: 1px solid #eee; border-bottom: 1px solid #eee; margin-bottom: 25px; }
+        .rekap-item { display: flex; flex-direction: column; align-items: center; }
+        .rekap-item span { font-size: 0.7rem; color: #888; font-weight: 700; letter-spacing: 1px; margin-bottom: 5px; }
+        .rekap-item strong { font-size: 1.1rem; color: #333; font-weight: 800; }
 
-.menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px 10px; padding: 0 20px; }
-.menu-btn { display: flex; flex-direction: column; align-items: center; background: none; border: none; cursor: pointer; }
-.icon-circle { width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; color: #fff; margin-bottom: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-.bg-green { background: #10b981; } .bg-blue { background: #3b82f6; } .bg-red { background: #ef4444; }
-.menu-btn span { font-size: 0.75rem; color: #555; font-weight: 600; text-align: center; }
+        .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px 10px; padding: 0 20px; }
+        .menu-btn { display: flex; flex-direction: column; align-items: center; background: none; border: none; cursor: pointer; }
+        .icon-circle { width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; color: #fff; margin-bottom: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .bg-green { background: #10b981; } .bg-blue { background: #3b82f6; } .bg-red { background: #ef4444; }
+        .menu-btn span { font-size: 0.75rem; color: #555; font-weight: 600; text-align: center; }
 
-.bottom-nav-mobile { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 1000; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
-.nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; color: #999; cursor: pointer; gap: 4px; border: none; background: none; }
-.nav-item.active { color: #3b82f6; font-weight: 700; }
+        .bottom-nav-mobile { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 1000; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; color: #999; cursor: pointer; gap: 4px; border: none; background: none; }
+        .nav-item.active { color: #3b82f6; font-weight: 700; }
     </style>
 </head>
 <body>
@@ -352,77 +278,161 @@
             <div id="errorMsg" class="error-msg"></div>
         </div>
 
-<!-- DASHBOARD UTAMA (DESAIN BARU) -->
-<div id="dashboardSection" class="dashboard" style="display: none;">
-    
-    <!-- Header Biru -->
-    <div class="mobile-header">
-        <h2>Aplikasi Portal Sekolah</h2>
-        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-img">
-        <h3 id="welcomeText">Nama Siswa</h3>
-        <p id="classText">Kelas - Kelompok</p>
-    </div>
+        <!-- DASHBOARD UTAMA -->
+        <div id="dashboardSection" class="dashboard" style="display: none;">
+            <!-- Header Biru Mobile -->
+            <div class="mobile-header">
+                <h2>Aplikasi Portal Sekolah</h2>
+                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-img">
+                <h3 id="welcomeText">Nama Siswa</h3>
+                <p id="classText">Kelas - Kelompok</p>
+                <p id="kelompokText" style="font-size: 0.75rem; opacity: 0.8; margin-top: 2px;"></p>
+            </div>
 
-    <!-- Informasi Waktu -->
-    <div class="time-section">
-        <h4 id="tanggalHariIni">Selasa, 7 Maret 2023</h4>
-        <p id="jamRealTime">08:59:16 WIB</p>
-    </div>
+            <!-- Informasi Waktu -->
+            <div class="time-section">
+                <h4 id="tanggalHariIni">Selasa, 7 Maret 2023</h4>
+                <p id="jamRealTime">08:59:16 WIB</p>
+            </div>
 
-    <!-- Rekap Absen Singkat -->
-    <div class="rekap-absen">
-        <div class="rekap-item">
-            <span>DATANG</span>
-            <strong>08:59</strong>
+            <!-- Rekap Absen Singkat -->
+            <div class="rekap-absen">
+                <div class="rekap-item">
+                    <span>DATANG</span>
+                    <strong>08:59</strong>
+                </div>
+                <div class="rekap-item">
+                    <span>PULANG</span>
+                    <strong>--:--</strong>
+                </div>
+            </div>
+
+            <!-- Menu Utama Grid -->
+            <div class="menu-grid">
+                <button class="menu-btn" onclick="alert('Fitur Absen Datang diproses')">
+                    <div class="icon-circle bg-green">📥</div>
+                    <span>Absen Datang</span>
+                </button>
+                <button class="menu-btn" onclick="alert('Fitur Absen Pulang diproses')">
+                    <div class="icon-circle bg-blue">📤</div>
+                    <span>Absen Pulang</span>
+                </button>
+                <button class="menu-btn" onclick="alert('Form Izin dibuka')">
+                    <div class="icon-circle bg-red">🏥</div>
+                    <span>Izin / Sakit</span>
+                </button>
+                <button class="menu-btn" onclick="switchTab('ruangBelajar')">
+                    <div class="icon-circle bg-blue">📚</div>
+                    <span>Ruang Belajar</span>
+                </button>
+                <button class="menu-btn" onclick="switchTab('akademik')">
+                    <div class="icon-circle bg-blue">📊</div>
+                    <span>Nilai Siswa</span>
+                </button>
+                <button class="menu-btn" onclick="switchTab('informasi')">
+                    <div class="icon-circle bg-blue">📢</div>
+                    <span>Pengumuman</span>
+                </button>
+            </div>
+
+            <!-- TAB 1: RUANG BELAJAR -->
+            <div id="ruangBelajar" class="tab-content active">
+                <div class="main-content-grid">
+                    <div class="playlist-card">
+                        <div class="playlist-header">
+                            <label>Daftar Materi</label>
+                            <span id="playlistCounter" class="playlist-counter">0 Materi</span>
+                        </div>
+                        <div id="playlistContainer" class="playlist-container"></div>
+                    </div>
+                    <div class="right-content-area">
+                        <div class="video-container-box">
+                            <div class="section-title-small">Video Pembelajaran</div>
+                            <div id="mediaBox" class="media-wrapper">
+                                <iframe id="mediaPlayer" src="" allowfullscreen></iframe>
+                            </div>
+                            <div class="fullscreen-bar">
+                                <button class="fs-btn" onclick="toggleFullscreen()">fullscreen ⛶</button>
+                            </div>
+                            <div class="video-meta-bar">
+                                <span id="watchStatusBadge" class="status-badge">Status: Belum Ditonton</span>
+                                <div class="action-buttons">
+                                    <button id="likeBtn" class="action-btn" onclick="toggleLike()">❤️ <span id="likeCount">0</span></button>
+                                </div>
+                            </div>
+                            <div id="pdfContainerSection" class="pdf-section-wrapper">
+                                <div class="section-title-small">Dokumen / Modul Pembelajaran (PDF)</div>
+                                <div class="pdf-wrapper">
+                                    <iframe id="pdfPlayer" src=""></iframe>
+                                </div>
+                            </div>
+                            <div id="pdfEmptyNotice" class="pdf-empty-notice" style="display:none;">Tidak ada dokumen pendukung untuk materi ini.</div>
+                            
+                            <div class="comment-section">
+                                <h4>Diskusi / Tanya Jawab</h4>
+                                <div class="comment-box">
+                                    <input type="text" id="commentInput" placeholder="Tanyakan sesuatu mengenai materi ini...">
+                                    <div class="comment-btn-wrapper">
+                                        <button id="commentSubmitBtn" class="comment-btn" onclick="sendCommentToSheet()">Kirim</button>
+                                        <div id="commentLoading" class="comment-loading"><div class="spinner comment-spinner"></div> Mengirim...</div>
+                                    </div>
+                                </div>
+                                <div id="historyList" class="history-list"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: AKADEMIK (NILAI & ABSENSI) -->
+            <div id="akademik" class="tab-content">
+                <div class="akademik-grid">
+                    <div class="akademik-card">
+                        <div class="akademik-title">📊 Rekap Presensi Siswa</div>
+                        <div id="absensiContainer" class="stat-grid"></div>
+                    </div>
+                    <div class="akademik-card">
+                        <div class="akademik-title">📝 Rekap Nilai Akademik</div>
+                        <div class="table-responsive">
+                            <table class="grades-table">
+                                <thead>
+                                    <tr>
+                                        <th>Mata Pelajaran</th>
+                                        <th>Tugas</th>
+                                        <th>UTS</th>
+                                        <th>UAS</th>
+                                        <th>Rata-Rata</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="nilaiContainer"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: INFORMASI -->
+            <div id="informasi" class="tab-content">
+                <div class="akademik-card">
+                    <div class="akademik-title">📢 Informasi & Pengumuman Sekolah</div>
+                    <div id="informasiContainer" class="info-grid"></div>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation -->
+            <div class="bottom-nav-mobile">
+                <button class="nav-item active" onclick="switchTab('ruangBelajar')">
+                    <span style="font-size: 1.2rem;">🏠</span> Home
+                </button>
+                <button class="nav-item" onclick="switchTab('akademik')">
+                    <span style="font-size: 1.2rem;">📅</span> Presensi
+                </button>
+                <button class="nav-item" onclick="handleLogout()">
+                    <span style="font-size: 1.2rem;">🚪</span> Keluar
+                </button>
+            </div>
         </div>
-        <div class="rekap-item">
-            <span>PULANG</span>
-            <strong>--:--</strong>
-        </div>
-    </div>
-
-    <!-- Menu Utama -->
-    <div class="menu-grid">
-        <button class="menu-btn" onclick="alert('Fitur Absen Datang diproses')">
-            <div class="icon-circle bg-green">📥</div>
-            <span>Absen Datang</span>
-        </button>
-        <button class="menu-btn" onclick="alert('Fitur Absen Pulang diproses')">
-            <div class="icon-circle bg-blue">📤</div>
-            <span>Absen Pulang</span>
-        </button>
-        <button class="menu-btn" onclick="alert('Form Izin dibuka')">
-            <div class="icon-circle bg-red">🏥</div>
-            <span>Izin / Sakit</span>
-        </button>
-        <button class="menu-btn" onclick="switchTab('ruangBelajar')">
-            <div class="icon-circle bg-blue">📚</div>
-            <span>Ruang Belajar</span>
-        </button>
-        <button class="menu-btn" onclick="switchTab('akademik')">
-            <div class="icon-circle bg-blue">📊</div>
-            <span>Nilai Siswa</span>
-        </button>
-    </div>
-
-    <!-- Bottom Navigation -->
-    <div class="bottom-nav-mobile">
-        <button class="nav-item active">
-            <span style="font-size: 1.2rem;">🏠</span> Home
-        </button>
-        <button class="nav-item">
-            <span style="font-size: 1.2rem;">📅</span> Presensi
-        </button>
-        <button class="nav-item" onclick="handleLogout()">
-            <span style="font-size: 1.2rem;">🚪</span> Keluar
-        </button>
-    </div>
-
-    <!-- Area Konten Tab Lama (Bisa disembunyikan atau dimunculkan saat menu ditekan) -->
-    <div id="ruangBelajar" class="tab-content"></div>
-    <div id="akademik" class="tab-content"></div>
-    <div id="informasi" class="tab-content"></div>
-</div>
         <div class="footer-note">&copy; 2026 Portal Pembelajaran Terpadu. All rights reserved.</div>
     </div>
 
@@ -450,22 +460,8 @@
         /* FITUR TAB NAVIGASI */
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
-
-        /* FITUR NOTIFIKASI DROPDOWN */
-        function toggleNotif() {
-            let drop = document.getElementById('notifDropdown');
-            drop.classList.toggle('show');
-            // Menutup dropdown jika klik di luar
-            document.addEventListener('click', function closeNotif(e) {
-                if(!document.getElementById('notifWrapper').contains(e.target)) {
-                    drop.classList.remove('show');
-                    document.removeEventListener('click', closeNotif);
-                }
-            });
+            let targetTab = document.getElementById(tabId);
+            if(targetTab) targetTab.classList.add('active');
         }
 
         /* FULLSCREEN VIDEO */
@@ -615,33 +611,36 @@
             document.getElementById('dashboardSection').style.display = 'block';
             document.getElementById('welcomeText').innerText = "Selamat datang, " + student.nama;
             document.getElementById('classText').innerText = "Kelas: " + (student.kelas || "-");
-            document.getElementById('kelompokText').innerText = "Kelompok: " + (student.kelompokKelas.join(', ') || "-");
-
-            studentVideos = data.video.filter(v => student.kelompokKelas.includes(v.kelompokKelas));
             
-            // Render semua komponen UI
+            let kelompokElem = document.getElementById('kelompokText');
+            if (kelompokElem) {
+                kelompokElem.innerText = "Kelompok: " + (student.kelompokKelas ? student.kelompokKelas.join(', ') : "-");
+            }
+
+            studentVideos = data.video ? data.video.filter(v => student.kelompokKelas && student.kelompokKelas.includes(v.kelompokKelas)) : [];
+            
             renderTreePlaylist();
             renderAkademik(student);
             renderInformasi(data);
-            renderNotifikasi(student);
             
             startRealTimeSync(); 
         }
 
-        /* --- FITUR BARU: RENDER AKADEMIK (NILAI & ABSENSI) --- */
         function renderAkademik(student) {
-            // MOCK DATA: Gunakan data asli jika ada (student.absensi), jika tidak gunakan dummy data
+            let absenContainer = document.getElementById('absensiContainer');
+            if (!absenContainer) return;
+
             let absen = student.absensi || { hadir: 42, izin: 2, sakit: 1, alpa: 0 };
-            
-            let htmlAbsen = `
+            absenContainer.innerHTML = `
                 <div class="stat-card"><div class="stat-val val-hadir">${absen.hadir}</div><div class="stat-label">Hadir</div></div>
                 <div class="stat-card"><div class="stat-val val-izin">${absen.izin}</div><div class="stat-label">Izin</div></div>
                 <div class="stat-card"><div class="stat-val val-sakit">${absen.sakit}</div><div class="stat-label">Sakit</div></div>
                 <div class="stat-card"><div class="stat-val val-alpa">${absen.alpa}</div><div class="stat-label">Alpa</div></div>
             `;
-            document.getElementById('absensiContainer').innerHTML = htmlAbsen;
 
-            // MOCK DATA: Data Nilai Sementara
+            let nilaiContainer = document.getElementById('nilaiContainer');
+            if (!nilaiContainer) return;
+
             let nilai = student.nilai || [
                 { mapel: "Matematika Lanjut", tugas: 85, uts: 90, uas: 88 },
                 { mapel: "Fisika Terapan", tugas: 78, uts: 75, uas: 80 },
@@ -668,16 +667,16 @@
                     </tr>
                 `;
             });
-            document.getElementById('nilaiContainer').innerHTML = htmlNilai;
+            nilaiContainer.innerHTML = htmlNilai;
         }
 
-        /* --- FITUR BARU: RENDER INFORMASI --- */
         function renderInformasi(data) {
-            // MOCK DATA: Data Pengumuman
+            let infoContainer = document.getElementById('informasiContainer');
+            if (!infoContainer) return;
+
             let info = data.informasi || [
-                { tanggal: "16 Sep 2026", judul: "Jadwal Ujian Tengah Semester (UTS)", isi: "UTS akan dilaksanakan mulai minggu depan. Pastikan seluruh tagihan tugas telah dikumpulkan. Silakan unduh jadwal di grup kelas masing-class.", isUrgent: true },
-                { tanggal: "14 Sep 2026", judul: "Penambahan Materi Pemrograman", isi: "Terdapat 3 video materi baru di direktori Pemrograman Web. Harap dipelajari sebelum pertemuan praktik di hari Jumat.", isUrgent: false },
-                { tanggal: "10 Sep 2026", judul: "Libur Nasional Maulid Nabi", isi: "Diberitahukan bahwa kegiatan belajar mengajar diliburkan pada tanggal 12 September.", isUrgent: false }
+                { tanggal: "16 Sep 2026", judul: "Jadwal Ujian Tengah Semester (UTS)", isi: "UTS akan dilaksanakan mulai minggu depan. Pastikan seluruh tagihan tugas telah dikumpulkan.", isUrgent: true },
+                { tanggal: "14 Sep 2026", judul: "Penambahan Materi Pemrograman", isi: "Terdapat 3 video materi baru di direktori Pemrograman Web. Harap dipelajari sebelum pertemuan praktik di hari Jumat.", isUrgent: false }
             ];
 
             let htmlInfo = '';
@@ -693,49 +692,12 @@
                     </div>
                 `;
             });
-            document.getElementById('informasiContainer').innerHTML = htmlInfo;
+            infoContainer.innerHTML = htmlInfo;
         }
 
-        /* --- FITUR BARU: RENDER NOTIFIKASI --- */
-        function renderNotifikasi(student) {
-            // MOCK DATA: Notifikasi Personal
-            let notif = student.notifikasi || [
-                { waktu: "Baru saja", pesan: "Materi baru: 'Kalkulus Lanjut Bab 3' telah diunggah.", isRead: false },
-                { waktu: "2 Jam yang lalu", pesan: "Pengajar membalas pertanyaan Anda di forum diskusi.", isRead: false },
-                { waktu: "Kemarin", pesan: "Tugas Fisika Anda telah dinilai (85).", isRead: true }
-            ];
-
-            let htmlNotif = '';
-            let unreadCount = 0;
-
-            notif.forEach(n => {
-                if(!n.isRead) unreadCount++;
-                htmlNotif += `
-                    <div class="notif-item ${n.isRead ? '' : 'unread'}">
-                        <div class="notif-time">${n.waktu}</div>
-                        <div class="notif-text">${n.pesan}</div>
-                    </div>
-                `;
-            });
-
-            if(notif.length === 0) {
-                htmlNotif = '<div class="notif-empty">Belum ada notifikasi untuk Anda.</div>';
-            }
-
-            document.getElementById('notifList').innerHTML = htmlNotif;
-            
-            let badge = document.getElementById('notifBadge');
-            if(unreadCount > 0) {
-                badge.style.display = 'block';
-                badge.innerText = unreadCount;
-            } else {
-                badge.style.display = 'none';
-            }
-        }
-
-        /* --- RUANG BELAJAR: LOGIC (Tetap sama seperti sebelumnya) --- */
         function renderTreePlaylist() {
             let container = document.getElementById('playlistContainer');
+            if (!container) return;
             container.innerHTML = "";
             document.getElementById('playlistCounter').innerText = studentVideos.length + " Materi";
 
@@ -756,7 +718,7 @@
             let activeVid = studentVideos.find(v => v.url === currentActiveItemUrl);
             let currentActiveMapel = activeVid ? activeVid.mapel : studentVideos[0].mapel;
 
-            Object.keys(groupedMapel).forEach((mapelName, idx) => {
+            Object.keys(groupedMapel).forEach((mapelName) => {
                 let itemsInMapel = groupedMapel[mapelName];
                 let isCurrentFolder = (mapelName === currentActiveMapel);
                 let folder = document.createElement('div'); folder.className = "folder-root";
@@ -834,7 +796,9 @@
             let likedKey = "liked_" + currentStudent.username + "_" + fileId;
             let isLiked = localStorage.getItem(likedKey) === "true";
             let likeBtn = document.getElementById('likeBtn');
-            if (isLiked) likeBtn.classList.add('liked'); else likeBtn.classList.remove('liked');
+            if (likeBtn) {
+                if (isLiked) likeBtn.classList.add('liked'); else likeBtn.classList.remove('liked');
+            }
         }
 
         async function toggleLike() {
@@ -861,6 +825,7 @@
 
         function renderStudentHistory(currentVideo) {
             let historyList = document.getElementById('historyList');
+            if(!historyList) return;
             historyList.innerHTML = "";
 
             if (!globalDatabase || !globalDatabase.komentar) {
@@ -884,8 +849,10 @@
 
         function updateWatchStatus(watched) {
             let badge = document.getElementById('watchStatusBadge');
-            badge.className = watched ? "status-badge watched" : "status-badge";
-            badge.innerHTML = watched ? `Status: Selesai Ditonton` : `Status: Belum Ditonton`;
+            if(badge) {
+                badge.className = watched ? "status-badge watched" : "status-badge";
+                badge.innerHTML = watched ? `Status: Selesai Ditonton` : `Status: Belum Ditonton`;
+            }
         }
 
         async function sendCommentToSheet() {
@@ -916,19 +883,20 @@
                 submitBtn.style.display = 'block'; loadingInd.style.display = 'none'; input.disabled = false;
             }
         }
-// Fungsi Jam Real-Time
-setInterval(() => {
-    let now = new Date();
-    let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    
-    let elTanggal = document.getElementById('tanggalHariIni');
-    let elJam = document.getElementById('jamRealTime');
-    
-    if(elTanggal && elJam) {
-        elTanggal.innerText = now.toLocaleDateString('id-ID', options);
-        elJam.innerText = now.toLocaleTimeString('id-ID') + " WIB";
-    }
-}, 1000);
+
+        // Jam Real-Time
+        setInterval(() => {
+            let now = new Date();
+            let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            
+            let elTanggal = document.getElementById('tanggalHariIni');
+            let elJam = document.getElementById('jamRealTime');
+            
+            if(elTanggal && elJam) {
+                elTanggal.innerText = now.toLocaleDateString('id-ID', options);
+                elJam.innerText = now.toLocaleTimeString('id-ID') + " WIB";
+            }
+        }, 1000);
         
         function handleLogout(clearServerToken = true) {
             if (realTimeSync) clearInterval(realTimeSync);
@@ -940,9 +908,12 @@ setInterval(() => {
             document.getElementById('dashboardSection').style.display = 'none';
             document.getElementById('loginSection').style.display = 'block';
             document.getElementById('userInput').value = ''; document.getElementById('passInput').value = '';
-            document.getElementById('mediaPlayer').src = ''; document.getElementById('pdfPlayer').src = '';
             
-            // Kembalikan tab ke default (Ruang Belajar)
+            let media = document.getElementById('mediaPlayer');
+            let pdf = document.getElementById('pdfPlayer');
+            if(media) media.src = '';
+            if(pdf) pdf.src = '';
+            
             switchTab('ruangBelajar');
         }
 
