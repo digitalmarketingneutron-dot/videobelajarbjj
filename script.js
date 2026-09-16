@@ -511,12 +511,11 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwg0JXaoE8aj1LUm-aNR
                 card.innerHTML = html; historyList.appendChild(card);
             });
         }
-// --- FUNGSI PENDUKUNG NOTIFIKASI ---
+// Fungsi untuk memuat dan memperbarui notifikasi
 function loadNotifications() {
     const userSession = JSON.parse(localStorage.getItem('userSession'));
     if (!userSession) return;
 
-    // Pastikan URL Web App GAS Anda benar
     const urlWebApps = "URL_WEB_APP_GOOGLE_APPS_SCRIPT_ANDA"; 
 
     fetch(`${urlWebApps}?action=getNotifications&email=${encodeURIComponent(userSession.email)}`)
@@ -537,10 +536,11 @@ function loadNotifications() {
             let htmlContent = '';
 
             data.forEach(notif => {
+                // Cek apakah notifikasi belum dibaca
                 if (!notif.isRead) unreadCount++;
                 
                 htmlContent += `
-                    <div class="notif-item">
+                    <div class="notif-item" onclick="markAsRead('${notif.id}')">
                         <strong>${notif.title || 'Informasi'}</strong>
                         <p style="margin: 4px 0 0 0; color: #555;">${notif.message}</p>
                         <small style="color: #888; font-size: 11px;">${notif.date || ''}</small>
@@ -550,6 +550,7 @@ function loadNotifications() {
 
             notifList.innerHTML = htmlContent;
 
+            // Tampilkan atau sembunyikan badge berdasarkan jumlah yang belum dibaca
             if (unreadCount > 0) {
                 notifBadge.innerText = unreadCount;
                 notifBadge.style.display = 'inline-block';
@@ -560,7 +561,35 @@ function loadNotifications() {
         .catch(error => console.error('Gagal memuat notifikasi:', error));
 }
 
-// Inisialisasi Event Klik pada Ikon Lonceng Notifikasi
+// Fungsi saat salah satu notifikasi diklik untuk menandai sudah dibaca
+function markAsRead(notifId) {
+    const notifBadge = document.getElementById('notifBadge');
+    const notifList = document.getElementById('notifList');
+
+    // Langsung hilangkan angka badge secara instan di sisi klien
+    if (notifBadge) {
+        notifBadge.style.display = 'none';
+        notifBadge.innerText = '0';
+    }
+
+    // Ubah tampilan isi list menjadi kosong atau bertuliskan "Tidak ada notifikasi"
+    if (notifList) {
+        notifList.innerHTML = '<div class="notif-item">Tidak ada notifikasi baru.</div>';
+        setTimeout(() => {
+            notifList.style.display = 'none';
+        }, 300);
+    }
+
+    // Opsional: Kirim sinyal ke Google Apps Script bahwa notifikasi ini sudah dibaca
+    const userSession = JSON.parse(localStorage.getItem('userSession'));
+    if (userSession) {
+        const urlWebApps = "URL_WEB_APP_GOOGLE_APPS_SCRIPT_ANDA";
+        fetch(`${urlWebApps}?action=markRead&email=${encodeURIComponent(userSession.email)}&id=${notifId}`)
+            .catch(err => console.error('Gagal memperbarui status read:', err));
+    }
+}
+
+// Event Listener Utama
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.querySelector('.notif-container');
     const notifList = document.getElementById('notifList');
@@ -576,7 +605,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Panggil fungsi saat aplikasi aktif dan cek pembaruan berkala setiap 30 detik
     loadNotifications();
     setInterval(loadNotifications, 30000);
 });
