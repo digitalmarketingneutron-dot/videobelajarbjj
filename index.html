@@ -50,6 +50,13 @@
             <!-- HALAMAN MENU DASHBOARD (HOME) -->
             <div id="home" class="tab-content active">
                 <div class="mobile-header">
+                    <!-- Kontainer Notifikasi -->
+                    <div class="notif-container" title="Klik untuk melihat notifikasi">
+                        <span style="font-size: 1.4rem; cursor: pointer;">🔔</span>
+                        <span id="notifBadge" style="display:none;">0</span>
+                        <div id="notifList"></div>
+                    </div>
+
                     <h2>Aplikasi Portal Sekolah</h2>
                     <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-img">
                     <h3 id="welcomeText">Nama Siswa</h3>
@@ -120,7 +127,6 @@
                         <div class="video-container-box">
                             <div class="section-title-small">Video Pembelajaran</div>
                             <div id="mediaBox" class="media-wrapper">
-                                <!-- Proteksi Overlay Google Drive Header (Menutup Pop-out / Download) -->
                                 <div class="drive-header-blocker" title="Akses link eksternal dinonaktifkan"></div>
                                 <iframe id="mediaPlayer" src="" allowfullscreen></iframe>
                             </div>
@@ -136,7 +142,6 @@
                             <div id="pdfContainerSection" class="pdf-section-wrapper">
                                 <div class="section-title-small">Dokumen / Modul Pembelajaran (PDF)</div>
                                 <div class="pdf-wrapper">
-                                    <!-- Proteksi Overlay Google Drive Header PDF -->
                                     <div class="drive-header-blocker" title="Akses link eksternal dinonaktifkan"></div>
                                     <iframe id="pdfPlayer" src=""></iframe>
                                 </div>
