@@ -39,7 +39,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 12px;
+            padding: 0;
         }
 
         /* --- SPLASH SCREEN --- */
@@ -63,18 +63,17 @@
         .splash-title { color: #ffffff; font-size: 1.25rem; font-weight: bold; margin-bottom: 6px; }
         .splash-subtitle { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; }
 
-        .container { width: 100%; max-width: 480px; transition: max-width 0.3s ease; }
+        .container { width: 100%; max-width: 480px; margin: 0 auto; }
 
         @media (min-width: 768px) {
-            body { padding: 24px; align-items: flex-start; }
-            .container { max-width: 1140px; margin-top: 20px; }
+            body { padding: 24px 0; }
+            .container { max-width: 1000px; }
         }
 
         /* --- LOGIN CARD --- */
         .login-card { 
             background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 28px; 
-            padding: 36px 28px; box-shadow: var(--shadow-lg); width: 100%; max-width: 440px; margin: 0 auto; 
-            margin-top: 10vh;
+            padding: 36px 28px; box-shadow: var(--shadow-lg); width: 90%; max-width: 440px; margin: 50px auto; 
         }
         .login-header { text-align: center; margin-bottom: 28px; }
         .logo-badge { 
@@ -104,20 +103,25 @@
         .loading-text { font-size: 0.9rem; font-weight: 700; color: #ffffff; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* --- TAB CONTENT SECTIONS --- */
-        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; margin-top: 20px; padding: 0 15px; }
+        /* --- TAB CONTENT & VIEW ROUTING --- */
+        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; padding-bottom: 90px; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* CONTENT PAGE HEADER BAR */
+        .content-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: var(--card-bg); border-bottom: 1px solid var(--border-color); margin-bottom: 20px; }
+        .back-btn { background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 16px; border-radius: 10px; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
+        .content-header h3 { font-size: 1.05rem; font-weight: 800; color: var(--text-main); }
+
         /* --- TAB 1: RUANG BELAJAR --- */
-        .main-content-grid { display: flex; flex-direction: column; gap: 16px; }
-        @media (min-width: 900px) { .main-content-grid { display: grid; grid-template-columns: 340px 1fr; align-items: start; } }
+        .main-content-grid { display: flex; flex-direction: column; gap: 16px; padding: 0 16px; }
+        @media (min-width: 900px) { .main-content-grid { display: grid; grid-template-columns: 320px 1fr; align-items: start; } }
 
         .playlist-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 22px; padding: 20px; box-shadow: var(--shadow-sm); }
         .playlist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
         .playlist-header label { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
         .playlist-counter { font-size: 0.72rem; font-weight: 700; color: var(--text-muted); background: var(--input-bg); padding: 3px 10px; border-radius: 6px; border: 1px solid var(--border-color); }
-        .playlist-container { display: flex; flex-direction: column; gap: 10px; max-height: 600px; overflow-y: auto; padding-right: 4px; }
+        .playlist-container { display: flex; flex-direction: column; gap: 10px; max-height: 550px; overflow-y: auto; padding-right: 4px; }
         .folder-root { border: 1px solid var(--border-color); border-radius: 14px; overflow: hidden; background: var(--input-bg); margin-bottom: 8px; }
         .folder-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; cursor: pointer; background: rgba(255, 255, 255, 0.03); transition: background 0.2s; user-select: none; }
         .folder-header:hover { background: var(--card-hover); }
@@ -177,7 +181,7 @@
         .no-history { text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 16px; background: rgba(255, 255, 255, 0.02); border-radius: 14px; border: 2px dashed var(--border-color); font-weight: 700; }
 
         /* --- TAB 2 & 3: AKADEMIK & INFORMASI --- */
-        .akademik-grid { display: flex; flex-direction: column; gap: 20px; }
+        .akademik-grid { display: flex; flex-direction: column; gap: 20px; padding: 0 16px; }
         .akademik-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 22px; padding: 24px; box-shadow: var(--shadow-sm); }
         .akademik-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 16px; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
         
@@ -202,7 +206,7 @@
         .grade-c { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
         .grade-d { background: rgba(239, 68, 68, 0.15); color: #f87171; }
 
-        .info-grid { display: flex; flex-direction: column; gap: 16px; }
+        .info-grid { display: flex; flex-direction: column; gap: 16px; padding: 0 16px; }
         .info-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 18px; padding: 20px; position: relative; overflow: hidden; }
         .info-card::before { content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%; background: var(--primary); }
         .info-card.urgent::before { background: var(--warning-color); }
@@ -213,32 +217,33 @@
 
         .footer-note { text-align: center; font-size: 0.72rem; color: var(--text-muted); margin-top: 30px; font-weight: 700; padding-bottom: 20px;}
 
-        /* --- TAMPILAN DASHBOARD MOBILE --- */
-        #dashboardSection { background: #ffffff; padding: 0; min-height: 100vh; position: relative; padding-bottom: 80px; }
-        .mobile-header { background: #2E75B6; padding: 40px 20px 30px; border-radius: 0 0 50px 50px; text-align: center; color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        /* --- DASHBOARD MENU UTAMA HOME --- */
+        #dashboardSection { background: #090d16; padding: 0; min-height: 100vh; position: relative; }
+        .mobile-header { background: #2E75B6; padding: 40px 20px 30px; border-radius: 0 0 35px 35px; text-align: center; color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .mobile-header h2 { font-size: 1.1rem; font-weight: 500; margin-bottom: 15px; }
         .profile-img { width: 90px; height: 90px; border-radius: 50%; border: 4px solid #fff; margin-bottom: 10px; background: #eee; }
         .mobile-header h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 5px; }
         .mobile-header p { font-size: 0.8rem; text-transform: uppercase; color: rgba(255,255,255,0.8); letter-spacing: 1px; }
 
         .time-section { text-align: center; margin: 25px 0 15px; }
-        .time-section h4 { font-size: 1.1rem; color: #333; margin-bottom: 5px; font-weight: 600; }
-        .time-section p { font-size: 0.9rem; color: #888; }
+        .time-section h4 { font-size: 1.1rem; color: var(--text-main); margin-bottom: 5px; font-weight: 600; }
+        .time-section p { font-size: 0.9rem; color: var(--text-muted); }
 
-        .rekap-absen { display: flex; justify-content: space-between; padding: 15px 40px; border-top: 1px solid #eee; border-bottom: 1px solid #eee; margin-bottom: 25px; }
+        .rekap-absen { display: flex; justify-content: space-between; padding: 15px 40px; background: var(--card-bg); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); margin-bottom: 25px; }
         .rekap-item { display: flex; flex-direction: column; align-items: center; }
-        .rekap-item span { font-size: 0.7rem; color: #888; font-weight: 700; letter-spacing: 1px; margin-bottom: 5px; }
-        .rekap-item strong { font-size: 1.1rem; color: #333; font-weight: 800; }
+        .rekap-item span { font-size: 0.7rem; color: var(--text-muted); font-weight: 700; letter-spacing: 1px; margin-bottom: 5px; }
+        .rekap-item strong { font-size: 1.1rem; color: var(--text-main); font-weight: 800; }
 
         .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px 10px; padding: 0 20px; }
-        .menu-btn { display: flex; flex-direction: column; align-items: center; background: none; border: none; cursor: pointer; }
-        .icon-circle { width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; color: #fff; margin-bottom: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .menu-btn { display: flex; flex-direction: column; align-items: center; background: none; border: none; cursor: pointer; transition: transform 0.2s; }
+        .menu-btn:active { transform: scale(0.95); }
+        .icon-circle { width: 60px; height: 60px; border-radius: 20px; display: flex; justify-content: center; align-items: center; font-size: 1.6rem; color: #fff; margin-bottom: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); }
         .bg-green { background: #10b981; } .bg-blue { background: #3b82f6; } .bg-red { background: #ef4444; }
-        .menu-btn span { font-size: 0.75rem; color: #555; font-weight: 600; text-align: center; }
+        .menu-btn span { font-size: 0.78rem; color: var(--text-main); font-weight: 700; text-align: center; }
 
-        .bottom-nav-mobile { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 1000; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; color: #999; cursor: pointer; gap: 4px; border: none; background: none; }
-        .nav-item.active { color: #3b82f6; font-weight: 700; }
+        .bottom-nav-mobile { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--card-bg); display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid var(--border-color); z-index: 1000; box-shadow: 0 -4px 15px rgba(0,0,0,0.5); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.68rem; color: var(--text-muted); cursor: pointer; gap: 3px; border: none; background: none; font-weight: 600; }
+        .nav-item.active { color: var(--primary); font-weight: 800; }
     </style>
 </head>
 <body>
@@ -278,65 +283,70 @@
             <div id="errorMsg" class="error-msg"></div>
         </div>
 
-        <!-- DASHBOARD UTAMA -->
+        <!-- DASHBOARD UTAMA CONTAINER -->
         <div id="dashboardSection" class="dashboard" style="display: none;">
-            <!-- Header Biru Mobile -->
-            <div class="mobile-header">
-                <h2>Aplikasi Portal Sekolah</h2>
-                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-img">
-                <h3 id="welcomeText">Nama Siswa</h3>
-                <p id="classText">Kelas - Kelompok</p>
-                <p id="kelompokText" style="font-size: 0.75rem; opacity: 0.8; margin-top: 2px;"></p>
-            </div>
-
-            <!-- Informasi Waktu -->
-            <div class="time-section">
-                <h4 id="tanggalHariIni">Selasa, 7 Maret 2023</h4>
-                <p id="jamRealTime">08:59:16 WIB</p>
-            </div>
-
-            <!-- Rekap Absen Singkat -->
-            <div class="rekap-absen">
-                <div class="rekap-item">
-                    <span>DATANG</span>
-                    <strong>08:59</strong>
+            
+            <!-- HALAMAN MENU DASHBOARD (HOME) -->
+            <div id="homeView" class="tab-content active">
+                <div class="mobile-header">
+                    <h2>Aplikasi Portal Sekolah</h2>
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-img">
+                    <h3 id="welcomeText">Nama Siswa</h3>
+                    <p id="classText">Kelas - Kelompok</p>
+                    <p id="kelompokText" style="font-size: 0.75rem; opacity: 0.8; margin-top: 2px;"></p>
                 </div>
-                <div class="rekap-item">
-                    <span>PULANG</span>
-                    <strong>--:--</strong>
+
+                <div class="time-section">
+                    <h4 id="tanggalHariIni">Selasa, 7 Maret 2023</h4>
+                    <p id="jamRealTime">08:59:16 WIB</p>
+                </div>
+
+                <div class="rekap-absen">
+                    <div class="rekap-item">
+                        <span>DATANG</span>
+                        <strong>08:59</strong>
+                    </div>
+                    <div class="rekap-item">
+                        <span>PULANG</span>
+                        <strong>--:--</strong>
+                    </div>
+                </div>
+
+                <!-- Grid Menu Terkumpul -->
+                <div class="menu-grid">
+                    <button class="menu-btn" onclick="alert('Fitur Absen Datang diproses')">
+                        <div class="icon-circle bg-green">📥</div>
+                        <span>Absen Datang</span>
+                    </button>
+                    <button class="menu-btn" onclick="alert('Fitur Absen Pulang diproses')">
+                        <div class="icon-circle bg-blue">📤</div>
+                        <span>Absen Pulang</span>
+                    </button>
+                    <button class="menu-btn" onclick="alert('Form Izin dibuka')">
+                        <div class="icon-circle bg-red">🏥</div>
+                        <span>Izin / Sakit</span>
+                    </button>
+                    <button class="menu-btn" onclick="switchTab('ruangBelajar')">
+                        <div class="icon-circle bg-blue">📚</div>
+                        <span>Ruang Belajar</span>
+                    </button>
+                    <button class="menu-btn" onclick="switchTab('akademik')">
+                        <div class="icon-circle bg-blue">📊</div>
+                        <span>Nilai Siswa</span>
+                    </button>
+                    <button class="menu-btn" onclick="switchTab('informasi')">
+                        <div class="icon-circle bg-blue">📢</div>
+                        <span>Pengumuman</span>
+                    </button>
                 </div>
             </div>
 
-            <!-- Menu Utama Grid -->
-            <div class="menu-grid">
-                <button class="menu-btn" onclick="alert('Fitur Absen Datang diproses')">
-                    <div class="icon-circle bg-green">📥</div>
-                    <span>Absen Datang</span>
-                </button>
-                <button class="menu-btn" onclick="alert('Fitur Absen Pulang diproses')">
-                    <div class="icon-circle bg-blue">📤</div>
-                    <span>Absen Pulang</span>
-                </button>
-                <button class="menu-btn" onclick="alert('Form Izin dibuka')">
-                    <div class="icon-circle bg-red">🏥</div>
-                    <span>Izin / Sakit</span>
-                </button>
-                <button class="menu-btn" onclick="switchTab('ruangBelajar')">
-                    <div class="icon-circle bg-blue">📚</div>
-                    <span>Ruang Belajar</span>
-                </button>
-                <button class="menu-btn" onclick="switchTab('akademik')">
-                    <div class="icon-circle bg-blue">📊</div>
-                    <span>Nilai Siswa</span>
-                </button>
-                <button class="menu-btn" onclick="switchTab('informasi')">
-                    <div class="icon-circle bg-blue">📢</div>
-                    <span>Pengumuman</span>
-                </button>
-            </div>
-
-            <!-- TAB 1: RUANG BELAJAR -->
-            <div id="ruangBelajar" class="tab-content active">
+            <!-- TAB 1: ISI RUANG BELAJAR -->
+            <div id="ruangBelajar" class="tab-content">
+                <div class="content-header">
+                    <button class="back-btn" onclick="switchTab('home')">← Kembali</button>
+                    <h3>Ruang Belajar</h3>
+                </div>
                 <div class="main-content-grid">
                     <div class="playlist-card">
                         <div class="playlist-header">
@@ -384,8 +394,12 @@
                 </div>
             </div>
 
-            <!-- TAB 2: AKADEMIK (NILAI & ABSENSI) -->
+            <!-- TAB 2: ISI AKADEMIK & PRESENSI -->
             <div id="akademik" class="tab-content">
+                <div class="content-header">
+                    <button class="back-btn" onclick="switchTab('home')">← Kembali</button>
+                    <h3>Rekap Nilai & Presensi</h3>
+                </div>
                 <div class="akademik-grid">
                     <div class="akademik-card">
                         <div class="akademik-title">📊 Rekap Presensi Siswa</div>
@@ -412,21 +426,32 @@
                 </div>
             </div>
 
-            <!-- TAB 3: INFORMASI -->
+            <!-- TAB 3: ISI INFORMASI & PENGUMUMAN -->
             <div id="informasi" class="tab-content">
-                <div class="akademik-card">
-                    <div class="akademik-title">📢 Informasi & Pengumuman Sekolah</div>
-                    <div id="informasiContainer" class="info-grid"></div>
+                <div class="content-header">
+                    <button class="back-btn" onclick="switchTab('home')">← Kembali</button>
+                    <h3>Informasi & Pengumuman</h3>
+                </div>
+                <div class="info-grid">
+                    <div class="akademik-card" style="margin-bottom:0;">
+                        <div id="informasiContainer" class="info-grid"></div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Bottom Navigation -->
+            <!-- Bottom Navigation Bar -->
             <div class="bottom-nav-mobile">
-                <button class="nav-item active" onclick="switchTab('ruangBelajar')">
-                    <span style="font-size: 1.2rem;">🏠</span> Home
+                <button class="nav-item active" data-tab="home" onclick="switchTab('home')">
+                    <span style="font-size: 1.2rem;">🏠</span> Menu Utama
                 </button>
-                <button class="nav-item" onclick="switchTab('akademik')">
-                    <span style="font-size: 1.2rem;">📅</span> Presensi
+                <button class="nav-item" data-tab="ruangBelajar" onclick="switchTab('ruangBelajar')">
+                    <span style="font-size: 1.2rem;">📚</span> Belajar
+                </button>
+                <button class="nav-item" data-tab="akademik" onclick="switchTab('akademik')">
+                    <span style="font-size: 1.2rem;">📊</span> Nilai
+                </button>
+                <button class="nav-item" data-tab="informasi" onclick="switchTab('informasi')">
+                    <span style="font-size: 1.2rem;">📢</span> Info
                 </button>
                 <button class="nav-item" onclick="handleLogout()">
                     <span style="font-size: 1.2rem;">🚪</span> Keluar
@@ -457,11 +482,18 @@
             passInput.type = passInput.type === "password" ? "text" : "password";
         }
 
-        /* FITUR TAB NAVIGASI */
+        /* FITUR SWITCH PAGE / TAB NAVIGASI */
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+
             let targetTab = document.getElementById(tabId);
             if(targetTab) targetTab.classList.add('active');
+
+            let activeNav = document.querySelector(`.nav-item[data-tab="${tabId}"]`);
+            if(activeNav) activeNav.classList.add('active');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         /* FULLSCREEN VIDEO */
@@ -623,6 +655,7 @@
             renderAkademik(student);
             renderInformasi(data);
             
+            switchTab('home');
             startRealTimeSync(); 
         }
 
@@ -914,7 +947,7 @@
             if(media) media.src = '';
             if(pdf) pdf.src = '';
             
-            switchTab('ruangBelajar');
+            switchTab('home');
         }
 
         document.addEventListener('contextmenu', e => e.preventDefault());
