@@ -181,75 +181,60 @@
         }
         .logout-btn:hover { background: var(--primary); color: #ffffff; }
 
-        .mapel-library-section { 
-            margin-bottom: 16px; 
-            background: var(--card-bg); 
-            padding: 18px 20px; 
-            border-radius: 22px; 
-            border: 1px solid var(--border-color); 
-            box-shadow: var(--shadow-sm); 
-        }
-        .mapel-library-section label { display: block; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .mapel-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
-        .mapel-tabs::-webkit-scrollbar { display: none; }
-        .mapel-tab { 
-            background: var(--input-bg); 
-            border: 1px solid var(--border-color); 
-            color: var(--text-muted); 
-            padding: 8px 18px; 
-            border-radius: 50px; 
-            font-size: 0.8rem; 
-            font-weight: 700; 
-            cursor: pointer; 
-            white-space: nowrap; 
-            transition: all 0.2s; 
-        }
-        .mapel-tab:hover { color: var(--text-main); border-color: rgba(255,255,255,0.2); }
-        .mapel-tab.active { 
-            background: var(--primary); 
-            color: #ffffff; 
-            border-color: var(--primary); 
-            box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35); 
-        }
-
         /* --- MAIN GRID LAYOUT --- */
         .main-content-grid { display: flex; flex-direction: column; gap: 16px; }
         @media (min-width: 900px) {
-            .main-content-grid { display: grid; grid-template-columns: 320px 1fr; align-items: start; }
+            .main-content-grid { display: grid; grid-template-columns: 340px 1fr; align-items: start; }
         }
 
-        /* --- PLAYLIST DI SEBELAH KIRI --- */
+        /* --- PLAYLIST DIRECTORY TREE DI KIRI --- */
         .playlist-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 22px; padding: 20px; box-shadow: var(--shadow-sm); }
         .playlist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
         .playlist-header label { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
         .playlist-counter { font-size: 0.72rem; font-weight: 700; color: var(--text-muted); background: var(--input-bg); padding: 3px 10px; border-radius: 6px; border: 1px solid var(--border-color); }
         
-        .playlist-container { display: flex; flex-direction: column; gap: 8px; max-height: 520px; overflow-y: auto; padding-right: 4px; }
+        .playlist-container { display: flex; flex-direction: column; gap: 10px; max-height: 600px; overflow-y: auto; padding-right: 4px; }
+        
+        /* Folder Root & Accordion */
+        .folder-root { border: 1px solid var(--border-color); border-radius: 14px; overflow: hidden; background: var(--input-bg); }
+        .folder-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 12px 14px; cursor: pointer; background: rgba(255, 255, 255, 0.03); 
+            transition: background 0.2s; user-select: none;
+        }
+        .folder-header:hover { background: var(--card-hover); }
+        .folder-title { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 0.85rem; color: var(--text-main); }
+        .folder-icon { font-size: 1rem; transition: transform 0.2s; }
+        .folder-header.open .folder-icon { transform: rotate(90deg); }
+        .folder-count { font-size: 0.68rem; font-weight: 700; color: var(--text-muted); background: rgba(255,255,255,0.06); padding: 2px 8px; border-radius: 12px; }
+
+        .folder-items { display: flex; flex-direction: column; gap: 6px; padding: 8px 10px; border-top: 1px solid var(--border-color); background: var(--card-bg); }
+
         .playlist-item { 
             display: flex; 
             align-items: center; 
-            gap: 12px; 
+            gap: 10px; 
             background: rgba(255, 255, 255, 0.02); 
-            border: 1.5px solid var(--border-color); 
-            border-radius: 14px; 
-            padding: 12px; 
+            border: 1px solid var(--border-color); 
+            border-radius: 10px; 
+            padding: 10px; 
             cursor: pointer; 
             transition: all 0.2s; 
         }
         .playlist-item:hover { background: var(--card-hover); border-color: rgba(255,255,255,0.15); }
-        .playlist-item.active { background: rgba(225, 29, 72, 0.12); border-color: var(--primary); }
+        .playlist-item.active { background: rgba(225, 29, 72, 0.15); border-color: var(--primary); }
         
         .playlist-thumb { 
-            width: 34px; height: 34px; border-radius: 10px; background: var(--input-bg); 
-            display: flex; justify-content: center; align-items: center; font-size: 0.85rem; 
+            width: 30px; height: 30px; border-radius: 8px; background: var(--input-bg); 
+            display: flex; justify-content: center; align-items: center; font-size: 0.8rem; 
             flex-shrink: 0; color: var(--text-muted); font-weight: 700; 
         }
-        .playlist-item.active .playlist-thumb { background: var(--primary); color: #ffffff; box-shadow: 0 2px 10px rgba(225, 29, 72, 0.4); }
+        .playlist-item.active .playlist-thumb { background: var(--primary); color: #ffffff; box-shadow: 0 2px 8px rgba(225, 29, 72, 0.4); }
 
         .playlist-info { flex: 1; overflow: hidden; }
-        .playlist-title { font-size: 0.82rem; font-weight: 700; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
+        .playlist-title { font-size: 0.8rem; font-weight: 700; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
         .playlist-item.active .playlist-title { color: #ffffff; }
-        .playlist-status { font-size: 0.68rem; font-weight: 600; color: var(--text-muted); }
+        .playlist-status { font-size: 0.65rem; font-weight: 600; color: var(--text-muted); }
         .playlist-status.watched { color: var(--success-color); }
 
         /* --- KANAN: VIDEO & PDF & DISKUSI --- */
@@ -360,18 +345,13 @@
                 <button class="logout-btn" onclick="handleLogout()">Keluar Akun</button>
             </div>
 
-            <div class="mapel-library-section">
-                <label>Pilih Mata Pelajaran (Library)</label>
-                <div id="mapelTabsContainer" class="mapel-tabs"></div>
-            </div>
-
-            <!-- GRID UTAMA: PLAYLIST DI KIRI, KONTEN DI KANAN -->
+            <!-- GRID UTAMA: ROOT PLAYLIST DI KIRI, KONTEN DI KANAN -->
             <div class="main-content-grid">
                 
-                <!-- PLAYLIST DI KIRI -->
+                <!-- PLAYLIST TREE DI KIRI -->
                 <div class="playlist-card">
                     <div class="playlist-header">
-                        <label>Daftar Materi</label>
+                        <label>Direktori Materi</label>
                         <span id="playlistCounter" class="playlist-counter">0 Item</span>
                     </div>
                     <div id="playlistContainer" class="playlist-container"></div>
@@ -444,7 +424,6 @@
         let studentVideos = [];
         let currentStudent = null;
         let globalDatabase = null;
-        let activeMapel = "";
         let currentActiveItemUrl = "";
         let realTimeSync = null;
 
@@ -615,51 +594,19 @@
             document.getElementById('kelompokText').innerText = "Kelompok: " + (student.kelompokKelas.join(', ') || "-");
 
             studentVideos = data.video.filter(v => student.kelompokKelas.includes(v.kelompokKelas));
-            setupMapelTabs();
+            renderTreePlaylist();
             startRealTimeSync(); 
         }
 
-        function setupMapelTabs() {
-            let tabsContainer = document.getElementById('mapelTabsContainer');
-            tabsContainer.innerHTML = "";
-
-            let mapelSet = [...new Set(studentVideos.map(v => v.mapel))];
-
-            if(mapelSet.length === 0) {
-                tabsContainer.innerHTML = "<span style='font-size:0.8rem; color:var(--text-muted);'>Belum ada materi pelajaran.</span>";
-                document.getElementById('playlistContainer').innerHTML = "<div class='no-history'>Tidak ada materi tersedia</div>";
-                document.getElementById('mediaPlayer').src = "";
-                document.getElementById('pdfPlayer').src = "";
-                return;
-            }
-
-            activeMapel = mapelSet[0];
-
-            mapelSet.forEach(mapel => {
-                let tab = document.createElement('button');
-                tab.className = "mapel-tab " + (mapel === activeMapel ? "active" : "");
-                tab.innerText = mapel;
-                tab.onclick = () => {
-                    activeMapel = mapel;
-                    document.querySelectorAll('.mapel-tab').forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    renderPlaylistForActiveMapel();
-                };
-                tabsContainer.appendChild(tab);
-            });
-
-            renderPlaylistForActiveMapel();
-        }
-
-        function renderPlaylistForActiveMapel() {
+        /* --- FUNGSI BARU: MENGGABUNGKAN MAPEL DAN MATERI MENJADI DIRECTORY TREE / ACCORDION --- */
+        function renderTreePlaylist() {
             let container = document.getElementById('playlistContainer');
             container.innerHTML = "";
 
-            let filteredVideos = studentVideos.filter(v => v.mapel === activeMapel);
-            document.getElementById('playlistCounter').innerText = filteredVideos.length + " Materi";
+            document.getElementById('playlistCounter').innerText = studentVideos.length + " Materi";
 
-            if(filteredVideos.length === 0) {
-                container.innerHTML = `<div class='no-history'>Belum ada materi untuk mapel ini.</div>`;
+            if(studentVideos.length === 0) {
+                container.innerHTML = `<div class='no-history'>Belum ada materi tersedia.</div>`;
                 document.getElementById('mediaPlayer').src = "";
                 document.getElementById('pdfPlayer').src = "";
                 document.getElementById('pdfContainerSection').style.display = 'none';
@@ -668,36 +615,82 @@
                 return;
             }
 
-            filteredVideos.forEach((vid, index) => {
-                let fileId = extractDriveId(vid.url);
-                let itemKey = "viewed_" + currentStudent.username + "_" + fileId;
-                let isViewed = localStorage.getItem(itemKey) === "true";
-
-                let item = document.createElement('div');
-                item.className = "playlist-item " + (vid.url === currentActiveItemUrl ? "active" : "");
-                
-                let iconSymbol = vid.url === currentActiveItemUrl ? "▶" : (index + 1);
-
-                item.innerHTML = `
-                    <div class="playlist-thumb">${iconSymbol}</div>
-                    <div class="playlist-info">
-                        <div class="playlist-title">${vid.judul}</div>
-                        <div class="playlist-status ${isViewed ? 'watched' : ''}">
-                            ${isViewed ? '✓ Selesai' : 'Belum dibuka'}
-                        </div>
-                    </div>
-                `;
-
-                item.onclick = () => {
-                    loadSelectedMediaData(vid.url);
-                    renderPlaylistForActiveMapel();
-                };
-
-                container.appendChild(item);
+            // Kelompokkan materi berdasarkan Mata Pelajaran (Root)
+            let groupedMapel = {};
+            studentVideos.forEach(v => {
+                if(!groupedMapel[v.mapel]) groupedMapel[v.mapel] = [];
+                groupedMapel[v.mapel].push(v);
             });
 
-            if (!currentActiveItemUrl || !filteredVideos.some(v => v.url === currentActiveItemUrl)) {
-                loadSelectedMediaData(filteredVideos[0].url);
+            let activeVid = studentVideos.find(v => v.url === currentActiveItemUrl);
+            let currentActiveMapel = activeVid ? activeVid.mapel : studentVideos[0].mapel;
+
+            // Render setiap Mapel sebagai Folder Root
+            Object.keys(groupedMapel).forEach((mapelName, idx) => {
+                let itemsInMapel = groupedMapel[mapelName];
+                let isCurrentFolder = (mapelName === currentActiveMapel);
+
+                let folder = document.createElement('div');
+                folder.className = "folder-root";
+
+                let folderHeader = document.createElement('div');
+                folderHeader.className = "folder-header" + (isCurrentFolder ? " open" : "");
+                folderHeader.innerHTML = `
+                    <div class="folder-title">
+                        <span class="folder-icon">▶</span>
+                        <span>📁 ${mapelName}</span>
+                    </div>
+                    <span class="folder-count">${itemsInMapel.length} Materi</span>
+                `;
+
+                let folderItems = document.createElement('div');
+                folderItems.className = "folder-items";
+                folderItems.style.display = isCurrentFolder ? "flex" : "none";
+
+                itemsInMapel.forEach((vid, index) => {
+                    let fileId = extractDriveId(vid.url);
+                    let itemKey = "viewed_" + currentStudent.username + "_" + fileId;
+                    let isViewed = localStorage.getItem(itemKey) === "true";
+
+                    let item = document.createElement('div');
+                    item.className = "playlist-item " + (vid.url === currentActiveItemUrl ? "active" : "");
+
+                    let iconSymbol = vid.url === currentActiveItemUrl ? "▶" : (index + 1);
+
+                    item.innerHTML = `
+                        <div class="playlist-thumb">${iconSymbol}</div>
+                        <div class="playlist-info">
+                            <div class="playlist-title">${vid.judul}</div>
+                            <div class="playlist-status ${isViewed ? 'watched' : ''}">
+                                ${isViewed ? '✓ Selesai' : 'Belum dibuka'}
+                            </div>
+                        </div>
+                    `;
+
+                    item.onclick = (e) => {
+                        e.stopPropagation();
+                        loadSelectedMediaData(vid.url);
+                        renderTreePlaylist();
+                    };
+
+                    folderItems.appendChild(item);
+                });
+
+                // Toggle Buka / Tutup Folder
+                folderHeader.onclick = () => {
+                    let isOpen = folderItems.style.display === "flex";
+                    folderItems.style.display = isOpen ? "none" : "flex";
+                    folderHeader.classList.toggle("open", !isOpen);
+                };
+
+                folder.appendChild(folderHeader);
+                folder.appendChild(folderItems);
+                container.appendChild(folder);
+            });
+
+            // Putar materi pertama secara otomatis jika belum ada yang aktif
+            if (!currentActiveItemUrl && studentVideos.length > 0) {
+                loadSelectedMediaData(studentVideos[0].url);
             }
         }
 
