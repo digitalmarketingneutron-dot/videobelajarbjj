@@ -511,6 +511,75 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwg0JXaoE8aj1LUm-aNR
                 card.innerHTML = html; historyList.appendChild(card);
             });
         }
+// --- FUNGSI PENDUKUNG NOTIFIKASI ---
+function loadNotifications() {
+    const userSession = JSON.parse(localStorage.getItem('userSession'));
+    if (!userSession) return;
+
+    // Pastikan URL Web App GAS Anda benar
+    const urlWebApps = "URL_WEB_APP_GOOGLE_APPS_SCRIPT_ANDA"; 
+
+    fetch(`${urlWebApps}?action=getNotifications&email=${encodeURIComponent(userSession.email)}`)
+        .then(response => response.json())
+        .then(data => {
+            const notifList = document.getElementById('notifList');
+            const notifBadge = document.getElementById('notifBadge');
+            
+            if (!notifList || !notifBadge) return;
+
+            if (!data || data.length === 0) {
+                notifList.innerHTML = '<div class="notif-item">Tidak ada notifikasi baru.</div>';
+                notifBadge.style.display = 'none';
+                return;
+            }
+
+            let unreadCount = 0;
+            let htmlContent = '';
+
+            data.forEach(notif => {
+                if (!notif.isRead) unreadCount++;
+                
+                htmlContent += `
+                    <div class="notif-item">
+                        <strong>${notif.title || 'Informasi'}</strong>
+                        <p style="margin: 4px 0 0 0; color: #555;">${notif.message}</p>
+                        <small style="color: #888; font-size: 11px;">${notif.date || ''}</small>
+                    </div>
+                `;
+            });
+
+            notifList.innerHTML = htmlContent;
+
+            if (unreadCount > 0) {
+                notifBadge.innerText = unreadCount;
+                notifBadge.style.display = 'inline-block';
+            } else {
+                notifBadge.style.display = 'none';
+            }
+        })
+        .catch(error => console.error('Gagal memuat notifikasi:', error));
+}
+
+// Inisialisasi Event Klik pada Ikon Lonceng Notifikasi
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.querySelector('.notif-container');
+    const notifList = document.getElementById('notifList');
+
+    if (container && notifList) {
+        container.addEventListener('click', (e) => {
+            e.stopPropagation();
+            notifList.style.display = notifList.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', () => {
+            if (notifList) notifList.style.display = 'none';
+        });
+    }
+
+    // Panggil fungsi saat aplikasi aktif dan cek pembaruan berkala setiap 30 detik
+    loadNotifications();
+    setInterval(loadNotifications, 30000);
+});
 
         function updateWatchStatus(watched) {
             let badge = document.getElementById('watchStatusBadge');
