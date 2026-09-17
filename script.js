@@ -380,7 +380,7 @@ function markAsRead(element, waktuNotif, targetUrl) {
         }
 
         // 3. Kirim POST request ke code.gs untuk update ke Google Sheets
-        const urlWebApps = "URL_WEB_APP_GOOGLE_APPS_SCRIPT_ANDA"; // Ganti dengan URL Anda
+        const urlWebApps = "https://script.google.com/macros/s/AKfycbwg0JXaoE8aj1LUm-aNReGH83ayPP3uKjAhVXAhI4XY_ZkiX8rkPv-QRNPrxvpA5Gnk/exec"; // Ganti dengan URL Anda
         
         fetch(urlWebApps, {
             method: 'POST',
@@ -575,7 +575,7 @@ function loadNotifications() {
     // Ambil daftar ID notifikasi yang sudah dibaca dari localStorage (jika ada)
     let readNotifs = JSON.parse(localStorage.getItem(readStorageKey)) || [];
 
-    const urlWebApps = "URL_WEB_APP_GOOGLE_APPS_SCRIPT_ANDA"; 
+    const urlWebApps = "https://script.google.com/macros/s/AKfycbwg0JXaoE8aj1LUm-aNReGH83ayPP3uKjAhVXAhI4XY_ZkiX8rkPv-QRNPrxvpA5Gnk/exec"; 
 
     fetch(`${urlWebApps}?action=getNotifications&email=${encodeURIComponent(userSession.email)}`)
         .then(response => response.json())
@@ -659,7 +659,7 @@ function markAsRead(element, notifId, targetUrl) {
         }
 
         // Opsional: Kirim juga ke server jika Anda punya sistem rekap database
-        const urlWebApps = "URL_WEB_APP_GOOGLE_APPS_SCRIPT_ANDA";
+        const urlWebApps = "https://script.google.com/macros/s/AKfycbwg0JXaoE8aj1LUm-aNReGH83ayPP3uKjAhVXAhI4XY_ZkiX8rkPv-QRNPrxvpA5Gnk/exec";
         fetch(`${urlWebApps}?action=markRead&email=${encodeURIComponent(userSession.email)}&id=${notifId}`)
             .catch(err => console.error('Gagal update ke server:', err));
     }
