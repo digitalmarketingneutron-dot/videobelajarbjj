@@ -527,7 +527,7 @@ function loadNotifications() {
             if (!notifList || !notifBadge) return;
 
             if (!data || data.length === 0) {
-                notifList.innerHTML = '<div class="notif-item">Tidak ada notifikasi baru.</div>';
+                notifList.innerHTML = '<div class="notif-item read" style="text-align:center;">Tidak ada notifikasi.</div>';
                 notifBadge.style.display = 'none';
                 return;
             }
@@ -536,13 +536,18 @@ function loadNotifications() {
             let htmlContent = '';
 
             data.forEach(notif => {
-                // Cek apakah notifikasi belum dibaca
-                if (!notif.isRead) unreadCount++;
+                // Tentukan status berdasarkan properti isRead (true/false)
+                const isUnread = notif.isRead === false || notif.isRead === "false" || notif.isRead === undefined;
+                
+                if (isUnread) {
+                    unreadCount++;
+                }
+
+                const itemClass = isUnread ? 'notif-item unread' : 'notif-item read';
                 
                 htmlContent += `
-                    <div class="notif-item" onclick="markAsRead('${notif.id}')">
-                        <strong>${notif.title || 'Informasi'}</strong>
-                        <p style="margin: 4px 0 0 0; color: #555;">${notif.message}</p>
+                    <div class="${itemClass}" onclick="markAsRead(this, '${notif.id}')">
+                        <p style="margin: 0 0 4px 0; color: #222;">${notif.message || notif.title}</p>
                         <small style="color: #888; font-size: 11px;">${notif.date || ''}</small>
                     </div>
                 `;
@@ -550,7 +555,7 @@ function loadNotifications() {
 
             notifList.innerHTML = htmlContent;
 
-            // Tampilkan atau sembunyikan badge berdasarkan jumlah yang belum dibaca
+            // Sesuaikan angka badge berdasarkan jumlah yang benar-benar belum dibaca
             if (unreadCount > 0) {
                 notifBadge.innerText = unreadCount;
                 notifBadge.style.display = 'inline-block';
@@ -561,35 +566,36 @@ function loadNotifications() {
         .catch(error => console.error('Gagal memuat notifikasi:', error));
 }
 
-// Fungsi saat salah satu notifikasi diklik untuk menandai sudah dibaca
-function markAsRead(notifId) {
-    const notifBadge = document.getElementById('notifBadge');
-    const notifList = document.getElementById('notifList');
+// Fungsi saat salah satu notifikasi diklik
+function markAsRead(element, notifId) {
+    // Jika item masih berstatus unread, ubah kelasnya menjadi read dan kurangi angka badge
+    if (element.classList.contains('unread')) {
+        element.classList.remove('unread');
+        element.classList.add('read');
 
-    // Langsung hilangkan angka badge secara instan di sisi klien
-    if (notifBadge) {
-        notifBadge.style.display = 'none';
-        notifBadge.innerText = '0';
-    }
+        const notifBadge = document.getElementById('notifBadge');
+        if (notifBadge) {
+            let currentCount = parseInt(notifBadge.innerText) || 1;
+            currentCount--;
 
-    // Ubah tampilan isi list menjadi kosong atau bertuliskan "Tidak ada notifikasi"
-    if (notifList) {
-        notifList.innerHTML = '<div class="notif-item">Tidak ada notifikasi baru.</div>';
-        setTimeout(() => {
-            notifList.style.display = 'none';
-        }, 300);
-    }
+            if (currentCount > 0) {
+                notifBadge.innerText = currentCount;
+            } else {
+                notifBadge.style.display = 'none';
+            }
+        }
 
-    // Opsional: Kirim sinyal ke Google Apps Script bahwa notifikasi ini sudah dibaca
-    const userSession = JSON.parse(localStorage.getItem('userSession'));
-    if (userSession) {
-        const urlWebApps = "URL_WEB_APP_GOOGLE_APPS_SCRIPT_ANDA";
-        fetch(`${urlWebApps}?action=markRead&email=${encodeURIComponent(userSession.email)}&id=${notifId}`)
-            .catch(err => console.error('Gagal memperbarui status read:', err));
+        // Kirim permintaan ke server untuk mengubah status menjadi 'sudah dibaca'
+        const userSession = JSON.parse(localStorage.getItem('userSession'));
+        if (userSession && notifId) {
+            const urlWebApps = "URL_WEB_APP_GOOGLE_APPS_SCRIPT_ANDA";
+            fetch(`${urlWebApps}?action=markRead&email=${encodeURIComponent(userSession.email)}&id=${notifId}`)
+                .catch(err => console.error('Gagal memperbarui status read ke server:', err));
+        }
     }
 }
 
-// Event Listener Utama
+// Event Listener Utama untuk Dropdown
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.querySelector('.notif-container');
     const notifList = document.getElementById('notifList');
@@ -606,7 +612,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     loadNotifications();
-    setInterval(loadNotifications, 30000);
+    setInterval(loadNotifications, 30000); // Periksa pembaruan tiap 30 detik
 });
 
         function updateWatchStatus(watched) {
