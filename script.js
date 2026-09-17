@@ -245,6 +245,18 @@ function setupDashboard(student, data) {
     
     switchTab('home');
     startRealTimeSync(); 
+    renderTreePlaylist();
+    renderAkademik(student);
+    renderInformasi(data);
+    
+    // TAMBAHKAN DUA BARIS INI:
+    processJadwalHariIni(data);
+    renderJadwalLengkap(data);
+
+    renderNotifikasi(data);
+    
+    switchTab('home');
+    startRealTimeSync();
 }
 
 /* RENDER AKADEMIK (NILAI & ABSENSI) */
@@ -634,6 +646,115 @@ setInterval(() => {
     }
 }, 1000);
 
+
+// Function pembantu mendapatkan nama hari ini
+function getHariIniIndo() {
+    const daftarHari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    return daftarHari[new Date().getDay()];
+}
+
+// 1. RENDER JADWAL HARI INI DI DASHBOARD + NOTIFIKASI
+function processJadwalHariIni(dataMaster) {
+    if (!currentStudent) return;
+
+    const containerHariIni = document.getElementById('containerJadwalHariIni');
+    const labelHari = document.getElementById('labelHariIni');
+    const hariSekarang = getHariIniIndo();
+
+    if (labelHari) labelHari.innerText = hariSekarang;
+
+    const allJadwal = (dataMaster && dataMaster.jadwal) ? dataMaster.jadwal : [];
+    
+    // Filter berdasarkan kelompokKelas siswa & hari sekarang
+    const jadwalToday = allJadwal.filter(j => {
+        const cocokKelas = !j.kelompokKelas || (currentStudent.kelompokKelas && currentStudent.kelompokKelas.includes(j.kelompokKelas));
+        const cocokHari = j.hari && j.hari.trim().toLowerCase() === hariSekarang.toLowerCase();
+        return cocokKelas && cocokHari;
+    });
+
+    if (!containerHariIni) return;
+
+    if (jadwalToday.length === 0) {
+        containerHariIni.innerHTML = `<div style="font-size:0.78rem; color:var(--text-muted); text-align:center; padding:10px 0;">Tidak ada jadwal bimbingan/pelajaran hari ini.</div>`;
+    } else {
+        let html = '';
+        jadwalToday.forEach(item => {
+            html += `
+                <div style="background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; margin-bottom: 8px;">
+                    <div style="font-weight: 800; font-size: 0.85rem; color: var(--text-main); margin-bottom: 4px;">${item.mapel || 'Bimbingan'}</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">⏰ ${item.jam || ''} | 👤 ${item.pengajar || '-'}</div>
+                    ${item.linkZoom ? `<a href="${item.linkZoom}" target="_blank" class="btn" style="padding:6px 12px; font-size:0.75rem; text-decoration:none; display:inline-block; margin-top:0; background:#2d8cff;">📹 Masuk Zoom</a>` : ''}
+                </div>
+            `;
+        });
+        containerHariIni.innerHTML = html;
+
+        // Push notifikasi otomatis ke sistem notifikasi
+        triggerNotifJadwalHariIni(jadwalToday);
+    }
+}
+
+// 2. SUNTIKAN PUSH NOTIFIKASI JADWAL
+function triggerNotifJadwalHariIni(jadwalToday) {
+    if (!globalDatabase) return;
+    if (!globalDatabase.notifikasi) globalDatabase.notifikasi = [];
+
+    const keyNotif = `notif_jadwal_${currentStudent.username}_${new Date().toDateString()}`;
+    if (sessionStorage.getItem(keyNotif)) return; // Cegah duplikasi notifikasi per sesi hari ini
+
+    jadwalToday.forEach(j => {
+        globalDatabase.notifikasi.unshift({
+            username: currentStudent.username,
+            pesan: `📅 Jadwal Hari Ini (${j.hari}): ${j.mapel} pukul ${j.jam}`,
+            waktu: "Hari ini",
+            isRead: false,
+            url: ""
+        });
+    });
+
+    sessionStorage.setItem(keyNotif, "true");
+    renderNotifikasi(globalDatabase);
+}
+
+// 3. RENDER JADWAL LENGKAP PADA TAB JADWAL
+function renderJadwalLengkap(dataMaster) {
+    if (!currentStudent) return;
+
+    const container = document.getElementById('containerJadwalLengkap');
+    if (!container) return;
+
+    const allJadwal = (dataMaster && dataMaster.jadwal) ? dataMaster.jadwal : [];
+
+    // Filter jadwal sesuai kelompokKelas siswa
+    const myJadwal = allJadwal.filter(j => 
+        !j.kelompokKelas || (currentStudent.kelompokKelas && currentStudent.kelompokKelas.includes(j.kelompokKelas))
+    );
+
+    if (myJadwal.length === 0) {
+        container.innerHTML = `<div class='no-history'>Belum ada jadwal yang terdaftar untuk kelas Anda.</div>`;
+        return;
+    }
+
+    let html = '';
+    myJadwal.forEach(item => {
+        const isHariIni = item.hari && item.hari.trim().toLowerCase() === getHariIniIndo().toLowerCase();
+        
+        html += `
+            <div class="info-card" style="border-left: 4px solid ${isHariIni ? 'var(--primary)' : '#3b82f6'};">
+                <div class="info-header">
+                    <span class="info-date" style="color:${isHariIni ? 'var(--primary)' : '#3b82f6'}; background:${isHariIni ? 'rgba(225,29,72,0.1)' : 'rgba(59,130,246,0.1)'};">
+                        📅 ${item.hari || ''} | ⏰ ${item.jam || ''}
+                    </span>
+                    ${isHariIni ? '<span style="font-size:0.65rem; font-weight:800; background:var(--primary); color:#fff; padding:2px 8px; border-radius:10px;">HARI INI</span>' : ''}
+                </div>
+                <div class="info-title">${item.mapel || '-'}</div>
+                <div class="info-body" style="margin-bottom:10px;">Pengajar: <strong>${item.pengajar || '-'}</strong></div>
+                ${item.linkZoom ? `<a href="${item.linkZoom}" target="_blank" class="btn" style="padding:8px 14px; font-size:0.78rem; text-decoration:none; display:inline-block; margin-top:0; background:#2d8cff;">📹 Link Zoom</a>` : ''}
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+}
 function handleLogout(clearServerToken = true) {
     if (realTimeSync) clearInterval(realTimeSync);
     if (clearServerToken && currentStudent) {
