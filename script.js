@@ -238,27 +238,17 @@ function setupDashboard(student, data) {
 
     studentVideos = (data && data.video) ? data.video.filter(v => student.kelompokKelas && student.kelompokKelas.includes(v.kelompokKelas)) : [];
     
+    // Panggil semua fungsi render sekali saja secara berurutan
     renderTreePlaylist();
     renderAkademik(student);
     renderInformasi(data);
+    processJadwalHariIni(data);
+    renderJadwalLengkap(data);
     renderNotifikasi(data);
     
     switchTab('home');
     startRealTimeSync(); 
-    renderTreePlaylist();
-    renderAkademik(student);
-    renderInformasi(data);
-    
-    // TAMBAHKAN DUA BARIS INI:
-    processJadwalHariIni(data);
-    dwalLengkap(data);
-
-    renderNotifikasi(data);
-    
-    switchTab('home');
-    startRealTimeSync();
 }
-
 /* RENDER AKADEMIK (NILAI & ABSENSI) */
 function renderAkademik(student) {
     let absenContainer = document.getElementById('absensiContainer');
