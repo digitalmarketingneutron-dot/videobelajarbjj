@@ -312,15 +312,22 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwg0JXaoE8aj1LUm-aNR
 // Memproses notifikasi dari data master yang diambil dari code.gs
 function renderNotifications(dataMaster) {
     const userSession = JSON.parse(localStorage.getItem('userSession'));
-    if (!userSession || !userSession.username) return;
+    if (!userSession) return;
+
+    // PERBAIKAN 1: Ambil Username (U besar) atau username (u kecil)
+    const currentUsername = String(userSession.Username || userSession.username || '').trim().toLowerCase();
+    if (!currentUsername) return;
 
     const notifList = document.getElementById('notifList');
     const notifBadge = document.getElementById('notifBadge');
     
     if (!notifList || !notifBadge) return;
 
-    // Filter notifikasi khusus untuk user yang sedang login
-    const myNotifs = dataMaster.notifikasi.filter(n => n.username === userSession.username);
+    // PERBAIKAN 2: Gunakan (dataMaster.notifikasi || []) agar aman dari error undefined
+    // dan samakan huruf besar/kecil (toLowerCase)
+    const myNotifs = (dataMaster.notifikasi || []).filter(n => {
+        return String(n.username).trim().toLowerCase() === currentUsername;
+    });
 
     if (myNotifs.length === 0) {
         notifList.innerHTML = '<div class="notif-item read" style="text-align:center;">Tidak ada notifikasi.</div>';
@@ -332,13 +339,13 @@ function renderNotifications(dataMaster) {
     let htmlContent = '';
 
     myNotifs.forEach(notif => {
-        const isUnread = notif.isRead === false; // Mengambil dari data isread di code.gs
+        // PERBAIKAN 3: Tangani boolean false maupun string "false" / "FALSE"
+        const isUnread = notif.isRead === false || String(notif.isRead).toLowerCase() === "false";
         
         if (isUnread) unreadCount++;
 
         const itemClass = isUnread ? 'notif-item unread' : 'notif-item read';
         
-        // Kirim waktu sebagai parameter unik karena Anda tidak menggunakan ID
         htmlContent += `
             <div class="${itemClass}" onclick="markAsRead(this, '${notif.waktu}', '${notif.url || ''}')">
                 <p style="margin: 0 0 4px 0; color: #222;">${notif.pesan}</p>
@@ -360,10 +367,13 @@ function renderNotifications(dataMaster) {
 // Fungsi saat notifikasi diklik
 function markAsRead(element, waktuNotif, targetUrl) {
     const userSession = JSON.parse(localStorage.getItem('userSession'));
-    if (!userSession || !userSession.username) return;
+    if (!userSession) return;
+
+    const currentUsername = userSession.Username || userSession.username;
+    if (!currentUsername) return;
 
     if (element.classList.contains('unread')) {
-        // 1. Ubah tampilan instan (tanda titik hilang)
+        // 1. Ubah tampilan instan
         element.classList.remove('unread');
         element.classList.add('read');
 
@@ -379,20 +389,20 @@ function markAsRead(element, waktuNotif, targetUrl) {
             }
         }
 
-        // 3. Kirim POST request ke code.gs untuk update ke Google Sheets
-        const urlWebApps = "https://script.google.com/macros/s/AKfycbwg0JXaoE8aj1LUm-aNReGH83ayPP3uKjAhVXAhI4XY_ZkiX8rkPv-QRNPrxvpA5Gnk/exec"; // Ganti dengan URL Anda
+        // 3. Kirim POST request ke Google Apps Script
+        const urlWebApps = "https://script.google.com/macros/s/AKfycbwg0JXaoE8aj1LUm-aNReGH83ayPP3uKjAhVXAhI4XY_ZkiX8rkPv-QRNPrxvpA5Gnk/exec";
         
         fetch(urlWebApps, {
             method: 'POST',
             body: JSON.stringify({
                 action: 'mark_read',
-                username: userSession.username,
+                username: currentUsername,
                 waktu: waktuNotif 
             })
         }).catch(err => console.error('Gagal update database:', err));
     }
 
-    // 4. Pengalihan halaman (jika ada url)
+    // 4. Pengalihan halaman
     if (targetUrl && targetUrl !== 'undefined' && targetUrl.trim() !== '') {
         window.location.href = targetUrl;
     }
