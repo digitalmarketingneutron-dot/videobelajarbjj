@@ -309,41 +309,94 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwg0JXaoE8aj1LUm-aNR
             infoContainer.innerHTML = htmlInfo;
         }
 
-        /* --- RENDER NOTIFIKASI --- */
-        function renderNotifikasi(student) {
-            let notif = (globalDatabase && globalDatabase.notifikasi) ? globalDatabase.notifikasi.filter(n => n.username === student.username) : [];
+// Memproses notifikasi dari data master yang diambil dari code.gs
+function renderNotifications(dataMaster) {
+    const userSession = JSON.parse(localStorage.getItem('userSession'));
+    if (!userSession || !userSession.username) return;
 
-            let htmlNotif = '';
-            let unreadCount = 0;
+    const notifList = document.getElementById('notifList');
+    const notifBadge = document.getElementById('notifBadge');
+    
+    if (!notifList || !notifBadge) return;
 
-            notif.forEach(n => {
-                if(!n.isRead) unreadCount++;
-                htmlNotif += `
-                    <div class="notif-item ${n.isRead ? '' : 'unread'}">
-                        <div class="notif-time">${n.waktu || ''}</div>
-                        <div class="notif-text">${n.pesan || ''}</div>
-                    </div>
-                `;
-            });
+    // Filter notifikasi khusus untuk user yang sedang login
+    const myNotifs = dataMaster.notifikasi.filter(n => n.username === userSession.username);
 
-            if(notif.length === 0) {
-                htmlNotif = '<div class="notif-empty">Belum ada notifikasi untuk Anda.</div>';
-            }
+    if (myNotifs.length === 0) {
+        notifList.innerHTML = '<div class="notif-item read" style="text-align:center;">Tidak ada notifikasi.</div>';
+        notifBadge.style.display = 'none';
+        return;
+    }
 
-            let notifListEl = document.getElementById('notifList');
-            if(notifListEl) notifListEl.innerHTML = htmlNotif;
-            
-            let badge = document.getElementById('notifBadge');
-            if(badge) {
-                if(unreadCount > 0) {
-                    badge.style.display = 'block';
-                    badge.innerText = unreadCount;
-                } else {
-                    badge.style.display = 'none';
-                }
+    let unreadCount = 0;
+    let htmlContent = '';
+
+    myNotifs.forEach(notif => {
+        const isUnread = notif.isRead === false; // Mengambil dari data isread di code.gs
+        
+        if (isUnread) unreadCount++;
+
+        const itemClass = isUnread ? 'notif-item unread' : 'notif-item read';
+        
+        // Kirim waktu sebagai parameter unik karena Anda tidak menggunakan ID
+        htmlContent += `
+            <div class="${itemClass}" onclick="markAsRead(this, '${notif.waktu}', '${notif.url || ''}')">
+                <p style="margin: 0 0 4px 0; color: #222;">${notif.pesan}</p>
+                <small style="color: #888; font-size: 11px;">${notif.waktu}</small>
+            </div>
+        `;
+    });
+
+    notifList.innerHTML = htmlContent;
+
+    if (unreadCount > 0) {
+        notifBadge.innerText = unreadCount;
+        notifBadge.style.display = 'inline-block';
+    } else {
+        notifBadge.style.display = 'none';
+    }
+}
+
+// Fungsi saat notifikasi diklik
+function markAsRead(element, waktuNotif, targetUrl) {
+    const userSession = JSON.parse(localStorage.getItem('userSession'));
+    if (!userSession || !userSession.username) return;
+
+    if (element.classList.contains('unread')) {
+        // 1. Ubah tampilan instan (tanda titik hilang)
+        element.classList.remove('unread');
+        element.classList.add('read');
+
+        // 2. Kurangi angka badge
+        const notifBadge = document.getElementById('notifBadge');
+        if (notifBadge) {
+            let currentCount = parseInt(notifBadge.innerText) || 1;
+            currentCount--;
+            if (currentCount > 0) {
+                notifBadge.innerText = currentCount;
+            } else {
+                notifBadge.style.display = 'none';
             }
         }
 
+        // 3. Kirim POST request ke code.gs untuk update ke Google Sheets
+        const urlWebApps = "URL_WEB_APP_GOOGLE_APPS_SCRIPT_ANDA"; // Ganti dengan URL Anda
+        
+        fetch(urlWebApps, {
+            method: 'POST',
+            body: JSON.stringify({
+                action: 'mark_read',
+                username: userSession.username,
+                waktu: waktuNotif 
+            })
+        }).catch(err => console.error('Gagal update database:', err));
+    }
+
+    // 4. Pengalihan halaman (jika ada url)
+    if (targetUrl && targetUrl !== 'undefined' && targetUrl.trim() !== '') {
+        window.location.href = targetUrl;
+    }
+}
         function renderTreePlaylist() {
             let container = document.getElementById('playlistContainer');
             if (!container) return;
@@ -514,7 +567,13 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwg0JXaoE8aj1LUm-aNR
 // Fungsi untuk memuat dan memperbarui notifikasi
 function loadNotifications() {
     const userSession = JSON.parse(localStorage.getItem('userSession'));
-    if (!userSession) return;
+    if (!userSession || !userSession.email) return;
+
+    // Kunci unik untuk menyimpan daftar ID notifikasi yang sudah dibaca oleh user ini
+    const readStorageKey = 'readNotif_' + userSession.email;
+    
+    // Ambil daftar ID notifikasi yang sudah dibaca dari localStorage (jika ada)
+    let readNotifs = JSON.parse(localStorage.getItem(readStorageKey)) || [];
 
     const urlWebApps = "URL_WEB_APP_GOOGLE_APPS_SCRIPT_ANDA"; 
 
@@ -535,27 +594,27 @@ function loadNotifications() {
             let unreadCount = 0;
             let htmlContent = '';
 
-// Bagian dalam loadNotifications() saat membuat htmlContent
-data.forEach(notif => {
-    const isUnread = notif.isRead === false || notif.isRead === "false" || notif.isRead === undefined;
-    
-    if (isUnread) {
-        unreadCount++;
-    }
+            data.forEach(notif => {
+                // Cek apakah ID notifikasi ini belum ada di dalam daftar yang sudah dibaca user
+                const isUnread = !readNotifs.includes(notif.id.toString());
+                
+                if (isUnread) {
+                    unreadCount++;
+                }
 
-    const itemClass = isUnread ? 'notif-item unread' : 'notif-item read';
-    
-    // Tambahkan parameter notif.url ke dalam onclick
-    htmlContent += `
-        <div class="${itemClass}" onclick="markAsRead(this, '${notif.id}', '${notif.url || ''}')">
-            <p style="margin: 0 0 4px 0; color: #222;">${notif.message || notif.title}</p>
-            <small style="color: #888; font-size: 11px;">${notif.date || ''}</small>
-        </div>
-    `;
-});
+                const itemClass = isUnread ? 'notif-item unread' : 'notif-item read';
+                
+                htmlContent += `
+                    <div class="${itemClass}" onclick="markAsRead(this, '${notif.id}', '${notif.url || ''}')">
+                        <p style="margin: 0 0 4px 0; color: #222;">${notif.message || notif.title}</p>
+                        <small style="color: #888; font-size: 11px;">${notif.date || ''}</small>
+                    </div>
+                `;
+            });
+
             notifList.innerHTML = htmlContent;
 
-            // Sesuaikan angka badge berdasarkan jumlah yang benar-benar belum dibaca
+            // Tampilkan atau sembunyikan angka badge
             if (unreadCount > 0) {
                 notifBadge.innerText = unreadCount;
                 notifBadge.style.display = 'inline-block';
@@ -566,13 +625,27 @@ data.forEach(notif => {
         .catch(error => console.error('Gagal memuat notifikasi:', error));
 }
 
-// Fungsi saat salah satu notifikasi diklik, ditambahkan parameter url
+// Fungsi saat salah satu notifikasi diklik
 function markAsRead(element, notifId, targetUrl) {
-    // 1. Kurangi angka badge dan ubah tampilan jika statusnya belum dibaca
+    const userSession = JSON.parse(localStorage.getItem('userSession'));
+    if (!userSession || !userSession.email) return;
+
+    // Jika item berstatus unread, proses pembaruan datanya
     if (element.classList.contains('unread')) {
+        // 1. Ubah tampilan secara instan
         element.classList.remove('unread');
         element.classList.add('read');
 
+        // 2. Simpan ID notifikasi ke localStorage berdasarkan email user
+        const readStorageKey = 'readNotif_' + userSession.email;
+        let readNotifs = JSON.parse(localStorage.getItem(readStorageKey)) || [];
+        
+        if (!readNotifs.includes(notifId.toString())) {
+            readNotifs.push(notifId.toString());
+            localStorage.setItem(readStorageKey, JSON.stringify(readNotifs));
+        }
+
+        // 3. Kurangi angka badge
         const notifBadge = document.getElementById('notifBadge');
         if (notifBadge) {
             let currentCount = parseInt(notifBadge.innerText) || 1;
@@ -585,44 +658,17 @@ function markAsRead(element, notifId, targetUrl) {
             }
         }
 
-        // 2. Kirim permintaan ke server untuk mengubah status menjadi 'sudah dibaca' (Berjalan di latar belakang)
-        const userSession = JSON.parse(localStorage.getItem('userSession'));
-        if (userSession && notifId) {
-            const urlWebApps = "URL_WEB_APP_GOOGLE_APPS_SCRIPT_ANDA"; // Pastikan ini URL yang benar
-            fetch(`${urlWebApps}?action=markRead&email=${encodeURIComponent(userSession.email)}&id=${notifId}`)
-                .catch(err => console.error('Gagal memperbarui status read ke server:', err));
-        }
+        // Opsional: Kirim juga ke server jika Anda punya sistem rekap database
+        const urlWebApps = "URL_WEB_APP_GOOGLE_APPS_SCRIPT_ANDA";
+        fetch(`${urlWebApps}?action=markRead&email=${encodeURIComponent(userSession.email)}&id=${notifId}`)
+            .catch(err => console.error('Gagal update ke server:', err));
     }
 
-    // 3. Lakukan Redirect / Pengalihan ke halaman tujuan jika ada
+    // 4. Redirect ke halaman tujuan
     if (targetUrl && targetUrl !== 'undefined' && targetUrl.trim() !== '') {
-        // Opsi A: Buka di tab/jendela yang sama
-        window.location.href = targetUrl;
-        
-        // Opsi B: Buka di tab baru (Hapus komentar baris di bawah ini dan komentari baris di atas jika ingin tab baru)
-        // window.open(targetUrl, '_blank'); 
+        window.location.href = targetUrl; 
     }
 }
-
-// Event Listener Utama untuk Dropdown
-document.addEventListener('DOMContentLoaded', () => {
-    const container = document.querySelector('.notif-container');
-    const notifList = document.getElementById('notifList');
-
-    if (container && notifList) {
-        container.addEventListener('click', (e) => {
-            e.stopPropagation();
-            notifList.style.display = notifList.style.display === 'block' ? 'none' : 'block';
-        });
-
-        document.addEventListener('click', () => {
-            if (notifList) notifList.style.display = 'none';
-        });
-    }
-
-    loadNotifications();
-    setInterval(loadNotifications, 30000); // Periksa pembaruan tiap 30 detik
-});
 
         function updateWatchStatus(watched) {
             let badge = document.getElementById('watchStatusBadge');
