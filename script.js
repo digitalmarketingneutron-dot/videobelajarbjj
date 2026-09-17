@@ -1,6 +1,6 @@
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwg0JXaoE8aj1LUm-aNReGH83ayPP3uKjAhVXAhI4XY_ZkiX8rkPv-QRNPrxvpA5Gnk/exec';
 
-let studentVideos = [];F
+let studentVideos = [];
 let currentStudent = null;
 let globalDatabase = null;
 let currentActiveItemUrl = "";
@@ -72,12 +72,18 @@ document.addEventListener('click', (e) => {
 
 window.addEventListener('DOMContentLoaded', async () => {
     let splash = document.getElementById('splashScreen');
-    setTimeout(() => {
+    
+    // Pembantu hilangkan splash screen
+    const hideSplash = () => {
         if(splash) {
             splash.style.opacity = '0';
             splash.style.visibility = 'hidden';
+            setTimeout(() => splash.style.display = 'none', 500);
         }
-    }, 800);
+    };
+
+    // Sembunyikan splash screen otomatis dalam 1 detik
+    setTimeout(hideSplash, 1000);
 
     let savedUser = localStorage.getItem('elearn_logged_user');
     let savedToken = localStorage.getItem('elearn_session_token');
@@ -238,7 +244,6 @@ function setupDashboard(student, data) {
 
     studentVideos = (data && data.video) ? data.video.filter(v => student.kelompokKelas && student.kelompokKelas.includes(v.kelompokKelas)) : [];
     
-    // Panggil semua fungsi render sekali saja secara berurutan
     renderTreePlaylist();
     renderAkademik(student);
     renderInformasi(data);
@@ -249,6 +254,7 @@ function setupDashboard(student, data) {
     switchTab('home');
     startRealTimeSync(); 
 }
+
 /* RENDER AKADEMIK (NILAI & ABSENSI) */
 function renderAkademik(student) {
     let absenContainer = document.getElementById('absensiContainer');
@@ -636,7 +642,6 @@ setInterval(() => {
     }
 }, 1000);
 
-
 // Function pembantu mendapatkan nama hari ini
 function getHariIniIndo() {
     const daftarHari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
@@ -705,6 +710,7 @@ function triggerNotifJadwalHariIni(jadwalToday) {
     sessionStorage.setItem(keyNotif, "true");
     renderNotifikasi(globalDatabase);
 }
+
 // 3. RENDER JADWAL LENGKAP PADA TAB JADWAL
 function renderJadwalLengkap(dataMaster) {
     if (!currentStudent) return;
@@ -755,6 +761,7 @@ function renderJadwalLengkap(dataMaster) {
     });
     container.innerHTML = html;
 }
+
 function handleLogout(clearServerToken = true) {
     if (realTimeSync) clearInterval(realTimeSync);
     if (clearServerToken && currentStudent) {
