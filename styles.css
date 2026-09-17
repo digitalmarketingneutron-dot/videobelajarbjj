@@ -314,3 +314,41 @@ body {
 .notif-item:hover {
     background-color: #f8f9fa;
 }
+
+
+/* Styling untuk item notifikasi berdasarkan status */
+.notif-item {
+    padding: 12px 15px;
+    border-bottom: 1px solid #f1f1f1;
+    font-size: 13px;
+    color: #333333;
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+}
+
+.notif-item.unread {
+    background-color: #f0f7ff; /* Warna latar sedikit kebiruan untuk yang belum dibaca */
+    font-weight: 600;
+}
+
+.notif-item.unread::after {
+    content: '';
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background-color: var(--primary);
+    border-radius: 50%;
+}
+
+.notif-item.read {
+    background-color: #ffffff;
+    color: #666666;
+}
+
+.notif-item:hover {
+    background-color: #f8f9fa;
+}
