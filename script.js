@@ -535,24 +535,24 @@ function loadNotifications() {
             let unreadCount = 0;
             let htmlContent = '';
 
-            data.forEach(notif => {
-                // Tentukan status berdasarkan properti isRead (true/false)
-                const isUnread = notif.isRead === false || notif.isRead === "false" || notif.isRead === undefined;
-                
-                if (isUnread) {
-                    unreadCount++;
-                }
+// Bagian dalam loadNotifications() saat membuat htmlContent
+data.forEach(notif => {
+    const isUnread = notif.isRead === false || notif.isRead === "false" || notif.isRead === undefined;
+    
+    if (isUnread) {
+        unreadCount++;
+    }
 
-                const itemClass = isUnread ? 'notif-item unread' : 'notif-item read';
-                
-                htmlContent += `
-                    <div class="${itemClass}" onclick="markAsRead(this, '${notif.id}')">
-                        <p style="margin: 0 0 4px 0; color: #222;">${notif.message || notif.title}</p>
-                        <small style="color: #888; font-size: 11px;">${notif.date || ''}</small>
-                    </div>
-                `;
-            });
-
+    const itemClass = isUnread ? 'notif-item unread' : 'notif-item read';
+    
+    // Tambahkan parameter notif.url ke dalam onclick
+    htmlContent += `
+        <div class="${itemClass}" onclick="markAsRead(this, '${notif.id}', '${notif.url || ''}')">
+            <p style="margin: 0 0 4px 0; color: #222;">${notif.message || notif.title}</p>
+            <small style="color: #888; font-size: 11px;">${notif.date || ''}</small>
+        </div>
+    `;
+});
             notifList.innerHTML = htmlContent;
 
             // Sesuaikan angka badge berdasarkan jumlah yang benar-benar belum dibaca
@@ -566,9 +566,9 @@ function loadNotifications() {
         .catch(error => console.error('Gagal memuat notifikasi:', error));
 }
 
-// Fungsi saat salah satu notifikasi diklik
-function markAsRead(element, notifId) {
-    // Jika item masih berstatus unread, ubah kelasnya menjadi read dan kurangi angka badge
+// Fungsi saat salah satu notifikasi diklik, ditambahkan parameter url
+function markAsRead(element, notifId, targetUrl) {
+    // 1. Kurangi angka badge dan ubah tampilan jika statusnya belum dibaca
     if (element.classList.contains('unread')) {
         element.classList.remove('unread');
         element.classList.add('read');
@@ -585,13 +585,22 @@ function markAsRead(element, notifId) {
             }
         }
 
-        // Kirim permintaan ke server untuk mengubah status menjadi 'sudah dibaca'
+        // 2. Kirim permintaan ke server untuk mengubah status menjadi 'sudah dibaca' (Berjalan di latar belakang)
         const userSession = JSON.parse(localStorage.getItem('userSession'));
         if (userSession && notifId) {
-            const urlWebApps = "URL_WEB_APP_GOOGLE_APPS_SCRIPT_ANDA";
+            const urlWebApps = "URL_WEB_APP_GOOGLE_APPS_SCRIPT_ANDA"; // Pastikan ini URL yang benar
             fetch(`${urlWebApps}?action=markRead&email=${encodeURIComponent(userSession.email)}&id=${notifId}`)
                 .catch(err => console.error('Gagal memperbarui status read ke server:', err));
         }
+    }
+
+    // 3. Lakukan Redirect / Pengalihan ke halaman tujuan jika ada
+    if (targetUrl && targetUrl !== 'undefined' && targetUrl.trim() !== '') {
+        // Opsi A: Buka di tab/jendela yang sama
+        window.location.href = targetUrl;
+        
+        // Opsi B: Buka di tab baru (Hapus komentar baris di bawah ini dan komentari baris di atas jika ingin tab baru)
+        // window.open(targetUrl, '_blank'); 
     }
 }
 
