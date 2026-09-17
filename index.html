@@ -107,6 +107,24 @@
                         <div class="icon-circle bg-red">🏥</div>
                         <span>Izin / Sakit</span>
                     </button>
+                    <!-- TAMBAHKAN TOMBOL JADWAL LENGKAP DI SINI -->
+    <button class="menu-btn" onclick="switchTab('jadwalLengkap')">
+        <div class="icon-circle bg-blue">📅</div>
+        <span>Jadwal Lengkap</span>
+    </button>
+
+    <button class="menu-btn" onclick="switchTab('ruangBelajar')">
+        <div class="icon-circle bg-blue">📚</div>
+        <span>Ruang Belajar</span>
+    </button>
+    <button class="menu-btn" onclick="switchTab('akademik')">
+        <div class="icon-circle bg-blue">📊</div>
+        <span>Nilai Siswa</span>
+    </button>
+    <button class="menu-btn" onclick="switchTab('informasi')">
+        <div class="icon-circle bg-blue">📢</div>
+        <span>Pengumuman</span>
+    </button>
                     <button class="menu-btn" onclick="switchTab('ruangBelajar')">
                         <div class="icon-circle bg-blue">📚</div>
                         <span>Ruang Belajar</span>
@@ -242,6 +260,9 @@
                 <button class="nav-item" data-tab="ruangBelajar" onclick="switchTab('ruangBelajar')">
                     <span style="font-size: 1.2rem;">📚</span> Belajar
                 </button>
+                <button class="nav-item" data-tab="jadwalLengkap" onclick="switchTab('jadwalLengkap')">
+        <span style="font-size: 1.2rem;">📅</span> Jadwal
+    </button>
                 <button class="nav-item" data-tab="akademik" onclick="switchTab('akademik')">
                     <span style="font-size: 1.2rem;">📊</span> Nilai
                 </button>
