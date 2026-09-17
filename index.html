@@ -69,6 +69,19 @@
                     <p id="jamRealTime">--:--:-- WIB</p>
                 </div>
 
+                <!-- WIDGET JADWAL HARI INI DI DASHBOARD -->
+<div id="dashboardJadwalWrapper" style="padding: 0 20px; margin-bottom: 20px;">
+    <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 18px; padding: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <span style="font-size: 0.85rem; font-weight: 800; color: var(--text-main);">📅 Jadwal Hari Ini</span>
+            <span id="labelHariIni" style="font-size: 0.7rem; font-weight: 700; color: var(--primary); background: rgba(225, 29, 72, 0.1); padding: 3px 10px; border-radius: 50px;">---</span>
+        </div>
+        <div id="containerJadwalHariIni">
+            <!-- Diisi otomatis via JavaScript -->
+        </div>
+    </div>
+</div>
+
                 <div class="rekap-absen">
                     <div class="rekap-item">
                         <span>DATANG</span>
@@ -163,6 +176,18 @@
                     </div>
                 </div>
             </div>
+            <!-- TAB JADWAL LENGKAP -->
+<div id="jadwalLengkap" class="tab-content">
+    <div class="content-header">
+        <button class="back-btn" onclick="switchTab('home')">← Kembali</button>
+        <h3>Jadwal Pelajaran Lengkap</h3>
+    </div>
+    <div class="info-grid">
+        <div class="akademik-card" style="margin-bottom:0;">
+            <div id="containerJadwalLengkap" class="info-grid"></div>
+        </div>
+    </div>
+</div>
 
             <!-- TAB 2: AKADEMIK & PRESENSI -->
             <div id="akademik" class="tab-content">
