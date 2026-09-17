@@ -1,6 +1,6 @@
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwg0JXaoE8aj1LUm-aNReGH83ayPP3uKjAhVXAhI4XY_ZkiX8rkPv-QRNPrxvpA5Gnk/exec';
 
-let studentVideos = [];
+let studentVideos = [];F
 let currentStudent = null;
 let globalDatabase = null;
 let currentActiveItemUrl = "";
@@ -251,7 +251,7 @@ function setupDashboard(student, data) {
     
     // TAMBAHKAN DUA BARIS INI:
     processJadwalHariIni(data);
-    renderJadwalLengkap(data);
+    dwalLengkap(data);
 
     renderNotifikasi(data);
     
@@ -715,7 +715,6 @@ function triggerNotifJadwalHariIni(jadwalToday) {
     sessionStorage.setItem(keyNotif, "true");
     renderNotifikasi(globalDatabase);
 }
-
 // 3. RENDER JADWAL LENGKAP PADA TAB JADWAL
 function renderJadwalLengkap(dataMaster) {
     if (!currentStudent) return;
@@ -739,11 +738,22 @@ function renderJadwalLengkap(dataMaster) {
     myJadwal.forEach(item => {
         const isHariIni = item.hari && item.hari.trim().toLowerCase() === getHariIniIndo().toLowerCase();
         
+        // Penggabungan Tanggal & Hari
+        const textTanggal = item.tanggal ? item.tanggal.trim() : '';
+        const textHari = item.hari ? item.hari.trim() : '';
+        
+        let labelWaktu = textHari;
+        if (textHari && textTanggal) {
+            labelWaktu = `${textHari}, ${textTanggal}`;
+        } else if (textTanggal) {
+            labelWaktu = textTanggal;
+        }
+
         html += `
             <div class="info-card" style="border-left: 4px solid ${isHariIni ? 'var(--primary)' : '#3b82f6'};">
                 <div class="info-header">
                     <span class="info-date" style="color:${isHariIni ? 'var(--primary)' : '#3b82f6'}; background:${isHariIni ? 'rgba(225,29,72,0.1)' : 'rgba(59,130,246,0.1)'};">
-                        📅 ${item.hari || ''} | ⏰ ${item.jam || ''}
+                        📅 ${labelWaktu} | ⏰ ${item.jam || ''}
                     </span>
                     ${isHariIni ? '<span style="font-size:0.65rem; font-weight:800; background:var(--primary); color:#fff; padding:2px 8px; border-radius:10px;">HARI INI</span>' : ''}
                 </div>
